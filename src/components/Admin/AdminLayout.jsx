@@ -7,6 +7,7 @@ import {
   FaPenNib,
   FaStore,
   FaShoppingCart,
+  FaCalendarAlt,
 } from "react-icons/fa";
 import "./AdminLayout.css";
 
@@ -63,6 +64,13 @@ const AdminLayout = () => {
             className="sidebar-link"
           >
             <FaShoppingCart /> Orders
+          </Nav.Link>
+          <Nav.Link
+            as={NavLink}
+            to="/admin/dashboard/bookings"
+            className="sidebar-link"
+          >
+            <FaCalendarAlt /> Bookings
           </Nav.Link>
         </Nav>
         <button className="logout-button" onClick={handleLogout}>

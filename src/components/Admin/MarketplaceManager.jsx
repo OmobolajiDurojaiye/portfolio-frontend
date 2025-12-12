@@ -8,7 +8,6 @@ import {
   Col,
   InputGroup,
   Spinner,
-  ProgressBar,
   Card,
   Badge,
 } from "react-bootstrap";
@@ -23,8 +22,6 @@ const MarketplaceManager = () => {
   const [showModal, setShowModal] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
   const [newCategoryName, setNewCategoryName] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
-  const [galleryUrls, setGalleryUrls] = useState([]);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -43,47 +40,10 @@ const MarketplaceManager = () => {
     fetchData();
   }, [fetchData]);
 
-  useEffect(() => {
-    if (showModal) {
-      setImageUrl(currentProduct?.image_url || "");
-      setGalleryUrls(currentProduct?.gallery_images || []);
-    }
-  }, [showModal, currentProduct]);
-
-  const uploadFile = async (file) => {
-    const formData = new FormData();
-    formData.append("file", file);
-    try {
-      const res = await apiClient.post("/api/blog/upload-image", formData);
-      return res.data.url;
-    } catch (err) {
-      alert("Image upload failed");
-      return null;
-    }
-  };
-
-  const handleSingleImageUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const url = await uploadFile(file);
-    if (url) setImageUrl(url);
-  };
-
-  const handleGalleryUpload = async (e) => {
-    const files = Array.from(e.target.files);
-    if (files.length === 0) return;
-    const uploadedUrls = await Promise.all(
-      files.map((file) => uploadFile(file))
-    );
-    setGalleryUrls((prev) => [...prev, ...uploadedUrls.filter(Boolean)]);
-  };
-
   const handleSaveProduct = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
-    data.image_url = imageUrl;
-    data.gallery_images = galleryUrls.join(",");
     data.is_sold = formData.get("is_sold") === "on";
 
     const apiCall = currentProduct
@@ -281,20 +241,11 @@ const MarketplaceManager = () => {
             <Row>
               <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Main Product Image</Form.Label>
+                  <Form.Label>Main Product Image URL</Form.Label>
                   <Form.Control
-                    type="file"
-                    onChange={handleSingleImageUpload}
-                    accept="image/*"
+                    name="image_url"
+                    defaultValue={currentProduct?.image_url}
                   />
-                  {imageUrl && (
-                    <img
-                      src={imageUrl}
-                      alt="preview"
-                      className="img-fluid rounded mt-2"
-                      style={{ maxHeight: "100px" }}
-                    />
-                  )}
                 </Form.Group>
               </Col>
               <Col md={6}>
@@ -315,23 +266,13 @@ const MarketplaceManager = () => {
               </Col>
             </Row>
             <Form.Group className="mb-3">
-              <Form.Label>Gallery Images (upload multiple)</Form.Label>
+              <Form.Label>Gallery Images (comma-separated URLs)</Form.Label>
               <Form.Control
-                type="file"
-                multiple
-                onChange={handleGalleryUpload}
-                accept="image/*"
+                as="textarea"
+                rows={3}
+                name="gallery_images"
+                defaultValue={currentProduct?.gallery_images?.join(",")}
               />
-              <div className="d-flex gap-2 mt-2 flex-wrap">
-                {galleryUrls.map((url, i) => (
-                  <img
-                    key={i}
-                    src={url}
-                    style={{ height: "50px" }}
-                    alt={`gal-${i}`}
-                  />
-                ))}
-              </div>
             </Form.Group>
             <Row>
               <Col md={6}>

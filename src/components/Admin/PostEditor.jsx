@@ -1,13 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import {
-  Form,
-  Button,
-  Spinner,
-  Alert,
-  Row,
-  Col,
-  ProgressBar,
-} from "react-bootstrap";
+import { Form, Button, Spinner, Alert, Row, Col } from "react-bootstrap";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import apiClient from "../../services/api";
@@ -28,14 +20,15 @@ const PostEditor = ({ postId, onSave }) => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
-  const [uploadProgress, setUploadProgress] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const readlistsRes = await apiClient.get("/api/blog/admin/readlists");
-        const categoriesRes = await apiClient.get("/api/blog/admin/categories");
+        const [readlistsRes, categoriesRes] = await Promise.all([
+          apiClient.get("/api/blog/admin/readlists"),
+          apiClient.get("/api/blog/admin/categories"),
+        ]);
         setReadlists(readlistsRes.data);
         setCategories(categoriesRes.data);
 
@@ -89,62 +82,15 @@ const PostEditor = ({ postId, onSave }) => {
     setPost((prev) => ({ ...prev, readlist_ids: selectedIds }));
   };
 
-  const handleFeaturedImageUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const url = await handleImageUpload(file, setUploadProgress);
-    if (url) {
-      setPost((prev) => ({ ...prev, image_url: url }));
-    }
-    setTimeout(() => setUploadProgress(0), 1000);
-  };
-
-  const handleImageUpload = async (file, progressCallback) => {
-    const formData = new FormData();
-    formData.append("file", file);
-    try {
-      progressCallback?.(0);
-      const res = await apiClient.post("/api/blog/upload-image", formData, {
-        onUploadProgress: (e) =>
-          progressCallback?.(Math.round((e.loaded * 100) / e.total)),
-      });
-      return res.data.url;
-    } catch (err) {
-      console.error("Image upload failed:", err);
-      alert("Image upload failed. Please try again.");
-      return null;
-    }
-  };
-
   const quillModules = useMemo(
     () => ({
-      toolbar: {
-        container: [
-          [{ header: [1, 2, 3, 4, 5, 6, false] }],
-          ["bold", "italic", "underline", "strike", "blockquote"],
-          [{ list: "ordered" }, { list: "bullet" }],
-          ["link", "image", "video"],
-          ["clean"],
-        ],
-        handlers: {
-          image: function () {
-            const input = document.createElement("input");
-            input.setAttribute("type", "file");
-            input.setAttribute("accept", "image/*");
-            input.click();
-            input.onchange = async () => {
-              const file = input.files[0];
-              if (file) {
-                const url = await handleImageUpload(file);
-                if (url) {
-                  const range = this.quill.getSelection(true);
-                  this.quill.insertEmbed(range.index, "image", url);
-                }
-              }
-            };
-          },
-        },
-      },
+      toolbar: [
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+        ["bold", "italic", "underline", "strike", "blockquote"],
+        [{ list: "ordered" }, { list: "bullet" }],
+        ["link", "image", "video"],
+        ["clean"],
+      ],
     }),
     []
   );
@@ -231,27 +177,12 @@ const PostEditor = ({ postId, onSave }) => {
               />
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>Featured Image</Form.Label>
+              <Form.Label>Featured Image URL</Form.Label>
               <Form.Control
-                type="file"
                 name="image_url"
-                onChange={handleFeaturedImageUpload}
-                accept="image/*"
+                value={post.image_url || ""}
+                onChange={handleChange}
               />
-              {uploadProgress > 0 && (
-                <ProgressBar
-                  now={uploadProgress}
-                  label={`${uploadProgress}%`}
-                  className="mt-2"
-                />
-              )}
-              {post.image_url && (
-                <img
-                  src={post.image_url}
-                  alt="Featured"
-                  className="img-fluid rounded mt-2"
-                />
-              )}
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Excerpt</Form.Label>

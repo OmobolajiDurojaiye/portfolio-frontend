@@ -20,6 +20,7 @@ import ProjectManager from "./components/Admin/ProjectManager";
 import BlogManager from "./components/Admin/BlogManager";
 import MarketplaceManager from "./components/Admin/MarketplaceManager";
 import OrderManager from "./components/Admin/OrderManager";
+import BookingManager from "./components/Admin/BookingManager";
 
 import BlogLayout from "./components/Blog/BlogLayout";
 import BlogHomePage from "./pages/Blog/BlogHomePage";
@@ -73,13 +74,11 @@ function App() {
             <Route path="readlists/:slug" element={<ReadlistPage />} />
             <Route path=":slug" element={<SinglePostPage />} />
           </Route>
-
           <Route path="/marketplace" element={<MarketplaceLayout />}>
             <Route index element={<MarketplacePage />} />
             <Route path="cart" element={<CartPage />} />
             <Route path=":slug" element={<ProductDetailPage />} />
           </Route>
-
           <Route
             path="/contact"
             element={
@@ -96,6 +95,7 @@ function App() {
               <Route path="blog" element={<BlogManager />} />
               <Route path="marketplace" element={<MarketplaceManager />} />
               <Route path="orders" element={<OrderManager />} />
+              <Route path="bookings" element={<BookingManager />} />
             </Route>
           </Route>
         </Routes>
