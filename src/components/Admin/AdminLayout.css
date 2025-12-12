@@ -1,0 +1,83 @@
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.admin-sidebar {
+  width: 250px;
+  background-color: var(--background-elevated);
+  border-right: 1px solid var(--border-color);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-title {
+  font-weight: 800;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.sidebar-link {
+  color: var(--text-secondary) !important;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.sidebar-link:hover {
+  background-color: #242836;
+  color: var(--text-primary) !important;
+}
+
+.sidebar-link.active {
+  background-color: var(--plum-accent) !important;
+  color: var(--text-primary) !important;
+}
+
+.logout-button {
+  margin-top: auto;
+  background: transparent;
+  border: 1px solid #dc3545;
+  color: #dc3545;
+  padding: 0.5rem;
+  border-radius: 6px;
+  width: 100%;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.logout-button:hover {
+  background-color: #dc3545;
+  color: var(--text-primary);
+}
+
+.admin-main-content {
+  flex: 1;
+  padding: 2rem 3rem;
+  overflow-y: auto;
+}
+
+.admin-main-content .ql-editor * {
+  color: var(--text-secondary) !important;
+  background-color: transparent !important;
+}
+.admin-main-content .ql-editor h1,
+.admin-main-content .ql-editor h2,
+.admin-main-content .ql-editor h3,
+.admin-main-content .ql-editor h4 {
+  color: var(--text-primary) !important;
+}
+.admin-main-content .ql-editor a {
+  color: var(--teal-accent) !important;
+}
+
+.post-sidebar {
+  background-color: var(--background-elevated);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}

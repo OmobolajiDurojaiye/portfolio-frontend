@@ -1,0 +1,65 @@
+.landing-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 85vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.lead-custom {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  max-width: 700px;
+  line-height: 1.8;
+}
+
+.cta-button {
+  background-color: var(--plum-accent) !important;
+  border-color: var(--plum-accent) !important;
+  padding: 14px 35px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(161, 98, 247, 0.3);
+}
+
+.cta-button-outline {
+  color: var(--text-secondary) !important;
+  border-color: var(--border-color) !important;
+  padding: 14px 35px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.cta-button-outline:hover {
+  border-color: var(--teal-accent) !important;
+  color: var(--teal-accent) !important;
+  transform: translateY(-4px);
+}
+
+.generative-art-bg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 150%;
+  height: 150%;
+  background-image: url("/path-to-your-generative-art-image.svg"); /* Create or find an SVG like in the inspiration */
+  background-size: cover;
+  opacity: 0.05;
+  transform: translate(-50%, -50%);
+  animation: rotateBg 120s linear infinite;
+  z-index: -1;
+}
+
+@keyframes rotateBg {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}

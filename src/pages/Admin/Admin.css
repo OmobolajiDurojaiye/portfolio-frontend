@@ -1,0 +1,19 @@
+.admin-dashboard {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.admin-tabs .nav-link {
+  color: var(--text-secondary);
+}
+
+.admin-tabs .nav-link.active {
+  color: var(--plum-accent);
+  background-color: var(--background-elevated);
+  border-color: var(--border-color) var(--border-color)
+    var(--background-elevated);
+}
+
+.admin-tabs {
+  border-bottom-color: var(--border-color);
+}

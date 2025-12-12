@@ -1,0 +1,127 @@
+.blog-nav-wrapper {
+  border-bottom: 1px solid var(--border-color);
+  padding: 1rem 0;
+  margin-bottom: 3rem;
+  background-color: rgba(5, 7, 13, 0.8);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 60px; /* Adjust based on your main navbar height */
+  z-index: 100;
+}
+
+.blog-nav-container {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.blog-nav-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.blog-nav-links .nav-link {
+  color: var(--text-secondary);
+  font-weight: 600;
+  padding: 0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+}
+.blog-nav-links .nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--plum-accent);
+  transition: width 0.3s ease;
+}
+.blog-nav-links .nav-link:hover {
+  color: var(--text-primary);
+}
+.blog-nav-links .nav-link.active {
+  color: var(--text-primary);
+}
+.blog-nav-links .nav-link.active::after {
+  width: 100%;
+}
+
+.blog-nav-categories {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+.category-pill-link {
+  padding: 0 !important;
+}
+.category-pill {
+  display: block;
+  padding: 0.4rem 1rem;
+  border-radius: 99px;
+  background-color: var(--background-elevated);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+.category-pill-link:hover .category-pill,
+.category-pill-link.active .category-pill {
+  color: #fff;
+  background-color: var(--category-color, var(--plum-accent));
+  border-color: var(--category-color, var(--plum-accent));
+}
+
+.blog-search-form {
+  position: relative;
+  margin-left: auto;
+}
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+}
+.blog-search-input {
+  background-color: var(--background-elevated);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: 99px;
+  padding-left: 2.5rem;
+  width: 250px;
+  transition: all 0.3s ease;
+}
+.blog-search-input:focus {
+  background-color: var(--background-elevated);
+  border-color: var(--plum-accent);
+  color: var(--text-primary);
+  box-shadow: 0 0 0 3px rgba(161, 98, 247, 0.2);
+  width: 300px;
+}
+
+@media (max-width: 991.98px) {
+  .blog-nav-categories {
+    display: none;
+  }
+}
+@media (max-width: 767.98px) {
+  .blog-nav-wrapper {
+    top: 56px; /* Adjust for smaller main navbar */
+  }
+  .blog-nav-container {
+    gap: 1rem;
+  }
+  .blog-nav-links .nav-link span {
+    display: none;
+  }
+  .blog-search-input {
+    width: 180px;
+  }
+  .blog-search-input:focus {
+    width: 200px;
+  }
+}

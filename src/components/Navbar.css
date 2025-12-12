@@ -1,0 +1,43 @@
+.nav-item-custom {
+  margin: 0 0.75rem;
+  color: var(--text-secondary) !important;
+  transition: color 0.2s ease-in-out;
+  position: relative;
+  padding-bottom: 5px;
+}
+
+.nav-item-custom:hover {
+  color: var(--text-primary) !important;
+}
+
+.nav-item-custom::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--plum-accent);
+  transition: width 0.3s ease-in-out;
+}
+
+.nav-item-custom.active {
+  color: var(--text-primary) !important;
+}
+
+.nav-item-custom.active::after {
+  width: 50%;
+}
+
+/* New style for the contact button */
+.cta-button-nav {
+  color: var(--plum-accent) !important;
+  border-color: var(--plum-accent) !important;
+  transition: all 0.3s ease;
+}
+.cta-button-nav:hover {
+  background-color: var(--plum-accent) !important;
+  color: var(--text-primary) !important;
+  box-shadow: 0 5px 15px rgba(161, 98, 247, 0.3);
+}
