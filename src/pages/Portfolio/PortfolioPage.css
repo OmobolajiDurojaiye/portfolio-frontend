@@ -1,133 +1,104 @@
-.portfolio-container {
+.portfolio-page-container {
+  padding-top: 2rem;
   padding-bottom: 4rem;
 }
 
-.portfolio-grid {
+.portfolio-grid-staggered {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: 1fr;
   gap: 2rem;
 }
 
-.portfolio-item {
+.portfolio-card-staggered {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  align-items: center;
   background-color: var(--background-elevated);
+  padding: 2rem;
+  border-radius: 16px;
   border: 1px solid var(--border-color);
+}
+
+.portfolio-card-image {
   border-radius: 12px;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  aspect-ratio: 16/10;
 }
 
-.portfolio-item:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 0 0 2px var(--plum-accent);
-}
-
-.portfolio-media {
-  position: relative;
-  width: 100%;
-  padding-top: 56.25%; /* 16:9 Aspect Ratio */
-  overflow: hidden;
-}
-
-.portfolio-thumbnail,
-.portfolio-video {
-  position: absolute;
-  top: 0;
-  left: 0;
+.portfolio-card-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.4s ease;
 }
 
-.portfolio-thumbnail {
-  transition: opacity 0.5s ease;
+.portfolio-card-staggered:hover .portfolio-card-image img {
+  transform: scale(1.05);
 }
 
-.portfolio-video {
-  opacity: 0;
-  transition: opacity 0.5s ease;
+/* Staggered layout */
+.portfolio-grid-staggered > div:nth-child(even) .portfolio-card-image {
+  order: 2;
+}
+.portfolio-grid-staggered > div:nth-child(even) .portfolio-card-content {
+  order: 1;
 }
 
-.portfolio-video.visible {
-  opacity: 1;
+.portfolio-card-duration {
+  font-size: 0.9rem;
+  color: var(--plum-accent);
+  font-weight: 600;
 }
-
-.portfolio-content {
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
+.portfolio-card-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0.5rem 0 1rem 0;
 }
-
-.portfolio-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+.portfolio-card-description {
+  color: var(--text-secondary);
+  line-height: 1.7;
   margin-bottom: 1rem;
 }
-
-.portfolio-title {
-  font-size: 1.3rem;
-  font-weight: 600;
-  margin-right: 1rem;
-}
-
-.portfolio-links a {
+.portfolio-card-role {
   color: var(--text-secondary);
-  font-size: 1.2rem;
-  margin-left: 0.75rem;
-  transition: color 0.3s ease;
-}
-
-.portfolio-links a:hover {
-  color: var(--plum-accent);
-}
-
-.portfolio-description {
-  color: var(--text-secondary);
-  font-size: 0.95rem;
-  line-height: 1.7;
-  flex-grow: 1;
-  margin-bottom: 1.5rem;
-}
-
-.portfolio-details {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
   font-size: 0.9rem;
+}
+.portfolio-card-tags {
+  margin: 1.5rem 0;
+}
+.portfolio-card-tags h6 {
+  font-size: 0.9rem;
+  font-weight: 600;
   color: var(--text-secondary);
-  margin-bottom: 1.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border-color);
+  margin-bottom: 0.75rem;
 }
-
-.portfolio-details div {
-  display: flex;
-  align-items: center;
-}
-
-.portfolio-tags {
+.portfolio-card-tags > div {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
 }
-
-.tech-badge {
-  background-color: transparent !important;
-  color: var(--teal-accent) !important;
-  border: 1px solid var(--teal-accent) !important;
-  font-weight: 500;
-  padding: 0.4em 0.8em;
-  opacity: 0.7;
+.portfolio-card-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+.portfolio-card-links .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.tool-badge {
-  background-color: transparent !important;
-  color: var(--plum-accent) !important;
-  border: 1px solid var(--plum-accent) !important;
-  font-weight: 500;
-  padding: 0.4em 0.8em;
-  opacity: 0.7;
+@media (max-width: 767.98px) {
+  .portfolio-card-staggered {
+    grid-template-columns: 1fr;
+  }
+  .portfolio-grid-staggered > div:nth-child(even) .portfolio-card-image {
+    order: 1;
+  }
+  .portfolio-grid-staggered > div:nth-child(even) .portfolio-card-content {
+    order: 2;
+  }
 }

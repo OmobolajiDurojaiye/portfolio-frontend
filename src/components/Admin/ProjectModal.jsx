@@ -1,25 +1,18 @@
 import { useState, useEffect } from "react";
-import {
-  Modal,
-  Button,
-  Form,
-  Spinner,
-  Alert,
-  Row,
-  Col,
-  ProgressBar,
-} from "react-bootstrap";
+import { Modal, Button, Form, Spinner, Alert, Row, Col } from "react-bootstrap";
 import apiClient from "../../services/api";
 
 const ProjectModal = ({ show, handleClose, project, onSave }) => {
   const initialFormState = {
     title: "",
     description: "",
+    role: "",
     tech_stack: "",
     tools: "",
     live_url: "",
     github_url: "",
     image_url: "",
+    case_study_url: "",
     duration: "",
     cost: "",
     collaborators: "",
@@ -28,18 +21,19 @@ const ProjectModal = ({ show, handleClose, project, onSave }) => {
   const [formData, setFormData] = useState(initialFormState);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [uploadProgress, setUploadProgress] = useState(0);
 
   useEffect(() => {
     if (project) {
       setFormData({
         title: project.title || "",
         description: project.description || "",
+        role: project.role || "",
         tech_stack: project.tech_stack ? project.tech_stack.join(",") : "",
         tools: project.tools ? project.tools.join(",") : "",
         live_url: project.live_url || "",
         github_url: project.github_url || "",
         image_url: project.image_url || "",
+        case_study_url: project.case_study_url || "",
         duration: project.duration || "",
         cost: project.cost || "",
         collaborators: project.collaborators || "",
@@ -49,40 +43,10 @@ const ProjectModal = ({ show, handleClose, project, onSave }) => {
       setFormData(initialFormState);
     }
     setError(null);
-    setUploadProgress(0);
   }, [project, show]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
-  };
-
-  const handleFileUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const uploadData = new FormData();
-    uploadData.append("file", file);
-
-    try {
-      setUploadProgress(0);
-      const res = await apiClient.post("/api/portfolio/upload", uploadData, {
-        onUploadProgress: (progressEvent) => {
-          const percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-          setUploadProgress(percentCompleted);
-        },
-      });
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        image_url: res.data.secure_url,
-      }));
-    } catch (err) {
-      setError("File upload failed. Please try again.");
-    } finally {
-      setTimeout(() => setUploadProgress(0), 1500);
-    }
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
@@ -90,23 +54,15 @@ const ProjectModal = ({ show, handleClose, project, onSave }) => {
     setLoading(true);
     setError(null);
     const apiCall = project
-      ? apiClient.put(`/api/portfolio/projects/${project.id}`, {
-          ...formData,
-          video_url: "",
-        })
-      : apiClient.post("/api/portfolio/projects", {
-          ...formData,
-          video_url: "",
-        });
+      ? apiClient.put(`/api/portfolio/projects/${project.id}`, formData)
+      : apiClient.post("/api/portfolio/projects", formData);
 
     try {
       await apiCall;
       onSave();
       handleClose();
     } catch (err) {
-      setError(
-        err.response?.data?.error || "An error occurred. Please try again."
-      );
+      setError(err.response?.data?.error || "An error occurred.");
     } finally {
       setLoading(false);
     }
@@ -129,7 +85,7 @@ const ProjectModal = ({ show, handleClose, project, onSave }) => {
         <Modal.Body>
           {error && <Alert variant="danger">{error}</Alert>}
           <Row>
-            <Col md={6}>
+            <Col md={8}>
               <Form.Group className="mb-3">
                 <Form.Label>Title</Form.Label>
                 <Form.Control
@@ -141,7 +97,7 @@ const ProjectModal = ({ show, handleClose, project, onSave }) => {
                 />
               </Form.Group>
             </Col>
-            <Col md={6}>
+            <Col md={4}>
               <Form.Group className="mb-3">
                 <Form.Label>Duration</Form.Label>
                 <Form.Control
@@ -154,6 +110,16 @@ const ProjectModal = ({ show, handleClose, project, onSave }) => {
               </Form.Group>
             </Col>
           </Row>
+          <Form.Group className="mb-3">
+            <Form.Label>Role / Contributions</Form.Label>
+            <Form.Control
+              type="text"
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              placeholder="e.g., Full-Stack Developer, API Design"
+            />
+          </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Description</Form.Label>
             <Form.Control
@@ -191,35 +157,19 @@ const ProjectModal = ({ show, handleClose, project, onSave }) => {
               </Form.Group>
             </Col>
           </Row>
+          <Form.Group className="mb-3">
+            <Form.Label>Image/Thumbnail URL</Form.Label>
+            <Form.Control
+              type="text"
+              name="image_url"
+              value={formData.image_url}
+              onChange={handleChange}
+            />
+          </Form.Group>
           <Row>
-            <Col>
+            <Col md={4}>
               <Form.Group className="mb-3">
-                <Form.Label>Image/Thumbnail</Form.Label>
-                <Form.Control
-                  type="file"
-                  name="image_url"
-                  onChange={handleFileUpload}
-                  accept="image/*"
-                />
-                {formData.image_url && (
-                  <small className="text-success d-block mt-1">
-                    Current Image: {formData.image_url.split("/").pop()}
-                  </small>
-                )}
-                {uploadProgress > 0 && (
-                  <ProgressBar
-                    now={uploadProgress}
-                    label={`${uploadProgress}%`}
-                    className="mt-2"
-                  />
-                )}
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col md={6}>
-              <Form.Group className="mb-3">
-                <Form.Label>Live URL (Optional)</Form.Label>
+                <Form.Label>Live URL</Form.Label>
                 <Form.Control
                   type="text"
                   name="live_url"
@@ -228,7 +178,7 @@ const ProjectModal = ({ show, handleClose, project, onSave }) => {
                 />
               </Form.Group>
             </Col>
-            <Col md={6}>
+            <Col md={4}>
               <Form.Group className="mb-3">
                 <Form.Label>GitHub URL</Form.Label>
                 <Form.Control
@@ -239,17 +189,28 @@ const ProjectModal = ({ show, handleClose, project, onSave }) => {
                 />
               </Form.Group>
             </Col>
+            <Col md={4}>
+              <Form.Group className="mb-3">
+                <Form.Label>Case Study URL</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="case_study_url"
+                  value={formData.case_study_url}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Col>
           </Row>
           <Row>
             <Col md={4}>
               <Form.Group className="mb-3">
-                <Form.Label>Cost (Optional, numbers only)</Form.Label>
+                <Form.Label>Cost (Optional)</Form.Label>
                 <Form.Control
                   type="number"
+                  step="0.01"
                   name="cost"
                   value={formData.cost}
                   onChange={handleChange}
-                  placeholder="e.g., 49.99"
                 />
               </Form.Group>
             </Col>
@@ -261,7 +222,6 @@ const ProjectModal = ({ show, handleClose, project, onSave }) => {
                   name="collaborators"
                   value={formData.collaborators}
                   onChange={handleChange}
-                  placeholder="e.g., Jane Doe"
                 />
               </Form.Group>
             </Col>

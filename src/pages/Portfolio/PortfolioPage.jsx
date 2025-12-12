@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Container, Spinner } from "react-bootstrap";
-import ProjectItem from "../../components/ProjectItem"; // Changed back to ProjectItem
+import { Container, Spinner, Badge, Button } from "react-bootstrap";
+import { FaGithub, FaExternalLinkAlt, FaFileAlt } from "react-icons/fa";
+import "./PortfolioPage.css";
 
 function PortfolioPage() {
   const [projects, setProjects] = useState([]);
@@ -24,26 +25,86 @@ function PortfolioPage() {
   }, []);
 
   return (
-    <Container>
+    <Container className="portfolio-page-container">
       <div className="text-center mb-5">
-        <h2 className="section-title">My Portfolio</h2>
+        <h2 className="section-title">My Work</h2>
         <p className="section-subtitle">
-          A selection of projects where I've turned complex problems into
-          elegant digital solutions.
+          A collection of projects where I've turned complex challenges into
+          elegant, functional digital solutions.
         </p>
       </div>
       {loading ? (
         <div className="text-center">
-          <Spinner animation="border" variant="primary" />
+          <Spinner animation="border" />
         </div>
-      ) : projects.length > 0 ? (
-        projects.map((project, index) => (
-          <ProjectItem key={project.id} project={project} index={index} />
-        ))
       ) : (
-        <p className="text-center text-secondary">
-          No projects available at the moment. Please check back later.
-        </p>
+        <div className="portfolio-grid-staggered">
+          {projects.map((project, index) => (
+            <div className="portfolio-card-staggered" key={project.id}>
+              <div className="portfolio-card-image">
+                <img src={project.image_url} alt={project.title} />
+              </div>
+              <div className="portfolio-card-content">
+                <span className="portfolio-card-duration">
+                  {project.duration}
+                </span>
+                <h3 className="portfolio-card-title">{project.title}</h3>
+                <p className="portfolio-card-description">
+                  {project.description}
+                </p>
+                {project.role && (
+                  <p className="portfolio-card-role">
+                    <strong>My Role:</strong> {project.role}
+                  </p>
+                )}
+
+                <div className="portfolio-card-tags">
+                  <h6>Tech Stack:</h6>
+                  <div>
+                    {project.tech_stack.map((t) => (
+                      <Badge key={t} className="tech-badge">
+                        {t}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="portfolio-card-links">
+                  {project.live_url && (
+                    <Button
+                      variant="light"
+                      href={project.live_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <FaExternalLinkAlt /> Live Site
+                    </Button>
+                  )}
+                  {project.github_url && (
+                    <Button
+                      variant="outline-light"
+                      href={project.github_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <FaGithub /> GitHub
+                    </Button>
+                  )}
+                  {project.case_study_url && (
+                    <Button
+                      variant="outline-info"
+                      href={project.case_study_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <FaFileAlt /> Case Study
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
     </Container>
   );

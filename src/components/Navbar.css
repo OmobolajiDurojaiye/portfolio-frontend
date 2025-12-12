@@ -1,3 +1,11 @@
+.main-navbar {
+  background: transparent;
+  backdrop-filter: blur(10px);
+}
+.accent-text {
+  color: var(--plum-accent);
+}
+
 .nav-item-custom {
   margin: 0 0.75rem;
   color: var(--text-secondary) !important;
@@ -5,11 +13,9 @@
   position: relative;
   padding-bottom: 5px;
 }
-
 .nav-item-custom:hover {
   color: var(--text-primary) !important;
 }
-
 .nav-item-custom::after {
   content: "";
   position: absolute;
@@ -21,16 +27,12 @@
   background-color: var(--plum-accent);
   transition: width 0.3s ease-in-out;
 }
-
 .nav-item-custom.active {
   color: var(--text-primary) !important;
 }
-
 .nav-item-custom.active::after {
   width: 50%;
 }
-
-/* New style for the contact button */
 .cta-button-nav {
   color: var(--plum-accent) !important;
   border-color: var(--plum-accent) !important;
@@ -40,4 +42,73 @@
   background-color: var(--plum-accent) !important;
   color: var(--text-primary) !important;
   box-shadow: 0 5px 15px rgba(161, 98, 247, 0.3);
+}
+
+/* Hamburger Menu */
+.hamburger-menu {
+  width: 30px;
+  height: 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+.hamburger-menu .bar {
+  width: 100%;
+  height: 3px;
+  background-color: var(--text-primary);
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+/* Hide middle bar when active, keep top and bottom */
+.hamburger-menu.is-active .bar:nth-child(2) {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+.hamburger-menu.is-active .bar:nth-child(1) {
+  transform: translateY(9px) rotate(45deg);
+}
+.hamburger-menu.is-active .bar:nth-child(3) {
+  transform: translateY(-9px) rotate(-45deg);
+}
+
+/* Fullscreen Menu */
+.fullscreen-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(5, 7, 13, 0.95);
+  backdrop-filter: blur(15px);
+  z-index: 1040;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+.fullscreen-menu.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+.fullscreen-nav-links {
+  text-align: center;
+}
+.fullscreen-nav-links .nav-link {
+  color: var(--text-secondary);
+  font-size: 2rem;
+  font-weight: 800;
+  padding: 1rem 0;
+  transition: color 0.3s ease;
+}
+.fullscreen-nav-links .nav-link:hover,
+.fullscreen-nav-links .nav-link.active {
+  color: var(--text-primary);
 }

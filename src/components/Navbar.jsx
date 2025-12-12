@@ -1,22 +1,29 @@
+import { useState } from "react";
 import { Navbar, Nav, Container, Button } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import "./Navbar.css";
 
 function AppNavbar() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleLinkClick = () => {
+    setIsOpen(false);
+  };
+
   return (
-    <Navbar
-      expand="lg"
-      variant="dark"
-      style={{ background: "transparent", backdropFilter: "blur(10px)" }}
-      sticky="top"
-    >
-      <Container>
-        <Navbar.Brand as={NavLink} to="/" className="fw-bold">
-          Bolaji<span style={{ color: "#9D5DFF" }}>.</span>
-        </Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="ms-auto align-items-center">
+    <>
+      <Navbar expand="lg" variant="dark" className="main-navbar" sticky="top">
+        <Container>
+          <Navbar.Brand as={NavLink} to="/" className="fw-bold">
+            Bolaji<span className="accent-text">.</span>
+          </Navbar.Brand>
+
+          {/* Desktop Nav */}
+          <Nav className="ms-auto align-items-center d-none d-lg-flex">
             <Nav.Link as={NavLink} to="/about" className="nav-item-custom">
               About
             </Nav.Link>
@@ -42,9 +49,38 @@ function AppNavbar() {
               </Button>
             </Nav.Link>
           </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+
+          {/* Mobile Nav Toggle */}
+          <button
+            className={`hamburger-menu d-lg-none ${isOpen ? "is-active" : ""}`}
+            onClick={toggleMenu}
+          >
+            <div className="bar"></div>
+          </button>
+        </Container>
+      </Navbar>
+
+      {/* Full Screen Mobile Menu */}
+      <div className={`fullscreen-menu ${isOpen ? "is-open" : ""}`}>
+        <Nav className="flex-column fullscreen-nav-links">
+          <Nav.Link as={NavLink} to="/about" onClick={handleLinkClick}>
+            About
+          </Nav.Link>
+          <Nav.Link as={NavLink} to="/portfolio" onClick={handleLinkClick}>
+            Portfolio
+          </Nav.Link>
+          <Nav.Link as={NavLink} to="/blog" onClick={handleLinkClick}>
+            Blog
+          </Nav.Link>
+          <Nav.Link as={NavLink} to="/marketplace" onClick={handleLinkClick}>
+            Marketplace
+          </Nav.Link>
+          <Nav.Link as={NavLink} to="/contact" onClick={handleLinkClick}>
+            Contact
+          </Nav.Link>
+        </Nav>
+      </div>
+    </>
   );
 }
 
