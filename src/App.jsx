@@ -29,27 +29,24 @@ import ReadlistPage from "./pages/Blog/ReadlistPage";
 import CategoriesListPage from "./pages/Blog/CategoriesListPage";
 import CategoryPage from "./pages/Blog/CategoryPage";
 import BlogSearchResults from "./pages/Blog/BlogSearchResults";
+import ReadlistsListPage from "./pages/Blog/ReadlistsListPage";
 
 function App() {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith("/admin");
   const isBlogRoute = location.pathname.startsWith("/blog");
+  const isLandingPage = location.pathname === "/";
 
-  const showMainFooter = !isAdminRoute && !isBlogRoute;
+  const showMainFooter = !isAdminRoute && !isBlogRoute && !isLandingPage;
+  const showNavbar = !isAdminRoute && !isLandingPage;
 
   return (
     <>
-      {!isAdminRoute && <AppNavbar />}
-      <main style={{ minHeight: "80vh" }}>
+      {showNavbar && <AppNavbar />}
+
+      <main style={{ minHeight: "100vh" }}>
         <Routes>
-          <Route
-            path="/"
-            element={
-              <Container fluid className="py-5 px-md-5">
-                <LandingPage />
-              </Container>
-            }
-          />
+          <Route path="/" element={<LandingPage />} />
           <Route
             path="/about"
             element={
@@ -66,19 +63,23 @@ function App() {
               </Container>
             }
           />
+
           <Route path="/blog" element={<BlogLayout />}>
             <Route index element={<BlogHomePage />} />
             <Route path="search" element={<BlogSearchResults />} />
             <Route path="categories" element={<CategoriesListPage />} />
             <Route path="categories/:slug" element={<CategoryPage />} />
+            <Route path="readlists" element={<ReadlistsListPage />} />
             <Route path="readlists/:slug" element={<ReadlistPage />} />
             <Route path=":slug" element={<SinglePostPage />} />
           </Route>
+
           <Route path="/marketplace" element={<MarketplaceLayout />}>
             <Route index element={<MarketplacePage />} />
             <Route path="cart" element={<CartPage />} />
             <Route path=":slug" element={<ProductDetailPage />} />
           </Route>
+
           <Route
             path="/contact"
             element={
@@ -100,6 +101,7 @@ function App() {
           </Route>
         </Routes>
       </main>
+
       {showMainFooter && <Footer />}
     </>
   );

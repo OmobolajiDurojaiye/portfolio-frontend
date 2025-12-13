@@ -13,7 +13,7 @@ const BlogNavbar = () => {
   useEffect(() => {
     apiClient
       .get("/api/blog/categories")
-      .then((res) => setCategories(res.data.slice(0, 4))) // Show max 4 categories
+      .then((res) => setCategories(res.data.slice(0, 4)))
       .catch((err) => console.error("Failed to fetch categories", err));
   }, []);
 
@@ -35,10 +35,12 @@ const BlogNavbar = () => {
           </Nav.Link>
           <Nav.Link as={NavLink} to="/blog/categories">
             <FaThLarge />
-            <span>All Categories</span>
+            <span>Categories</span>
           </Nav.Link>
-          {/* Placeholder for Readlists link */}
-          {/* <Nav.Link as={NavLink} to="/blog/readlists"><FaStream /><span>Readlists</span></Nav.Link> */}
+          <Nav.Link as={NavLink} to="/blog/readlists">
+            <FaStream />
+            <span>Readlists</span>
+          </Nav.Link>
         </Nav>
         <Nav className="blog-nav-categories ms-auto">
           {categories.map((cat) => (

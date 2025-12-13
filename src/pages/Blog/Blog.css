@@ -359,7 +359,6 @@
   background-color: var(--background-elevated);
   border-color: var(--border-color);
 }
-
 .see-more-section {
   margin-top: 5rem;
   padding-top: 5rem;
@@ -404,7 +403,6 @@
 .related-post-card:hover .related-post-title {
   color: var(--plum-accent);
 }
-
 .prev-next-nav {
   display: flex;
   justify-content: space-between;
@@ -436,7 +434,6 @@
 .next-link {
   text-align: right;
 }
-
 .category-card-link {
   text-decoration: none;
 }
@@ -481,8 +478,63 @@
   color: var(--text-primary);
   position: relative;
 }
-
 .category-header {
   padding-bottom: 2rem;
   border-bottom: 2px solid var(--category-color, var(--plum-accent));
+}
+
+/* --- NEW READLIST CARD STYLES --- */
+.readlist-card-link {
+  text-decoration: none;
+}
+.readlist-card {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  border: none;
+  height: 100%;
+  min-height: 350px;
+  background-color: var(--background-elevated);
+}
+.readlist-card-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+.readlist-card-link:hover .readlist-card-img {
+  transform: scale(1.05);
+}
+.readlist-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(5, 7, 13, 1) 0%,
+    rgba(5, 7, 13, 0.8) 50%,
+    transparent 100%
+  );
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.readlist-card-content h4 {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+.readlist-card-content p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+.readlist-card-footer {
+  border-top: 1px solid var(--border-color);
+  padding-top: 1rem;
+  margin-top: 1rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.9rem;
 }

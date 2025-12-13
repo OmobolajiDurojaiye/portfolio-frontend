@@ -8,7 +8,6 @@ import {
   Accordion,
   ListGroup,
 } from "react-bootstrap";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import apiClient from "../../services/api";
 
 const ReadlistManager = ({ onManage }) => {
