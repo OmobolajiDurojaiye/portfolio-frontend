@@ -1,0 +1,18 @@
+.error-display-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+}
+
+.error-content {
+  background-color: var(--background-elevated);
+  border: 1px solid var(--border-color);
+  padding: 3rem;
+  border-radius: 12px;
+}
+
+.error-title {
+  font-weight: 800;
+  color: var(--text-primary);
+}

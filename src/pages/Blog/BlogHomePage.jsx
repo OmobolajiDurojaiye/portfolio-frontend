@@ -9,6 +9,7 @@ import {
 } from "react-bootstrap";
 import { Link, useSearchParams } from "react-router-dom";
 import apiClient from "../../services/api";
+import ErrorDisplay from "../../components/ErrorDisplay";
 import "./Blog.css";
 
 function BlogHomePage() {
@@ -23,21 +24,23 @@ function BlogHomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = parseInt(searchParams.get("page") || "1");
 
+  const fetchBlogData = async () => {
+    setLoading(true);
+    setError(null); // Reset error on new attempt
+    try {
+      const response = await apiClient.get(
+        `/api/blog/home-data?page=${currentPage}`
+      );
+      setData(response.data);
+    } catch (err) {
+      setError("Failed to load blog content. Please check back later.");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchBlogData = async () => {
-      setLoading(true);
-      try {
-        const response = await apiClient.get(
-          `/api/blog/home-data?page=${currentPage}`
-        );
-        setData(response.data);
-      } catch (err) {
-        setError("Failed to load blog content. Please check back later.");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchBlogData();
   }, [currentPage]);
 
@@ -53,11 +56,7 @@ function BlogHomePage() {
     );
   }
   if (error) {
-    return (
-      <Container className="text-center py-5">
-        <p className="text-danger">{error}</p>
-      </Container>
-    );
+    return <ErrorDisplay onRetry={fetchBlogData} />;
   }
 
   const { featuredPost, posts, readlists, pagination } = data;
@@ -87,12 +86,14 @@ function BlogHomePage() {
             <div className="main-featured-content">
               <span className="eyebrow-text">Best of the week</span>
               {mainPost.category && (
-                <span
-                  className="category-tag"
-                  style={{ backgroundColor: mainPost.category?.color }}
-                >
-                  {mainPost.category?.name}
-                </span>
+                <Link to={`/blog/categories/${mainPost.category.slug}`}>
+                  <span
+                    className="category-tag"
+                    style={{ backgroundColor: mainPost.category?.color }}
+                  >
+                    {mainPost.category?.name}
+                  </span>
+                </Link>
               )}
               <h2 className="main-featured-title">{mainPost.title}</h2>
               <p className="main-featured-excerpt text-secondary">
@@ -132,7 +133,6 @@ function BlogHomePage() {
             </Col>
           ))}
       </Row>
-
       <Row>
         <Col lg={8}>
           {bottomRowPosts &&

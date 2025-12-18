@@ -1,28 +1,16 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
 import { Container, Spinner, Badge, Button } from "react-bootstrap";
 import { FaGithub, FaExternalLinkAlt, FaFileAlt } from "react-icons/fa";
+import { useApi } from "../../hooks/useApi";
+import ErrorDisplay from "../../components/ErrorDisplay";
 import "./PortfolioPage.css";
 
 function PortfolioPage() {
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/portfolio/projects`
-        );
-        setProjects(response.data);
-      } catch (error) {
-        console.error("Error fetching projects:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProjects();
-  }, []);
+  const {
+    data: projects,
+    loading,
+    error,
+    retry,
+  } = useApi("/api/portfolio/projects");
 
   return (
     <Container className="portfolio-page-container">
@@ -33,23 +21,25 @@ function PortfolioPage() {
           elegant, functional digital solutions.
         </p>
       </div>
-      {loading ? (
+      {loading && (
         <div className="text-center">
           <Spinner animation="border" />
         </div>
-      ) : (
-        <div className="portfolio-grid-staggered">
-          {projects.map((project, index) => (
-            <div className="portfolio-card-staggered" key={project.id}>
-              <div className="portfolio-card-image">
+      )}
+      {error && <ErrorDisplay onRetry={retry} />}
+      {projects && (
+        <div className="portfolio-list">
+          {projects.map((project) => (
+            <div className="portfolio-list-item" key={project.id}>
+              <div className="portfolio-item-image">
                 <img src={project.image_url} alt={project.title} />
               </div>
-              <div className="portfolio-card-content">
-                <span className="portfolio-card-duration">
+              <div className="portfolio-item-content">
+                <span className="portfolio-item-duration">
                   {project.duration}
                 </span>
-                <h3 className="portfolio-card-title">{project.title}</h3>
-                <p className="portfolio-card-description">
+                <h3 className="portfolio-item-title">{project.title}</h3>
+                <p className="portfolio-item-description">
                   {project.description}
                 </p>
                 {project.role && (
@@ -69,36 +59,36 @@ function PortfolioPage() {
                   </div>
                 </div>
 
-                <div className="portfolio-card-links">
+                <div className="portfolio-item-links">
                   {project.live_url && (
-                    <Button
-                      variant="light"
+                    <a
                       href={project.live_url}
                       target="_blank"
                       rel="noopener noreferrer"
+                      className="portfolio-link-button"
                     >
                       <FaExternalLinkAlt /> Live Site
-                    </Button>
+                    </a>
                   )}
                   {project.github_url && (
-                    <Button
-                      variant="outline-light"
+                    <a
                       href={project.github_url}
                       target="_blank"
                       rel="noopener noreferrer"
+                      className="portfolio-link-button"
                     >
                       <FaGithub /> GitHub
-                    </Button>
+                    </a>
                   )}
                   {project.case_study_url && (
-                    <Button
-                      variant="outline-info"
+                    <a
                       href={project.case_study_url}
                       target="_blank"
                       rel="noopener noreferrer"
+                      className="portfolio-link-button primary"
                     >
                       <FaFileAlt /> Case Study
-                    </Button>
+                    </a>
                   )}
                 </div>
               </div>

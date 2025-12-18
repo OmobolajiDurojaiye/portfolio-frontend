@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Container,
   Row,
@@ -7,9 +7,10 @@ import {
   Button,
   Accordion,
 } from "react-bootstrap";
-import axios from "axios";
 import { FaSpotify } from "react-icons/fa";
 import ReactMarkdown from "react-markdown";
+import { useApi } from "../../hooks/useApi";
+import ErrorDisplay from "../../components/ErrorDisplay";
 import DynamicIcon from "../../utils/iconMap";
 import "./AboutPage.css";
 
@@ -69,24 +70,7 @@ const HowIWork = () => {
 };
 
 function AboutPage() {
-  const [aboutData, setAboutData] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchAboutData = async () => {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/about/`
-        );
-        setAboutData(response.data);
-      } catch (error) {
-        console.error("Error fetching about page data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchAboutData();
-  }, []);
+  const { data: aboutData, loading, error, retry } = useApi("/api/about/");
 
   if (loading) {
     return (
@@ -95,12 +79,11 @@ function AboutPage() {
       </Container>
     );
   }
+  if (error) {
+    return <ErrorDisplay onRetry={retry} />;
+  }
   if (!aboutData) {
-    return (
-      <Container className="text-center py-5">
-        <p>Could not load page content.</p>
-      </Container>
-    );
+    return null;
   }
 
   return (

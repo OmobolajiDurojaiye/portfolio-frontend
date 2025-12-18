@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Spinner } from "react-bootstrap";
-import apiClient from "../../services/api";
+import { useApi } from "../../hooks/useApi";
+import ErrorDisplay from "../../components/ErrorDisplay";
 import ProductCard from "../../components/Marketplace/ProductCard";
 import PriceRangeFilter from "../../components/Marketplace/PriceRangeFilter";
 import "./Marketplace.css";
@@ -21,7 +22,7 @@ const FilterSidebar = ({
         className={activeCategory === "all" ? "active" : ""}
         onClick={() => setActiveCategory("all")}
       >
-        All Categories
+        All Products
       </button>
       {categories.map((cat) => (
         <button
@@ -35,51 +36,47 @@ const FilterSidebar = ({
     </div>
 
     <h4 className="filter-title mt-4">Price Range</h4>
-    {maxPrice > minPrice && (
+    {maxPrice > minPrice ? (
       <PriceRangeFilter
         min={Math.floor(minPrice)}
         max={Math.ceil(maxPrice)}
         onAfterChange={(value) => setPriceRange(value)}
       />
+    ) : (
+      <p className="text-secondary small">Not available.</p>
     )}
   </div>
 );
 
 function MarketplacePage() {
-  const [data, setData] = useState({ products: [], categories: [] });
-  const [loading, setLoading] = useState(true);
+  const { data, loading, error, retry } = useApi("/api/marketplace/products");
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
-  const [priceRange, setPriceRange] = useState([0, 10000]); // Default wide range
+  const [priceRange, setPriceRange] = useState([0, 99999]);
+  const [initialPriceRange, setInitialPriceRange] = useState([0, 99999]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await apiClient.get("/api/marketplace/products");
-        const prices = res.data.products.map((p) => p.price);
-        setData(res.data);
-        if (prices.length > 0) {
-          setPriceRange([Math.min(...prices), Math.max(...prices)]);
-        }
-      } catch (error) {
-        console.error("Failed to fetch marketplace data", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
+    if (data?.products && data.products.length > 0) {
+      const prices = data.products.map((p) => p.price);
+      const min = Math.min(...prices);
+      const max = Math.max(...prices);
+      setPriceRange([min, max]);
+      setInitialPriceRange([min, max]);
+    }
+  }, [data]);
 
-  const minPrice =
-    data.products.length > 0
-      ? Math.min(...data.products.map((p) => p.price))
-      : 0;
-  const maxPrice =
-    data.products.length > 0
-      ? Math.max(...data.products.map((p) => p.price))
-      : 10000;
+  if (loading)
+    return (
+      <Container className="text-center py-5">
+        <Spinner />
+      </Container>
+    );
+  if (error) return <ErrorDisplay onRetry={retry} />;
 
-  const filteredProducts = data.products.filter((p) => {
+  const products = data?.products || [];
+  const categories = data?.categories || [];
+
+  const filteredProducts = products.filter((p) => {
     const matchesCategory =
       activeCategory === "all" || p.category?.slug === activeCategory;
     const matchesSearch =
@@ -88,13 +85,6 @@ function MarketplacePage() {
     const matchesPrice = p.price >= priceRange[0] && p.price <= priceRange[1];
     return matchesCategory && matchesSearch && matchesPrice;
   });
-
-  if (loading)
-    return (
-      <Container className="text-center py-5">
-        <Spinner />
-      </Container>
-    );
 
   return (
     <Container fluid className="marketplace-container px-md-5">
@@ -111,13 +101,13 @@ function MarketplacePage() {
       <Row>
         <Col lg={3}>
           <FilterSidebar
-            categories={data.categories}
+            categories={categories}
             activeCategory={activeCategory}
             setActiveCategory={setActiveCategory}
             priceRange={priceRange}
             setPriceRange={setPriceRange}
-            minPrice={minPrice}
-            maxPrice={maxPrice}
+            minPrice={initialPriceRange[0]}
+            maxPrice={initialPriceRange[1]}
           />
         </Col>
         <Col lg={9}>
