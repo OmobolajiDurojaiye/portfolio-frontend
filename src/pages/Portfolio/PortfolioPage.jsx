@@ -1,16 +1,34 @@
-import { Container, Spinner, Badge, Button } from "react-bootstrap";
-import { FaGithub, FaExternalLinkAlt, FaFileAlt } from "react-icons/fa";
-import { useApi } from "../../hooks/useApi";
-import ErrorDisplay from "../../components/ErrorDisplay";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { Container, Spinner, Badge } from "react-bootstrap";
+import {
+  FaGithub,
+  FaExternalLinkAlt,
+  FaFileAlt,
+  FaUsers,
+  FaDollarSign,
+} from "react-icons/fa";
 import "./PortfolioPage.css";
 
 function PortfolioPage() {
-  const {
-    data: projects,
-    loading,
-    error,
-    retry,
-  } = useApi("/api/portfolio/projects");
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/portfolio/projects`
+        );
+        setProjects(response.data);
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProjects();
+  }, []);
 
   return (
     <Container className="portfolio-page-container">
@@ -21,38 +39,67 @@ function PortfolioPage() {
           elegant, functional digital solutions.
         </p>
       </div>
-      {loading && (
+      {loading ? (
         <div className="text-center">
           <Spinner animation="border" />
         </div>
-      )}
-      {error && <ErrorDisplay onRetry={retry} />}
-      {projects && (
+      ) : (
         <div className="portfolio-list">
-          {projects.map((project) => (
+          {projects.map((project, index) => (
             <div className="portfolio-list-item" key={project.id}>
               <div className="portfolio-item-image">
-                <img src={project.image_url} alt={project.title} />
+                <a
+                  href={project.live_url || project.github_url || "#"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img src={project.image_url} alt={project.title} />
+                </a>
               </div>
               <div className="portfolio-item-content">
                 <span className="portfolio-item-duration">
                   {project.duration}
                 </span>
                 <h3 className="portfolio-item-title">{project.title}</h3>
-                <p className="portfolio-item-description">
-                  {project.description}
-                </p>
-                {project.role && (
-                  <p className="portfolio-card-role">
-                    <strong>My Role:</strong> {project.role}
-                  </p>
-                )}
+                <div className="portfolio-item-description">
+                  <p>{project.description}</p>
+                </div>
 
-                <div className="portfolio-card-tags">
-                  <h6>Tech Stack:</h6>
+                <div className="portfolio-item-details">
+                  {project.role && (
+                    <div>
+                      <h6>Role</h6>
+                      <span>{project.role}</span>
+                    </div>
+                  )}
+                  {project.collaborators && (
+                    <div>
+                      <h6>
+                        <FaUsers /> Collaborators
+                      </h6>
+                      <span>{project.collaborators}</span>
+                    </div>
+                  )}
+                  {project.cost && (
+                    <div>
+                      <h6>
+                        <FaDollarSign /> Budget
+                      </h6>
+                      <span>${project.cost.toLocaleString()}</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="portfolio-item-tags">
+                  <h6>Tech Stack & Tools</h6>
                   <div>
                     {project.tech_stack.map((t) => (
                       <Badge key={t} className="tech-badge">
+                        {t}
+                      </Badge>
+                    ))}
+                    {project.tools.map((t) => (
+                      <Badge key={t} className="tool-badge">
                         {t}
                       </Badge>
                     ))}
