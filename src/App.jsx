@@ -11,6 +11,7 @@ import MarketplacePage from "./pages/Marketplace/MarketplacePage";
 import ProductDetailPage from "./pages/Marketplace/ProductDetailPage";
 import CartPage from "./pages/Marketplace/CartPage";
 import ContactPage from "./pages/Contact/ContactPage";
+import ScrollToTop from "./components/ScrollToTop";
 
 import AdminLoginPage from "./pages/Admin/AdminLoginPage";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -34,19 +35,22 @@ import ReadlistsListPage from "./pages/Blog/ReadlistsListPage";
 function App() {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith("/admin");
-  const isBlogRoute = location.pathname.startsWith("/blog");
-  const isLandingPage = location.pathname === "/";
-
-  const showMainFooter = !isAdminRoute && !isBlogRoute && !isLandingPage;
-  const showNavbar = !isAdminRoute && !isLandingPage;
 
   return (
     <>
-      {showNavbar && <AppNavbar />}
+      <ScrollToTop />
+      {!isAdminRoute && <AppNavbar />}
 
-      <main style={{ minHeight: "100vh" }}>
+      <main style={{ minHeight: "80vh" }}>
         <Routes>
-          <Route path="/" element={<LandingPage />} />
+          <Route
+            path="/"
+            element={
+              <Container fluid className="px-md-5">
+                <LandingPage />
+              </Container>
+            }
+          />
           <Route
             path="/about"
             element={
@@ -102,7 +106,7 @@ function App() {
         </Routes>
       </main>
 
-      {showMainFooter && <Footer />}
+      {!isAdminRoute && <Footer />}
     </>
   );
 }

@@ -1,10 +1,72 @@
 import { useState, useEffect } from "react";
+import {
+  Container,
+  Row,
+  Col,
+  Spinner,
+  Button,
+  Accordion,
+} from "react-bootstrap";
 import axios from "axios";
-import { Container, Row, Col, Spinner, Accordion } from "react-bootstrap";
 import { FaSpotify } from "react-icons/fa";
 import ReactMarkdown from "react-markdown";
 import DynamicIcon from "../../utils/iconMap";
 import "./AboutPage.css";
+
+const workProcess = [
+  {
+    title: "01 Discovery Call",
+    description:
+      "In the first stage, we'll have a Discovery Call to discuss your goals, needs, and project requirements. This helps us align our vision and set the foundation for a successful collaboration.",
+  },
+  {
+    title: "02 Project Proposal",
+    description:
+      "After our call, I will send you a detailed project proposal including the price quote. Upon agreement, you'll pay a deposit to secure the first milestone.",
+  },
+  {
+    title: "03 Design & Development",
+    description:
+      "This is where the magic happens. I will design and develop your project, providing regular updates and milestones for your review and feedback.",
+  },
+  {
+    title: "04 Review & Revisions",
+    description:
+      "We'll review the completed milestones together. This is the time for revisions to ensure the project perfectly matches your vision.",
+  },
+  {
+    title: "05 Launch & Handover",
+    description:
+      "Once everything is approved, we'll deploy the project. I'll hand over all the necessary files and provide documentation for a smooth transition.",
+  },
+];
+
+const HowIWork = () => {
+  const [activeStep, setActiveStep] = useState(0);
+
+  return (
+    <div className="how-i-work-container">
+      <span className="section-eyebrow">How I Work</span>
+      <div className="step-content">
+        <h3 className="step-title">{workProcess[activeStep].title}</h3>
+        <p className="step-description">
+          {workProcess[activeStep].description}
+        </p>
+      </div>
+      <div className="step-buttons">
+        {workProcess.map((step, index) => (
+          <button
+            key={index}
+            className={`step-button ${activeStep === index ? "active" : ""}`}
+            onClick={() => setActiveStep(index)}
+          >
+            Step {index + 1}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 function AboutPage() {
   const [aboutData, setAboutData] = useState(null);
@@ -33,7 +95,6 @@ function AboutPage() {
       </Container>
     );
   }
-
   if (!aboutData) {
     return (
       <Container className="text-center py-5">
@@ -62,7 +123,6 @@ function AboutPage() {
             </a>
           )}
         </Col>
-
         <Col lg={7}>
           <div className="section-block">
             <h3 className="section-heading">My Toolkit</h3>
@@ -75,7 +135,6 @@ function AboutPage() {
               ))}
             </div>
           </div>
-
           <div className="section-block mt-4">
             <h3 className="section-heading">Work Tools</h3>
             <div className="skills-grid">
@@ -89,7 +148,11 @@ function AboutPage() {
           </div>
         </Col>
       </Row>
-
+      <Row className="mt-5 pt-5">
+        <Col>
+          <HowIWork />
+        </Col>
+      </Row>
       <Row className="mt-5 pt-5">
         <Col>
           <div className="text-center mb-5">

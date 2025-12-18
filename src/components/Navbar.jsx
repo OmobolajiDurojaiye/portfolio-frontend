@@ -16,39 +16,16 @@ function AppNavbar() {
 
   return (
     <>
-      <Navbar expand="lg" variant="dark" className="main-navbar" sticky="top">
+      <Navbar
+        expand="lg"
+        variant="dark"
+        className={`main-navbar ${isOpen ? "menu-open" : ""}`}
+        sticky="top"
+      >
         <Container>
           <Navbar.Brand as={NavLink} to="/" className="fw-bold">
             Bolaji<span className="accent-text">.</span>
           </Navbar.Brand>
-
-          {/* Desktop Nav */}
-          <Nav className="ms-auto align-items-center d-none d-lg-flex">
-            <Nav.Link as={NavLink} to="/about" className="nav-item-custom">
-              About
-            </Nav.Link>
-            <Nav.Link as={NavLink} to="/portfolio" className="nav-item-custom">
-              Portfolio
-            </Nav.Link>
-            <Nav.Link as={NavLink} to="/blog" className="nav-item-custom">
-              Blog
-            </Nav.Link>
-            <Nav.Link
-              as={NavLink}
-              to="/marketplace"
-              className="nav-item-custom"
-            >
-              Marketplace
-            </Nav.Link>
-            <Nav.Link as={NavLink} to="/contact">
-              <Button
-                variant="outline-primary"
-                className="ms-lg-3 cta-button-nav"
-              >
-                Contact Me
-              </Button>
-            </Nav.Link>
-          </Nav>
 
           {/* Mobile Nav Toggle */}
           <button
@@ -56,7 +33,43 @@ function AppNavbar() {
             onClick={toggleMenu}
           >
             <div className="bar"></div>
+            <div className="bar"></div>
+            <div className="bar"></div>
           </button>
+
+          {/* Desktop Nav */}
+          <Navbar.Collapse className="d-none d-lg-flex">
+            <Nav className="ms-auto align-items-center">
+              <Nav.Link as={NavLink} to="/about" className="nav-item-custom">
+                About
+              </Nav.Link>
+              <Nav.Link
+                as={NavLink}
+                to="/portfolio"
+                className="nav-item-custom"
+              >
+                Portfolio
+              </Nav.Link>
+              <Nav.Link as={NavLink} to="/blog" className="nav-item-custom">
+                Blog
+              </Nav.Link>
+              <Nav.Link
+                as={NavLink}
+                to="/marketplace"
+                className="nav-item-custom"
+              >
+                Marketplace
+              </Nav.Link>
+              <Nav.Link as={NavLink} to="/contact">
+                <Button
+                  variant="outline-primary"
+                  className="ms-lg-3 cta-button-nav"
+                >
+                  Contact Me
+                </Button>
+              </Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
         </Container>
       </Navbar>
 

@@ -1,5 +1,12 @@
 import { useState, useEffect } from "react";
-import { Container, Row, Col, Spinner, Pagination } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Spinner,
+  Pagination,
+} from "react-bootstrap";
 import { Link, useSearchParams } from "react-router-dom";
 import apiClient from "../../services/api";
 import "./Blog.css";
@@ -80,14 +87,12 @@ function BlogHomePage() {
             <div className="main-featured-content">
               <span className="eyebrow-text">Best of the week</span>
               {mainPost.category && (
-                <Link to={`/blog/categories/${mainPost.category.slug}`}>
-                  <span
-                    className="category-tag"
-                    style={{ backgroundColor: mainPost.category?.color }}
-                  >
-                    {mainPost.category?.name}
-                  </span>
-                </Link>
+                <span
+                  className="category-tag"
+                  style={{ backgroundColor: mainPost.category?.color }}
+                >
+                  {mainPost.category?.name}
+                </span>
               )}
               <h2 className="main-featured-title">{mainPost.title}</h2>
               <p className="main-featured-excerpt text-secondary">
@@ -111,14 +116,12 @@ function BlogHomePage() {
                 </div>
                 <div className="grid-post-content">
                   {post.category && (
-                    <Link to={`/blog/categories/${post.category.slug}`}>
-                      <span
-                        className="category-tag-sm"
-                        style={{ backgroundColor: post.category?.color }}
-                      >
-                        {post.category?.name}
-                      </span>
-                    </Link>
+                    <span
+                      className="category-tag-sm"
+                      style={{ backgroundColor: post.category?.color }}
+                    >
+                      {post.category?.name}
+                    </span>
                   )}
                   <h5 className="grid-post-title">{post.title}</h5>
                   <p className="grid-post-excerpt text-secondary">
@@ -142,14 +145,12 @@ function BlogHomePage() {
                 <img src={post.image_url} alt={post.title} />
                 <div className="list-post-content">
                   {post.category && (
-                    <Link to={`/blog/categories/${post.category.slug}`}>
-                      <span
-                        className="category-tag-sm"
-                        style={{ backgroundColor: post.category?.color }}
-                      >
-                        {post.category?.name}
-                      </span>
-                    </Link>
+                    <span
+                      className="category-tag-sm"
+                      style={{ backgroundColor: post.category?.color }}
+                    >
+                      {post.category?.name}
+                    </span>
                   )}
                   <h6>{post.title}</h6>
                 </div>
