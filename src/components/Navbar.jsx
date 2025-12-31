@@ -27,7 +27,6 @@ function AppNavbar() {
             Bolaji<span className="accent-text">.</span>
           </Navbar.Brand>
 
-          {/* Mobile Nav Toggle */}
           <button
             className={`hamburger-menu d-lg-none ${isOpen ? "is-active" : ""}`}
             onClick={toggleMenu}
@@ -37,7 +36,6 @@ function AppNavbar() {
             <div className="bar"></div>
           </button>
 
-          {/* Desktop Nav */}
           <Navbar.Collapse className="d-none d-lg-flex">
             <Nav className="ms-auto align-items-center">
               <Nav.Link as={NavLink} to="/about" className="nav-item-custom">
@@ -73,7 +71,6 @@ function AppNavbar() {
         </Container>
       </Navbar>
 
-      {/* Full Screen Mobile Menu */}
       <div className={`fullscreen-menu ${isOpen ? "is-open" : ""}`}>
         <Nav className="flex-column fullscreen-nav-links">
           <Nav.Link as={NavLink} to="/about" onClick={handleLinkClick}>
