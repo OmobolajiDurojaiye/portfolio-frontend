@@ -10,7 +10,7 @@ import {
   FaHandshake,
 } from "react-icons/fa";
 import apiClient from "../../services/api";
-import headshot from "../../assets/bolaji-headshot.jpg";
+import headshot from "../../assets/PFP.jpg";
 import "./LandingPage.css";
 
 const ServiceCard = ({ icon, title, description }) => (
