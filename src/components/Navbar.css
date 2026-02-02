@@ -6,6 +6,7 @@
 .main-navbar.menu-open {
   background-color: transparent;
   backdrop-filter: none;
+  z-index: 1050;
 }
 
 .accent-text {
@@ -66,6 +67,7 @@
   border: none;
   padding: 0;
   z-index: 9999;
+  position: relative;
 }
 .hamburger-menu .bar {
   width: 100%;

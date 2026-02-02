@@ -35,6 +35,7 @@ import ReadlistsListPage from "./pages/Blog/ReadlistsListPage";
 function App() {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith("/admin");
+  const isBlogRoute = location.pathname.startsWith("/blog");
 
   return (
     <>
@@ -106,7 +107,7 @@ function App() {
         </Routes>
       </main>
 
-      {!isAdminRoute && <Footer />}
+      {!isAdminRoute && !isBlogRoute && <Footer />}
     </>
   );
 }

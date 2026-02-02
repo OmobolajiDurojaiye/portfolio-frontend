@@ -60,7 +60,7 @@ const BlogNavbar = () => {
           ))}
         </Nav>
         <Form onSubmit={handleSearch} className="blog-search-form">
-          <FaSearch className="search-icon" />
+
           <Form.Control
             type="search"
             placeholder="Search articles..."

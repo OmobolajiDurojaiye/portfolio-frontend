@@ -79,19 +79,13 @@
   position: relative;
   margin-left: auto;
 }
-.search-icon {
-  position: absolute;
-  left: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-secondary);
-}
+
 .blog-search-input {
   background-color: var(--background-elevated);
   border: 1px solid var(--border-color);
   color: var(--text-primary);
   border-radius: 99px;
-  padding-left: 2.5rem;
+  padding-left: 1rem;
   width: 250px;
   transition: all 0.3s ease;
 }
