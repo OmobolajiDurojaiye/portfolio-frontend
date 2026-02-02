@@ -58,24 +58,28 @@ function ReadlistPage() {
       <div className="posts-column">
         {readlist.posts &&
           readlist.posts.map((post, index) => (
-            <Card key={post.id} className="post-card mb-4">
-              <div className="readlist-post-number">{index + 1}</div>
-              <Link to={`/blog/${post.slug}`} className="readlist-post-link">
-                <Card.Body>
-                  <Card.Title as="h4">{post.title}</Card.Title>
-                  <Card.Text className="text-secondary">
-                    {post.excerpt}
-                  </Card.Text>
-                  <small className="text-muted">
-                    {new Date(post.date_posted).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </small>
-                </Card.Body>
-              </Link>
-            </Card>
+            <Link
+              to={`/blog/${post.slug}`}
+              key={post.id}
+              className="readlist-magazine-item"
+            >
+              <div className="readlist-magazine-number">
+                <span>{(index + 1).toString().padStart(2, "0")}</span>
+              </div>
+              <div className="readlist-magazine-img-container">
+                <img
+                  src={post.image_url || "https://via.placeholder.com/600x400"}
+                  alt={post.title}
+                />
+              </div>
+              <div className="readlist-magazine-content">
+                <h4 className="magazine-title">{post.title}</h4>
+                <p className="magazine-excerpt">{post.excerpt}</p>
+                <div className="magazine-meta">
+                  Read Article &rarr;
+                </div>
+              </div>
+            </Link>
           ))}
       </div>
     </Container>

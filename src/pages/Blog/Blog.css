@@ -411,43 +411,111 @@
   font-family: var(--font-serif);
   font-style: italic;
 }
-.readlist-page-container .post-card {
+/* --- PREMIUM MAGAZINE READLIST STYLES --- */
+.readlist-magazine-item {
+  display: flex;
+  gap: 2.5rem;
+  align-items: center;
+  text-decoration: none;
   background-color: var(--background-elevated);
   border: 1px solid var(--border-color);
-  color: var(--text-primary);
-  border-radius: 12px;
-}
-.readlist-header {
-  border-bottom: 1px solid var(--border-color);
-}
-.readlist-cover-img {
-  width: 100%;
-  max-height: 400px;
-  object-fit: cover;
-  border-radius: 12px;
-}
-.readlist-post-number {
-  position: absolute;
-  left: -1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 40px;
-  height: 40px;
-  border: 2px solid var(--border-color);
-  background-color: var(--background-elevated);
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  font-weight: 600;
-  color: var(--text-secondary);
+  padding: 2rem;
+  border-radius: 16px;
+  margin-bottom: 2rem;
   transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
-.readlist-post-link {
-  text-decoration: none;
-}
-.readlist-page-container .post-card:hover .readlist-post-number {
+
+.readlist-magazine-item:hover {
   border-color: var(--plum-accent);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.readlist-magazine-number {
+  font-family: var(--font-serif);
+  font-size: 3rem;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.05); /* Subtle background number */
+  position: absolute;
+  top: -0.5rem;
+  right: 1rem;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.readlist-magazine-img-container {
+  flex: 0 0 280px; /* Fixed width for image */
+  height: 180px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.readlist-magazine-img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.readlist-magazine-item:hover .readlist-magazine-img-container img {
+  transform: scale(1.05);
+}
+
+.readlist-magazine-content {
+  flex: 1;
+  z-index: 1; /* Ensure text sits above subtle number if they overlap */
+}
+
+.magazine-title {
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+.magazine-excerpt {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.magazine-meta {
   color: var(--plum-accent);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Response for Mobile */
+@media (max-width: 768px) {
+  .readlist-magazine-item {
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: flex-start;
+  }
+  
+  .readlist-magazine-img-container {
+    width: 100%;
+    flex: none;
+    height: 200px;
+  }
+
+  .readlist-magazine-number {
+    top: 1rem;
+    right: 1rem;
+    font-size: 4rem;
+  }
 }
 .pagination-container {
   display: flex;
