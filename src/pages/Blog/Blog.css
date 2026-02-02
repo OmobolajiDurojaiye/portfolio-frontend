@@ -7,23 +7,64 @@
   color: rgba(138, 148, 167, 0.6);
   font-style: normal !important;
 }
-.post-body * {
-  color: var(--text-secondary) !important;
-  background-color: transparent !important;
+/* --- PREMIUM POST TYPOGRAPHY --- */
+.post-body {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  line-height: 2;
+  color: var(--text-secondary); /* Base text color */
 }
+
+/* Headings */
 .post-body h1,
 .post-body h2,
 .post-body h3,
 .post-body h4,
 .post-body h5,
 .post-body h6 {
+  font-family: var(--font-sans); /* Use sans-serif for contrast headings */
+  font-weight: 800;
   color: var(--text-primary) !important;
+  margin-top: 3.5rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.5px;
+  line-height: 1.3;
 }
+
+.post-body h2 { font-size: 2.2rem; }
+.post-body h3 { font-size: 1.8rem; }
+.post-body h4 { font-size: 1.5rem; }
+
+/* Paragraphs */
+.post-body p {
+  margin-bottom: 2rem;
+}
+
+/* Links */
 .post-body a {
-  color: var(--teal-accent) !important;
-}
-.post-body blockquote {
   color: var(--text-primary) !important;
+  text-decoration: underline;
+  text-decoration-color: var(--plum-accent);
+  text-underline-offset: 4px;
+  transition: all 0.2s ease;
+}
+.post-body a:hover {
+  background-color: var(--plum-accent);
+  color: #fff !important;
+  text-decoration-color: transparent;
+}
+
+/* Blockquotes */
+.post-body blockquote {
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--text-primary) !important;
+  border-left: 4px solid var(--plum-accent);
+  padding-left: 2rem;
+  margin: 3rem 0;
+  background: transparent !important;
 }
 
 .blog-ecosystem {
@@ -258,40 +299,100 @@
   color: var(--text-secondary);
   padding: 0 0.5rem;
 }
-.post-body {
-  line-height: 2;
+/* Lists */
+.post-body ul,
+.post-body ol {
+  margin-bottom: 2rem;
+  padding-left: 2rem;
 }
-.post-body h1,
-.post-body h2,
-.post-body h3,
-.post-body h4,
-.post-body h5,
-.post-body h6 {
-  font-family: var(--font-serif);
-  margin-top: 3rem;
-  margin-bottom: 1.5rem;
-  font-weight: 700;
+.post-body li {
+  margin-bottom: 0.75rem;
+  padding-left: 0.5rem;
 }
+.post-body li::marker {
+  color: var(--plum-accent);
+}
+
+/* Images */
 .post-body img {
-  max-width: 100%;
+  width: 100%;
   height: auto;
-  border-radius: 8px;
-  margin: 2.5rem 0;
+  border-radius: 4px;
+  margin: 3rem 0;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
 }
-.post-body blockquote {
-  border-left: 3px solid var(--plum-accent);
-  padding-left: 1.5rem;
-  margin: 2.5rem 0;
-  font-size: 1.25rem;
-  font-style: italic;
-  font-family: var(--font-serif);
-}
+
+/* Code Blocks */
 .post-body pre {
-  background-color: var(--background-elevated);
-  padding: 1em;
+  background-color: #1e1e2e !important;
+  color: #cdd6f4 !important;
+  padding: 1.5rem;
   border-radius: 8px;
   overflow-x: auto;
-  white-space: pre-wrap;
+  margin: 2.5rem 0;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.95rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Merge adjacent code blocks visually */
+.post-body pre:has(+ pre) {
+  margin-bottom: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom: none;
+  padding-bottom: 0.5rem;
+}
+
+.post-body pre + pre {
+  margin-top: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-top: none;
+  padding-top: 0.5rem;
+}
+
+.post-body pre code {
+  color: inherit;
+  padding: 0;
+  background: none;
+}
+
+/* Inline Code */
+.post-body code {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.9em;
+  color: var(--plum-accent);
+}
+
+/* Tables */
+.post-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 3rem 0;
+  font-size: 1rem;
+  font-family: var(--font-sans);
+}
+
+.post-body th,
+.post-body td {
+  border: 1px solid var(--border-color);
+  padding: 0.75rem;
+  text-align: left;
+  color: var(--text-secondary);
+}
+
+.post-body th {
+  background-color: var(--background-elevated);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.post-body tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.02);
 }
 .blog-footer {
   padding: 3rem 0;

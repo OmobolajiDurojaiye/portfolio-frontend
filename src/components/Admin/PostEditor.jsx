@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { Form, Button, Spinner, Alert, Row, Col } from "react-bootstrap";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+import TiptapEditor from "./TiptapEditor";
 import apiClient from "../../services/api";
 
 const PostEditor = ({ postId, onSave }) => {
@@ -155,13 +154,10 @@ const PostEditor = ({ postId, onSave }) => {
             />
           </Form.Group>
           <Form.Group className="mb-3">
-            <ReactQuill
-              theme="snow"
-              value={post.content}
-              onChange={handleContentChange}
-              modules={quillModules}
-              style={{ height: "400px" }}
-            />
+            <div className="mb-3 editor-wrapper">
+              <Form.Label>Content</Form.Label>
+              <TiptapEditor content={post.content} onChange={handleContentChange} />
+            </div>
           </Form.Group>
         </Col>
         <Col md={4} className="mt-md-0 mt-5 pt-md-0 pt-3">
