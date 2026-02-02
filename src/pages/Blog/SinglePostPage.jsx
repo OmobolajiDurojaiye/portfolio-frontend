@@ -60,7 +60,7 @@ function SinglePostPage() {
         <meta name="description" content={post.excerpt} />
         <meta property="og:title" content={`${post.title} - The B Blog`} />
         <meta property="og:description" content={post.excerpt} />
-        <meta property="og:image" content={post.image_url} />
+        <meta property="og:image" content={post.image_url || "https://bolaji.tech/favicon.jpg"} />
         <meta property="og:type" content="article" />
         <meta
           property="og:url"
@@ -69,7 +69,7 @@ function SinglePostPage() {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={`${post.title} - The B Blog`} />
         <meta name="twitter:description" content={post.excerpt} />
-        <meta name="twitter:image" content={post.image_url} />
+        <meta name="twitter:image" content={post.image_url || "https://bolaji.tech/favicon.jpg"} />
       </Helmet>
 
       <div className="single-post-container">

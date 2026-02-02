@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import {
   FaPalette,
@@ -60,6 +61,28 @@ function LandingPage() {
 
   return (
     <div className="landing-page-wrapper">
+      <Helmet>
+        <title>Bolaji Durojaiye — Software Engineer & Digital Architect</title>
+        <meta
+          name="description"
+          content="Portfolio of Omobolaji 'Bolaji' Durojaiye — a software engineer crafting high-performance backend systems, intuitive frontend interfaces, and polished digital experiences."
+        />
+        <meta property="og:title" content="Bolaji Durojaiye — Software Engineer" />
+        <meta
+          property="og:description"
+          content="Explore the portfolio and digital creations of Bolaji Durojaiye — building clean, scalable, and elegant software."
+        />
+        <meta property="og:image" content="https://bolaji.tech/favicon.jpg" />
+        <meta property="og:url" content="https://bolaji.tech" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Bolaji Durojaiye — Software Engineer" />
+        <meta
+          name="twitter:description"
+          content="Clean engineering. Modern design. Thoughtful software by Bolaji."
+        />
+        <meta name="twitter:image" content="https://bolaji.tech/favicon.jpg" />
+      </Helmet>
       <div className="landing-grid">
         {/* Main Content Area */}
         <div className="main-content">

@@ -13,6 +13,8 @@
   font-size: 1.25rem;
   line-height: 2;
   color: var(--text-secondary); /* Base text color */
+  overflow-wrap: break-word; /* Prevent long words/URLs from overflowing */
+  max-width: 100%;
 }
 
 /* Headings */
@@ -329,10 +331,12 @@
   padding: 1.5rem;
   border-radius: 8px;
   overflow-x: auto;
+  max-width: 100%; /* Ensure it respects container width */
   margin: 2.5rem 0;
   font-family: 'Fira Code', monospace;
   font-size: 0.95rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  white-space: pre; /* Keep code formatting but allow scroll */
 }
 
 /* Merge adjacent code blocks visually */
@@ -375,6 +379,10 @@
   margin: 3rem 0;
   font-size: 1rem;
   font-family: var(--font-sans);
+  display: block; /* Required for overflow to work on table element itself */
+  overflow-x: auto;
+  white-space: nowrap; /* Prevent wrapping inside cells causing huge vertical tables */
+  max-width: 100%;
 }
 
 .post-body th,
