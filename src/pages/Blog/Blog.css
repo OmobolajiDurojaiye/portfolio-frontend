@@ -408,9 +408,29 @@
   border-top: 1px solid var(--border-color);
 }
 .blog-footer h4 {
-  font-family: var(--font-serif);
   font-style: italic;
 }
+
+/* Readlist Header */
+.readlist-header {
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 3rem;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.readlist-cover-img {
+  width: 100%;
+  max-width: 800px; /* Constrain width for a better look */
+  height: auto;
+  max-height: 450px;
+  object-fit: cover;
+  border-radius: 16px;
+  margin: 0 auto; /* Center it */
+  box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
+  display: block;
+}
+
 /* --- PREMIUM MAGAZINE READLIST STYLES --- */
 .readlist-magazine-item {
   display: flex;
