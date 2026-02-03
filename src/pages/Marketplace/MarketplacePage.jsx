@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Container, Row, Col, Form, Spinner } from "react-bootstrap";
+import { Container, Row, Col, Form, Spinner, Button, InputGroup } from "react-bootstrap";
+import { FaSearch, FaFilter, FaShoppingBag } from "react-icons/fa";
 import { useApi } from "../../hooks/useApi";
 import ErrorDisplay from "../../components/ErrorDisplay";
 import ProductCard from "../../components/Marketplace/ProductCard";
@@ -15,36 +16,40 @@ const FilterSidebar = ({
   minPrice,
   maxPrice,
 }) => (
-  <div className="filter-sidebar">
-    <h4 className="filter-title">Categories</h4>
-    <div className="category-filters">
-      <button
-        className={activeCategory === "all" ? "active" : ""}
-        onClick={() => setActiveCategory("all")}
-      >
-        All Products
-      </button>
-      {categories.map((cat) => (
+  <div className="filter-sidebar sticky-top" style={{ top: "100px" }}>
+    <div className="filter-group mb-5">
+        <h6 className="filter-title text-uppercase">Categories</h6>
+        <div className="category-filters d-flex flex-column gap-1">
         <button
-          key={cat.id}
-          className={activeCategory === cat.slug ? "active" : ""}
-          onClick={() => setActiveCategory(cat.slug)}
+            className={`filter-btn ${activeCategory === "all" ? "active" : ""}`}
+            onClick={() => setActiveCategory("all")}
         >
-          {cat.name}
+            All Products
         </button>
-      ))}
+        {categories.map((cat) => (
+            <button
+            key={cat.id}
+            className={`filter-btn ${activeCategory === cat.slug ? "active" : ""}`}
+            onClick={() => setActiveCategory(cat.slug)}
+            >
+            {cat.name}
+            </button>
+        ))}
+        </div>
     </div>
 
-    <h4 className="filter-title mt-4">Price Range</h4>
-    {maxPrice > minPrice ? (
-      <PriceRangeFilter
-        min={Math.floor(minPrice)}
-        max={Math.ceil(maxPrice)}
-        onAfterChange={(value) => setPriceRange(value)}
-      />
-    ) : (
-      <p className="text-secondary small">Not available.</p>
-    )}
+    <div className="filter-group">
+        <h6 className="filter-title text-uppercase">Price Range</h6>
+        {maxPrice > minPrice ? (
+        <PriceRangeFilter
+            min={Math.floor(minPrice)}
+            max={Math.ceil(maxPrice)}
+            onAfterChange={(value) => setPriceRange(value)}
+        />
+        ) : (
+        <p className="text-secondary small">Single Price</p>
+        )}
+    </div>
   </div>
 );
 
@@ -67,8 +72,9 @@ function MarketplacePage() {
 
   if (loading)
     return (
-      <Container className="text-center py-5">
-        <Spinner />
+      <Container className="text-center py-5 vh-100 d-flex flex-column justify-content-center">
+        <Spinner animation="grow" variant="primary" />
+        <p className="mt-3 text-secondary">Loading Marketplace...</p>
       </Container>
     );
   if (error) return <ErrorDisplay onRetry={retry} />;
@@ -87,54 +93,72 @@ function MarketplacePage() {
   });
 
   return (
-    <Container fluid className="marketplace-container px-md-5">
-      <div className="marketplace-hero">
-        <div className="marketplace-hero-content text-center">
-          <h1 className="display-3 fw-bolder">The Marketplace</h1>
-          <p className="lead-custom mx-auto">
-            A curated collection of digital products and developer assets to
-            supercharge your next project.
-          </p>
-        </div>
-      </div>
-
-      <Row>
-        <Col lg={3}>
-          <FilterSidebar
-            categories={categories}
-            activeCategory={activeCategory}
-            setActiveCategory={setActiveCategory}
-            priceRange={priceRange}
-            setPriceRange={setPriceRange}
-            minPrice={initialPriceRange[0]}
-            maxPrice={initialPriceRange[1]}
-          />
-        </Col>
-        <Col lg={9}>
-          <div className="d-flex justify-content-between align-items-center mb-4">
-            <h5 className="mb-0">{filteredProducts.length} Products Found</h5>
-            <Form.Control
-              type="search"
-              placeholder="Search products..."
-              className="product-search-input"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-          {filteredProducts.length > 0 ? (
-            <div className="product-grid">
-              {filteredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          ) : (
-            <p className="text-center text-secondary mt-5">
-              No products found matching your criteria.
+    <div className="marketplace-page-wrapper">
+        {/* Simplified Hero Section */}
+      <section className="marketplace-hero text-center">
+        <Container>
+            <h1 className="display-4 fw-bold text-white mb-3">
+                The Marketplace
+            </h1>
+            <p className="lead text-secondary mx-auto mb-4" style={{ maxWidth: "600px" }}>
+                A curated collection of digital products and developer assets to supercharge your next project.
             </p>
-          )}
-        </Col>
-      </Row>
-    </Container>
+            <div className="search-bar-wrapper mx-auto" style={{ maxWidth: "500px" }}>
+                <InputGroup size="lg" className="hero-search-input">
+                    <InputGroup.Text className="bg-dark border-secondary text-secondary">
+                        <FaSearch />
+                    </InputGroup.Text>
+                    <Form.Control
+                        placeholder="Search products..."
+                        className="bg-dark text-white border-secondary"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                </InputGroup>
+            </div>
+        </Container>
+      </section>
+
+      <Container fluid className="px-lg-5 pb-5">
+        <Row>
+          <Col lg={2} className="mb-4 mb-lg-0">
+            <FilterSidebar
+              categories={categories}
+              activeCategory={activeCategory}
+              setActiveCategory={setActiveCategory}
+              priceRange={priceRange}
+              setPriceRange={setPriceRange}
+              minPrice={initialPriceRange[0]}
+              maxPrice={initialPriceRange[1]}
+            />
+          </Col>
+          <Col lg={10}>
+            <div className="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-secondary">
+              <h5 className="mb-0 fw-bold text-white">
+                  {filteredProducts.length} Products
+              </h5>
+            </div>
+
+            {filteredProducts.length > 0 ? (
+              <div className="product-grid">
+                {filteredProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-5 border border-dashed border-secondary rounded-3">
+                <FaShoppingBag size={40} className="text-secondary opacity-50 mb-3" />
+                <h4 className="text-white">No products found</h4>
+                <p className="text-secondary">Try adjusting your filters or search term.</p>
+                <Button variant="outline-primary" onClick={() => { setActiveCategory("all"); setSearchTerm(""); }}>
+                    Clear Filters
+                </Button>
+              </div>
+            )}
+          </Col>
+        </Row>
+      </Container>
+    </div>
   );
 }
 

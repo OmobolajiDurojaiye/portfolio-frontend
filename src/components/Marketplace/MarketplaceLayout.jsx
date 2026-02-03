@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import MarketplaceHeader from "./MarketplaceHeader";
+import "../../pages/Marketplace/Marketplace.css";
 
 const MarketplaceLayout = () => {
   return (
