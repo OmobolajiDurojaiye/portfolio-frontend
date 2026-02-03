@@ -62,21 +62,21 @@ function LandingPage() {
   return (
     <div className="landing-page-wrapper">
       <Helmet>
-        <title>Bolaji Durojaiye — Software Engineer & Digital Architect</title>
+        <title>Bolaji — Software Engineer & Digital Architect</title>
         <meta
           name="description"
-          content="Portfolio of Omobolaji 'Bolaji' Durojaiye — a software engineer crafting high-performance backend systems, intuitive frontend interfaces, and polished digital experiences."
+          content="Portfolio of Bolaji — a software engineer crafting high-performance backend systems, intuitive frontend interfaces, and polished digital experiences."
         />
-        <meta property="og:title" content="Bolaji Durojaiye — Software Engineer" />
+        <meta property="og:title" content="Bolaji — Software Engineer" />
         <meta
           property="og:description"
-          content="Explore the portfolio and digital creations of Bolaji Durojaiye — building clean, scalable, and elegant software."
+          content="Explore the portfolio and digital creations of Bolaji — building clean, scalable, and elegant software."
         />
         <meta property="og:image" content="https://bolaji.tech/favicon.jpg" />
         <meta property="og:url" content="https://bolaji.tech" />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Bolaji Durojaiye — Software Engineer" />
+        <meta name="twitter:title" content="Bolaji — Software Engineer" />
         <meta
           name="twitter:description"
           content="Clean engineering. Modern design. Thoughtful software by Bolaji."
@@ -95,7 +95,7 @@ function LandingPage() {
               <motion.div variants={fadeIn(0)} className="hero-avatar">
                 <img
                   src={headshot}
-                  alt="Bolaji Durojaiye"
+                  alt="Bolaji"
                   className="hero-headshot"
                 />
               </motion.div>
@@ -103,7 +103,7 @@ function LandingPage() {
                 I create softwares to simplify life and Business workflow.
               </motion.h1>
               <motion.p variants={fadeIn(0.3)} className="hero-subheadline">
-                I’m Omobolaji Durojaiye; you can call me Bolaji. I’m a software
+                I’m Bolaji. I’m a software
                 engineer, writer, and startup founder.
               </motion.p>
               <motion.div variants={fadeIn(0.4)}>
