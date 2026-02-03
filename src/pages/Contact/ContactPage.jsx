@@ -1,13 +1,5 @@
 import { useState } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Form,
-  Button,
-  Spinner,
-  Alert,
-} from "react-bootstrap";
+import { Container, Row, Col, Form, Button, Spinner, Alert } from "react-bootstrap";
 import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa";
 import axios from "axios";
 import BookingComponent from "../../components/Contact/BookingComponent";
@@ -53,7 +45,7 @@ const ContactForm = () => {
 
   return (
     <Form onSubmit={handleSubmit} noValidate>
-      <h5 className="mb-4">Send a General Message</h5>
+      <h5 className="mb-4" style={{ color: "var(--text-primary)", fontWeight: "600" }}>Send a Message</h5>
       {status.success && <Alert variant="success">{status.success}</Alert>}
       {status.error && <Alert variant="danger">{status.error}</Alert>}
 
@@ -127,11 +119,11 @@ function ContactPage() {
         </p>
       </div>
       <Row className="justify-content-center">
-        <Col md={10} lg={8}>
+        <Col md={12} lg={10}>
           <div className="contact-wrapper">
             <div className="contact-info">
               <h3>Get in Touch</h3>
-              <p className="text-secondary">
+              <p>
                 Use the form for general messages or book a dedicated session
                 with me. You can also find me on these platforms:
               </p>
@@ -157,20 +149,18 @@ function ContactPage() {
             </div>
             <div className="contact-form-section">
               <div className="view-switcher">
-                <Button
-                  variant={view === "contact" ? "primary" : "outline-secondary"}
+                <button
+                  className={view === "contact" ? "active" : ""}
                   onClick={() => setView("contact")}
-                  className="w-100"
                 >
                   Send a Message
-                </Button>
-                <Button
-                  variant={view === "booking" ? "primary" : "outline-secondary"}
+                </button>
+                <button
+                  className={view === "booking" ? "active" : ""}
                   onClick={() => setView("booking")}
-                  className="w-100"
                 >
                   Book a Session
-                </Button>
+                </button>
               </div>
               {view === "contact" ? <ContactForm /> : <BookingComponent />}
             </div>

@@ -22,6 +22,26 @@ function SinglePostPage() {
         const postRes = await apiClient.get(`/api/blog/posts/${slug}`);
         setPost(postRes.data);
 
+        // --- TABLE RESPONSIVE FIX ---
+        // After DOM update (small delay to ensure content is rendered), wrap tables
+        setTimeout(() => {
+          const tables = document.querySelectorAll(".post-body table");
+          tables.forEach((table) => {
+            if (!table.parentElement.classList.contains("table-responsive")) {
+              const wrapper = document.createElement("div");
+              wrapper.className = "table-responsive";
+              // Copy margins to wrapper to maintain vertical spacing
+              wrapper.style.marginBottom = "2rem";
+              wrapper.style.marginTop = "2rem";
+              table.parentNode.insertBefore(wrapper, table);
+              wrapper.appendChild(table);
+               // Reset table margins inside wrapper to avoid double spacing
+              table.style.marginTop = "0";
+              table.style.marginBottom = "0";
+            }
+          });
+        }, 100);
+
         const relatedRes = await apiClient.get(
           `/api/blog/posts/${slug}/related`
         );

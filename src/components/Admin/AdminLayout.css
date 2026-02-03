@@ -4,61 +4,79 @@
 }
 
 .admin-sidebar {
-  width: 250px;
+  width: 260px;
   background-color: var(--background-elevated);
   border-right: 1px solid var(--border-color);
-  padding: 1.5rem;
+  padding: 2rem 1.5rem;
   display: flex;
   flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 1000;
+  overflow-y: auto;
 }
 
 .sidebar-title {
   font-weight: 800;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
   text-align: center;
+  font-size: 1.5rem;
+  letter-spacing: -0.5px;
+  background: linear-gradient(to right, #fff, var(--plum-accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .sidebar-link {
   color: var(--text-secondary) !important;
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
+  padding: 0.85rem 1rem;
+  border-radius: 8px;
   margin-bottom: 0.5rem;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  gap: 1rem;
+  transition: all 0.2s ease;
+  font-weight: 500;
 }
 
 .sidebar-link:hover {
-  background-color: #242836;
+  background-color: rgba(255, 255, 255, 0.03);
   color: var(--text-primary) !important;
+  transform: translateX(4px);
 }
 
 .sidebar-link.active {
   background-color: var(--plum-accent) !important;
-  color: var(--text-primary) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 12px rgba(161, 98, 247, 0.3);
 }
 
 .logout-button {
   margin-top: auto;
   background: transparent;
-  border: 1px solid #dc3545;
+  border: 1px solid rgba(220, 53, 69, 0.3);
   color: #dc3545;
-  padding: 0.5rem;
-  border-radius: 6px;
+  padding: 0.75rem;
+  border-radius: 8px;
   width: 100%;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: all 0.2s ease;
+  font-weight: 600;
 }
 
 .logout-button:hover {
   background-color: #dc3545;
-  color: var(--text-primary);
+  color: white;
+  border-color: #dc3545;
 }
 
 .admin-main-content {
   flex: 1;
   padding: 2rem 3rem;
-  overflow-y: auto;
+  margin-left: 260px; /* Offset for fixed sidebar */
+  width: calc(100% - 260px);
 }
 
 .admin-main-content .ql-editor * {

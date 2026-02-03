@@ -3,6 +3,7 @@ import { Button, Form, Spinner, Alert } from "react-bootstrap";
 import apiClient from "../../services/api";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import "./Booking.css";
 
 const BookingComponent = () => {
   const [availability, setAvailability] = useState([]);
@@ -80,32 +81,33 @@ const BookingComponent = () => {
     <div className="booking-component">
       {step === 1 && (
         <>
-          <h5 className="mb-4">1. Select a Date & Time</h5>
+          <h5 className="mb-4" style={{ color: "var(--text-primary)" }}>1. Select a Date & Time</h5>
           <Calendar
             onChange={setSelectedDate}
             value={selectedDate}
             minDate={new Date()}
           />
-          <div className="time-slots mt-4">
-            {availableSlots.length > 0 ? (
-              generateTimeSlots(
-                availableSlots[0].start_time,
-                availableSlots[0].end_time,
-                30
-              ).map((slot) => (
-                <Button
-                  key={slot}
-                  variant={
-                    selectedTime === slot ? "primary" : "outline-primary"
-                  }
-                  onClick={() => setSelectedTime(slot)}
-                >
-                  {slot}
-                </Button>
-              ))
-            ) : (
-              <p className="text-secondary">No slots available for this day.</p>
-            )}
+          <div className="time-slots-container mt-4">
+            <h6 style={{color: "var(--text-secondary)", marginBottom: "10px"}}>Available Slots for {dayOfWeek}</h6>
+            <div className="time-slots">
+              {availableSlots.length > 0 ? (
+                generateTimeSlots(
+                  availableSlots[0].start_time,
+                  availableSlots[0].end_time,
+                  30
+                ).map((slot) => (
+                  <button
+                    key={slot}
+                    className={selectedTime === slot ? "time-slot-selected" : ""}
+                    onClick={() => setSelectedTime(slot)}
+                  >
+                    {slot}
+                  </button>
+                ))
+              ) : (
+                <p>No slots available for this day.</p>
+              )}
+            </div>
           </div>
           <Button
             onClick={() => setStep(2)}
@@ -119,9 +121,9 @@ const BookingComponent = () => {
 
       {step === 2 && (
         <Form onSubmit={handleBookingSubmit}>
-          <h5 className="mb-4">2. Your Details</h5>
+          <h5 className="mb-4" style={{ color: "var(--text-primary)" }}>2. Your Details</h5>
           {status.error && <Alert variant="danger">{status.error}</Alert>}
-          <p className="text-secondary">
+          <p className="text-secondary mb-4">
             You are booking a <strong>{selectedDuration} minute</strong> session
             on <strong>{selectedDate.toLocaleDateString()}</strong> at{" "}
             <strong>{selectedTime}</strong>.
@@ -159,7 +161,7 @@ const BookingComponent = () => {
             />
           </Form.Group>
           <div className="d-flex gap-2">
-            <Button variant="outline-secondary" onClick={() => setStep(1)}>
+            <Button variant="outline-secondary" onClick={() => setStep(1)} style={{border: "1px solid var(--border-color)", color: "var(--text-primary)"}}>
               Back
             </Button>
             <Button

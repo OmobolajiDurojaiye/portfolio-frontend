@@ -1,0 +1,155 @@
+/* Booking.css */
+.booking-component {
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* React Calendar - Dark Mode Override */
+.booking-component .react-calendar {
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  font-family: "Manrope", sans-serif;
+  line-height: 1.5em;
+  padding: 1rem 0;
+}
+
+.booking-component abbr[title] {
+  text-decoration: none;
+  cursor: default;
+}
+
+/* Navigation (Month/Year) */
+.booking-component .react-calendar__navigation {
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.booking-component .react-calendar__navigation button {
+  color: var(--text-primary);
+  min-width: 44px;
+  background: none;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 5px;
+}
+
+.booking-component .react-calendar__navigation button:enabled:hover,
+.booking-component .react-calendar__navigation button:enabled:focus {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Week Days */
+.booking-component .react-calendar__month-view__weekdays {
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.booking-component .react-calendar__month-view__weekdays__weekday {
+  padding: 0.5rem;
+  text-decoration: none;
+}
+
+/* Day Tiles */
+.booking-component .react-calendar__tile {
+  background: none;
+  text-align: center;
+  line-height: 2.5rem;
+  font-size: 1rem;
+  color: var(--text-primary);
+  border-radius: 50%; /* Make selection circular or rounded square */
+  width: 45px; /* Fixed width for better grid */
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2px auto;
+  transition: all 0.2s ease;
+}
+
+.booking-component .react-calendar__tile:disabled {
+  background-color: transparent;
+  color: rgba(255, 255, 255, 0.1);
+}
+
+.booking-component .react-calendar__tile:enabled:hover,
+.booking-component .react-calendar__tile:enabled:focus {
+  background-color: rgba(161, 98, 247, 0.15);
+  color: var(--plum-accent);
+}
+
+.booking-component .react-calendar__tile--now {
+  background: rgba(255, 255, 255, 0.1);
+  font-weight: bold;
+}
+
+.booking-component .react-calendar__tile--active,
+.booking-component .react-calendar__tile--active:enabled:hover,
+.booking-component .react-calendar__tile--active:enabled:focus {
+  background: linear-gradient(135deg, var(--plum-accent), #7633e2);
+  color: white;
+  box-shadow: 0 4px 10px rgba(161, 98, 247, 0.4);
+}
+
+/* Month neighboring days */
+.booking-component .react-calendar__month-view__days__day--neighboringMonth {
+  color: rgba(255, 255, 255, 0.15);
+}
+
+/* Time Slots Grid */
+.time-slots {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.8rem;
+  margin-top: 1.5rem;
+  max-height: 250px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.time-slots::-webkit-scrollbar {
+  width: 4px;
+}
+
+.time-slots button {
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 0.6rem;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+}
+
+.time-slots button:hover {
+  border-color: var(--plum-accent);
+  color: var(--plum-accent);
+  background-color: rgba(161, 98, 247, 0.05);
+}
+
+.time-slots button.time-slot-selected {
+  background-color: var(--plum-accent);
+  border-color: var(--plum-accent);
+  color: white;
+  box-shadow: 0 4px 12px rgba(161, 98, 247, 0.3);
+}
+
+.time-slots p {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin-top: 1rem;
+}

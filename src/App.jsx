@@ -22,6 +22,7 @@ import BlogManager from "./components/Admin/BlogManager";
 import MarketplaceManager from "./components/Admin/MarketplaceManager";
 import OrderManager from "./components/Admin/OrderManager";
 import BookingManager from "./components/Admin/BookingManager";
+import DashboardOverview from "./components/Admin/DashboardOverview";
 
 import BlogLayout from "./components/Blog/BlogLayout";
 import BlogHomePage from "./pages/Blog/BlogHomePage";
@@ -96,6 +97,7 @@ function App() {
           <Route path="/admin" element={<AdminLoginPage />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/admin/dashboard" element={<AdminLayout />}>
+              <Route path="overview" element={<DashboardOverview />} />
               <Route path="about" element={<AboutManager />} />
               <Route path="portfolio" element={<ProjectManager />} />
               <Route path="blog" element={<BlogManager />} />
