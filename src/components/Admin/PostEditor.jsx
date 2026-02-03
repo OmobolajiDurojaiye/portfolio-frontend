@@ -1,5 +1,6 @@
-import { useState, useEffect, useMemo } from "react";
-import { Form, Button, Spinner, Alert, Row, Col } from "react-bootstrap";
+import { useState, useEffect } from "react";
+import { Form, Button, Spinner, Alert, Row, Col, Card, Image, Accordion } from "react-bootstrap";
+import { FaSave, FaArrowLeft, FaCog, FaImage, FaTag } from "react-icons/fa";
 import TiptapEditor from "./TiptapEditor";
 import apiClient from "../../services/api";
 
@@ -63,7 +64,7 @@ const PostEditor = ({ postId, onSave }) => {
         ...prevPost,
         [name]: type === "checkbox" ? checked : value,
       };
-      if (name === "title") {
+      if (name === "title" && !postId) { // Only auto-slugify on creation
         newPost.slug = handleSlugify(value);
       }
       return newPost;
@@ -80,19 +81,6 @@ const PostEditor = ({ postId, onSave }) => {
     );
     setPost((prev) => ({ ...prev, readlist_ids: selectedIds }));
   };
-
-  const quillModules = useMemo(
-    () => ({
-      toolbar: [
-        [{ header: [1, 2, 3, 4, 5, 6, false] }],
-        ["bold", "italic", "underline", "strike", "blockquote"],
-        [{ list: "ordered" }, { list: "bullet" }],
-        ["link", "image", "video"],
-        ["clean"],
-      ],
-    }),
-    []
-  );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -117,120 +105,164 @@ const PostEditor = ({ postId, onSave }) => {
     }
   };
 
-  if (loading) return <Spinner animation="border" />;
+  if (loading) return (
+      <div className="text-center py-5">
+        <Spinner animation="border" variant="light" />
+      </div>
+  );
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2>{postId ? "Edit Post" : "Create New Post"}</h2>
-        <div>
-          <Button variant="outline-secondary" onClick={onSave} className="me-2">
-            Cancel
+    <Form onSubmit={handleSubmit} className="post-editor h-100">
+      {/* Header Toolbar */}
+      <div className="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
+        <div className="d-flex align-items-center gap-3">
+            <Button variant="link" onClick={onSave} className="text-secondary p-0 fs-5 text-decoration-none">
+                <FaArrowLeft />
+            </Button>
+            <h4 className="m-0 fw-bold text-white">{postId ? "Edit Post" : "New Article"}</h4>
+        </div>
+        <div className="d-flex gap-2">
+          <Button variant="outline-secondary" onClick={onSave}>
+            Discard
           </Button>
-          <Button type="submit" disabled={saving}>
-            {saving ? (
-              <Spinner size="sm" />
-            ) : postId ? (
-              "Update Post"
-            ) : (
-              "Publish Post"
-            )}
+          <Button type="submit" variant="primary" disabled={saving}>
+            {saving ? <Spinner size="sm" /> : <><FaSave className="me-2"/> {postId ? "Update" : "Publish"}</>}
           </Button>
         </div>
       </div>
 
       {error && <Alert variant="danger">{error}</Alert>}
-      <Row>
-        <Col md={8}>
-          <Form.Group className="mb-3">
+
+      <Row className="h-100">
+        {/* Main Content Area */}
+        <Col lg={9} className="h-100 d-flex flex-column">
+          <Form.Group className="mb-4">
             <Form.Control
               type="text"
               name="title"
-              placeholder="Post Title"
+              placeholder="Post Title..."
               value={post.title}
               onChange={handleChange}
               required
-              className="fs-4"
+              className="fs-1 fw-bold bg-transparent border-0 text-white shadow-none px-0"
+              style={{ caretColor: "var(--primary-color)" }}
             />
           </Form.Group>
-          <Form.Group className="mb-3">
-            <div className="mb-3 editor-wrapper">
-              <Form.Label>Content</Form.Label>
-              <TiptapEditor content={post.content} onChange={handleContentChange} />
-            </div>
-          </Form.Group>
-        </Col>
-        <Col md={4} className="mt-md-0 mt-5 pt-md-0 pt-3">
-          <div className="post-sidebar">
-            <Form.Group className="mb-3">
-              <Form.Label>Slug</Form.Label>
-              <Form.Control
-                type="text"
-                name="slug"
-                value={post.slug}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Featured Image URL</Form.Label>
-              <Form.Control
-                name="image_url"
-                value={post.image_url || ""}
-                onChange={handleChange}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Excerpt</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                name="excerpt"
-                value={post.excerpt || ""}
-                onChange={handleChange}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Category</Form.Label>
-              <Form.Select
-                name="category_id"
-                value={post.category_id}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select a category</option>
-                {categories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
-                ))}
-              </Form.Select>
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Readlists</Form.Label>
-              <Form.Select
-                multiple
-                name="readlist_ids"
-                value={post.readlist_ids}
-                onChange={handleReadlistChange}
-              >
-                {readlists.map((rl) => (
-                  <option key={rl.id} value={rl.id}>
-                    {rl.name}
-                  </option>
-                ))}
-              </Form.Select>
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Check
-                type="switch"
-                name="is_featured"
-                label="Feature this post?"
-                checked={post.is_featured}
-                onChange={handleChange}
-              />
-            </Form.Group>
+          <div className="flex-grow-1 bg-dark rounded p-1 border border-secondary" style={{ minHeight: "500px" }}>
+            <TiptapEditor content={post.content} onChange={handleContentChange} />
           </div>
+        </Col>
+
+        {/* Sidebar Settings */}
+        <Col lg={3}>
+           <div className="sticky-top" style={{ top: "20px" }}>
+               <h6 className="text-secondary text-uppercase small fw-bold mb-3 d-flex align-items-center gap-2">
+                   <FaCog /> Post Settings
+               </h6>
+               
+               <Accordion defaultActiveKey="0" className="admin-accordion mb-3">
+                   <Accordion.Item eventKey="0" className="bg-transparent border-0 mb-2">
+                       <Accordion.Header className="shadow-sm rounded">General & Status</Accordion.Header>
+                       <Accordion.Body className="bg-dark rounded border border-secondary mt-1 p-3">
+                           <Form.Group className="mb-3">
+                               <Form.Check 
+                                   type="switch"
+                                   id="custom-switch"
+                                   label="Featured Post"
+                                   name="is_featured"
+                                   checked={post.is_featured}
+                                   onChange={handleChange}
+                                   className="text-white"
+                               />
+                           </Form.Group>
+                           <Form.Group className="mb-3">
+                               <Form.Label className="text-secondary small">Slug (URL)</Form.Label>
+                               <Form.Control
+                                   type="text"
+                                   name="slug"
+                                   value={post.slug}
+                                   onChange={handleChange}
+                                   required
+                                   className="bg-dark text-white border-secondary small"
+                               />
+                           </Form.Group>
+                           <Form.Group>
+                               <Form.Label className="text-secondary small">Excerpt</Form.Label>
+                               <Form.Control
+                                   as="textarea"
+                                   rows={3}
+                                   name="excerpt"
+                                   value={post.excerpt || ""}
+                                   onChange={handleChange}
+                                   className="bg-dark text-white border-secondary small"
+                               />
+                           </Form.Group>
+                       </Accordion.Body>
+                   </Accordion.Item>
+
+                   <Accordion.Item eventKey="1" className="bg-transparent border-0 mb-2">
+                       <Accordion.Header className="shadow-sm rounded">Taxonomy</Accordion.Header>
+                       <Accordion.Body className="bg-dark rounded border border-secondary mt-1 p-3">
+                           <Form.Group className="mb-3">
+                               <Form.Label className="text-secondary small d-flex align-items-center gap-2"><FaTag/> Category</Form.Label>
+                               <Form.Select
+                                   name="category_id"
+                                   value={post.category_id}
+                                   onChange={handleChange}
+                                   required
+                                   className="bg-dark text-white border-secondary"
+                               >
+                                   <option value="">Select Category</option>
+                                   {categories.map((cat) => (
+                                       <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                   ))}
+                               </Form.Select>
+                           </Form.Group>
+                           <Form.Group>
+                               <Form.Label className="text-secondary small">Add to Readlists</Form.Label>
+                               <Form.Select
+                                   multiple
+                                   name="readlist_ids"
+                                   value={post.readlist_ids}
+                                   onChange={handleReadlistChange}
+                                   className="bg-dark text-white border-secondary"
+                                   style={{ minHeight: "100px" }}
+                               >
+                                   {readlists.map((rl) => (
+                                       <option key={rl.id} value={rl.id}>{rl.name}</option>
+                                   ))}
+                               </Form.Select>
+                               <Form.Text className="text-muted small">Hold Ctrl/Cmd to select multiple</Form.Text>
+                           </Form.Group>
+                       </Accordion.Body>
+                   </Accordion.Item>
+
+                   <Accordion.Item eventKey="2" className="bg-transparent border-0 mb-2">
+                       <Accordion.Header className="shadow-sm rounded">Featured Media</Accordion.Header>
+                       <Accordion.Body className="bg-dark rounded border border-secondary mt-1 p-3">
+                           <Form.Group className="mb-3">
+                               <Form.Label className="text-secondary small d-flex align-items-center gap-2"><FaImage/> Image URL</Form.Label>
+                               <Form.Control
+                                   type="text"
+                                   name="image_url"
+                                   value={post.image_url || ""}
+                                   onChange={handleChange}
+                                   className="bg-dark text-white border-secondary small"
+                                   placeholder="https://..."
+                               />
+                           </Form.Group>
+                           <div className="border border-secondary rounded d-flex align-items-center justify-content-center overflow-hidden" 
+                                style={{ height: "120px", backgroundColor: "rgba(255,255,255,0.02)" }}>
+                               {post.image_url ? (
+                                   <Image src={post.image_url} alt="Preview" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                               ) : (
+                                   <span className="text-muted small">No Preview</span>
+                               )}
+                           </div>
+                       </Accordion.Body>
+                   </Accordion.Item>
+               </Accordion>
+           </div>
         </Col>
       </Row>
     </Form>
