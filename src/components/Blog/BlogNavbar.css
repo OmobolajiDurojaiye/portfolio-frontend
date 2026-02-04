@@ -2,17 +2,22 @@
   border-bottom: 1px solid var(--border-color);
   padding: 1rem 0;
   margin-bottom: 3rem;
-  background-color: rgba(5, 7, 13, 0.8);
-  backdrop-filter: blur(10px);
+  background-color: rgba(5, 7, 13, 0.85); /* Slightly more opaque */
+  backdrop-filter: blur(12px);
   position: sticky;
   top: 60px; /* Adjust based on your main navbar height */
   z-index: 100;
+  transition: all 0.3s ease;
 }
 
 .blog-nav-container {
   display: flex;
   align-items: center;
   gap: 2rem;
+}
+
+.blog-nav-top {
+    display: contents; /* On desktop, these items sit directly in the flex container */
 }
 
 .blog-nav-links {
@@ -49,13 +54,20 @@
   width: 100%;
 }
 
+.blog-nav-collapsible {
+    display: contents; /* On desktop, children are part of the main flex row */
+}
+
 .blog-nav-categories {
   display: flex;
   gap: 0.75rem;
   align-items: center;
+  margin-left: auto; /* Push categories to the right if needed, or stick to left/center */
 }
+
 .category-pill-link {
   padding: 0 !important;
+  text-decoration: none;
 }
 .category-pill {
   display: block;
@@ -78,6 +90,8 @@
 .blog-search-form {
   position: relative;
   margin-left: auto;
+  display: flex;
+  align-items: center;
 }
 
 .blog-search-input {
@@ -86,6 +100,7 @@
   color: var(--text-primary);
   border-radius: 99px;
   padding-left: 1rem;
+  padding-right: 2.5rem;
   width: 250px;
   transition: all 0.3s ease;
 }
@@ -97,25 +112,102 @@
   width: 300px;
 }
 
-@media (max-width: 991.98px) {
-  .blog-nav-categories {
-    display: none;
-  }
+.search-icon-btn {
+    position: absolute;
+    right: 5px;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 0 0.5rem;
 }
-@media (max-width: 767.98px) {
+
+.blog-nav-toggle {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.blog-nav-toggle:hover {
+    background-color: var(--plum-accent);
+    border-color: var(--plum-accent);
+}
+
+/* --- RESPONSIVE / MOBILE STYLES --- */
+@media (max-width: 991.98px) {
   .blog-nav-wrapper {
-    top: 56px; /* Adjust for smaller main navbar */
+      padding: 0.75rem 0; /* Slimmer on mobile */
   }
+
   .blog-nav-container {
-    gap: 1rem;
+    display: block; /* Stack items */
   }
-  .blog-nav-links .nav-link span {
-    display: none;
+
+  .blog-nav-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
   }
+
+  /* When collapsed, hide the collapsible part */
+  .blog-nav-wrapper.collapsed .blog-nav-collapsible {
+      display: none;
+  }
+  
+  /* When expanded, show it as block/flex column */
+  .blog-nav-wrapper.expanded .blog-nav-collapsible {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-color);
+      animation: slideDown 0.3s ease-out;
+  }
+
+  /* Reset 'contents' display for mobile */
+  .blog-nav-collapsible {
+      display: none; /* Default hidden unless expanded */
+  }
+
+  .blog-nav-categories {
+    display: flex;
+    flex-wrap: wrap; /* Allow pills to wrap */
+    margin-left: 0;
+    justify-content: center;
+  }
+  
+  .blog-search-form {
+      margin-left: 0;
+      width: 100%;
+  }
+  
   .blog-search-input {
-    width: 180px;
+      width: 100%; /* Full width search on mobile */
   }
   .blog-search-input:focus {
-    width: 200px;
+      width: 100%;
   }
+}
+
+@media (max-width: 767.98px) {
+  .blog-nav-wrapper {
+    top: 56px; 
+  }
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
