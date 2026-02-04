@@ -28,14 +28,23 @@ function BlogHomePage() {
       if (pageNum === 1) setLoading(true);
       else setLoadingMore(true);
       
-      const response = await apiClient.get(
-        `/api/blog/home-data?page=${pageNum}`
-      );
+      const [homeRes, readlistsRes] = await Promise.all([
+        apiClient.get(`/api/blog/home-data?page=${pageNum}`),
+        // Only fetch readlists on initial load to get full data including posts for count
+        pageNum === 1 ? apiClient.get("/api/blog/readlists") : Promise.resolve({ data: null })
+      ]);
       
-      const newData = response.data;
+      const newData = homeRes.data;
+      const readlistsData = readlistsRes.data;
       
       setData(prevData => {
-        if (pageNum === 1) return newData;
+        if (pageNum === 1) {
+             return {
+                 ...newData,
+                 // Use the separately fetched readlists which include 'posts' array for counting
+                 readlists: readlistsData || newData.readlists 
+             };
+        }
         return {
           ...newData,
           posts: [...prevData.posts, ...newData.posts], // Append new posts
@@ -196,7 +205,7 @@ function BlogHomePage() {
                     </div>
                     <div className="readlist-mini-info">
                         <h6 className="readlist-name">{readlist.name}</h6>
-                        <p className="readlist-count">{readlist.post_count || 0} Articles</p>
+                        <p className="readlist-count">{readlist.posts?.length || 0} Articles</p>
                     </div>
                     </Link>
                 ))}
