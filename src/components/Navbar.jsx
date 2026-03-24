@@ -41,6 +41,9 @@ function AppNavbar() {
               <Nav.Link as={NavLink} to="/about" className="nav-item-custom">
                 About
               </Nav.Link>
+              <Nav.Link as={NavLink} to="/services" className="nav-item-custom">
+                Services
+              </Nav.Link>
               <Nav.Link
                 as={NavLink}
                 to="/portfolio"
@@ -75,6 +78,9 @@ function AppNavbar() {
         <Nav className="flex-column fullscreen-nav-links">
           <Nav.Link as={NavLink} to="/about" onClick={handleLinkClick}>
             About
+          </Nav.Link>
+          <Nav.Link as={NavLink} to="/services" onClick={handleLinkClick}>
+            Services
           </Nav.Link>
           <Nav.Link as={NavLink} to="/portfolio" onClick={handleLinkClick}>
             Portfolio

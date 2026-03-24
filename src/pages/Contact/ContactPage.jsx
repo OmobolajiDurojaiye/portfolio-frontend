@@ -5,11 +5,16 @@ import axios from "axios";
 import BookingComponent from "../../components/Contact/BookingComponent";
 import "./Contact.css";
 
+import { useSearchParams } from "react-router-dom";
+
 const ContactForm = () => {
+  const [searchParams] = useSearchParams();
+  const initialMessage = searchParams.get("message") || "";
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    message: "",
+    message: initialMessage,
   });
   const [status, setStatus] = useState({
     loading: false,

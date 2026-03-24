@@ -5,6 +5,7 @@ import AppNavbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import LandingPage from "./pages/Landing/LandingPage";
 import AboutPage from "./pages/About/AboutPage";
+import ServicesPage from "./pages/Services/ServicesPage";
 import PortfolioPage from "./pages/Portfolio/PortfolioPage";
 import MarketplaceLayout from "./components/Marketplace/MarketplaceLayout";
 import MarketplacePage from "./pages/Marketplace/MarketplacePage";
@@ -58,6 +59,14 @@ function App() {
             element={
               <Container fluid className="py-5 px-md-5">
                 <AboutPage />
+              </Container>
+            }
+          />
+          <Route
+            path="/services"
+            element={
+              <Container fluid className="py-5 px-md-5">
+                <ServicesPage />
               </Container>
             }
           />
