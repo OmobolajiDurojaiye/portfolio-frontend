@@ -47,7 +47,7 @@ function LandingPage() {
   useEffect(() => {
     apiClient
       .get("/api/portfolio/projects/featured")
-      .then((res) => setFeaturedProjects(res.data.slice(0, 3))) // Fetch up to 3 to fill the space nicely
+      .then((res) => setFeaturedProjects(res.data.slice(0, 4))) // Fetch up to 4 to fill the space nicely
       .catch((err) => console.error("Failed to fetch featured projects", err));
   }, []);
 
