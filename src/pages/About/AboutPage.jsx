@@ -1,16 +1,7 @@
-import { useState } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Spinner,
-  Button,
-  Accordion,
-} from "react-bootstrap";
-import { FaSpotify } from "react-icons/fa";
+import { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
-import { useApi } from "../../hooks/useApi";
-import ErrorDisplay from "../../components/ErrorDisplay";
+import { FaSpotify } from "react-icons/fa";
+import apiClient from "../../services/api";
 import DynamicIcon from "../../utils/iconMap";
 import "./AboutPage.css";
 
@@ -18,28 +9,28 @@ const workProcess = [
   {
     title: "01 Discovery Call",
     description:
-      "In the first stage, we'll have a Discovery Call to discuss your goals, needs, and project requirements. This helps us align our vision and set the foundation for a successful collaboration.",
+      "We'll have a Discovery Call to discuss your goals, needs, and project requirements. This helps us align our vision and set the foundation for a successful collaboration."
   },
   {
     title: "02 Project Proposal",
     description:
-      "After our call, I will send you a detailed project proposal including the price quote. Upon agreement, you'll pay a deposit to secure the first milestone.",
+      "After our call, I will send you a detailed project proposal including the price quote. Upon agreement, we'll secure the first milestone."
   },
   {
     title: "03 Design & Development",
     description:
-      "This is where the magic happens. I will design and develop your project, providing regular updates and milestones for your review and feedback.",
+      "This is where the magic happens. I will design and develop your project, providing regular updates and milestones for your review and feedback."
   },
   {
     title: "04 Review & Revisions",
     description:
-      "We'll review the completed milestones together. This is the time for revisions to ensure the project perfectly matches your vision.",
+      "We'll review the completed milestones together. This is the time for revisions to ensure the project perfectly matches your vision."
   },
   {
     title: "05 Launch & Handover",
     description:
-      "Once everything is approved, we'll deploy the project. I'll hand over all the necessary files and provide documentation for a smooth transition.",
-  },
+      "Once everything is approved, we'll deploy the project. I'll hand over all the necessary files and provide documentation for a smooth transition."
+  }
 ];
 
 const HowIWork = () => {
@@ -47,9 +38,9 @@ const HowIWork = () => {
 
   return (
     <div className="how-i-work-container">
-      <span className="section-eyebrow">How I Work</span>
+      <h4 className="details-card-sub-title">How I Work</h4>
       <div className="step-content">
-        <h3 className="step-title">{workProcess[activeStep].title}</h3>
+        <h5 className="step-title">{workProcess[activeStep].title}</h5>
         <p className="step-description">
           {workProcess[activeStep].description}
         </p>
@@ -70,116 +61,132 @@ const HowIWork = () => {
 };
 
 function AboutPage() {
-  const { data: aboutData, loading, error, retry } = useApi("/api/about/");
+  const [aboutData, setAboutData] = useState(null);
 
-  if (loading) {
-    return (
-      <Container className="text-center py-5">
-        <Spinner animation="border" />
-      </Container>
-    );
-  }
-  if (error) {
-    return <ErrorDisplay onRetry={retry} />;
-  }
+  useEffect(() => {
+    apiClient.get("/api/about/")
+      .then((res) => {
+        setAboutData(res.data);
+      })
+      .catch((err) => {
+        console.log("Backend failed, using local offline about fallback.");
+        setAboutData({
+          spotify_url: "https://open.spotify.com",
+          bio: "I’m Omobolaji Durojaiye; you can call me Bolaji. I’m a software engineer, writer, and startup founder. I build software solutions for industries spanning logistics, education, finance, and many more. I also write for various industries, including crypto, conservation, and others.",
+          skills: [
+            { id: 1, name: "React", icon_name: "FaReact" },
+            { id: 2, name: "Node.js", icon_name: "FaNodeJs" },
+            { id: 3, name: "Python", icon_name: "FaPython" },
+            { id: 4, name: "UI Design", icon_name: "FaPalette" }
+          ],
+          tools: [
+            { id: 1, name: "VS Code", icon_name: "FaCode" },
+            { id: 2, name: "Figma", icon_name: "FaFigma" },
+            { id: 3, name: "Git", icon_name: "FaGithub" }
+          ],
+          work_experiences: [
+            {
+              role: "Frontend Software Developer",
+              company: "Freelance",
+              duration: "2020 - Present",
+              description: "Building premium React applications, optimizing web performance, and writing clean, scalable frontend code."
+            },
+            {
+              role: "Junior Web Developer",
+              company: "TechAgency",
+              duration: "2018 - 2020",
+              description: "Collaborated on web portal assets, designed client dashboards, and maintained codebase repositories."
+            }
+          ]
+        });
+      });
+  }, []);
+
   if (!aboutData) {
-    return null;
+    return (
+      <div className="about-loading-container">
+        <div className="about-loading-spinner"></div>
+      </div>
+    );
   }
 
   return (
-    <Container className="about-container py-5">
-      <Row>
-        <Col lg={5} className="mb-5 mb-lg-0">
-          <h2 className="about-title">About Me</h2>
-          <div className="about-bio text-secondary">
-            <ReactMarkdown>{aboutData.bio}</ReactMarkdown>
-          </div>
-          {aboutData.spotify_url && (
-            <a
-              href={aboutData.spotify_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="spotify-link"
-            >
-              <FaSpotify />
-              <span>My Spotify Profile</span>
-            </a>
-          )}
-        </Col>
-        <Col lg={7}>
-          <div className="section-block">
-            <h3 className="section-heading">My Toolkit</h3>
-            <div className="skills-grid">
-              {aboutData.skills.map((skill) => (
-                <div className="skill-item" key={skill.id}>
-                  <DynamicIcon name={skill.icon_name} />
-                  <span>{skill.name}</span>
-                </div>
-              ))}
+    <div className="about-page-wrapper">
+      
+      {/* 1. About Bio Card */}
+      <div className="details-card about-bio-card">
+        <h3 className="details-card-title">About Me</h3>
+        <div className="bio-paragraph">
+          <ReactMarkdown>{aboutData.bio}</ReactMarkdown>
+        </div>
+        {aboutData.spotify_url && (
+          <a
+            href={aboutData.spotify_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="spotify-link"
+          >
+            <FaSpotify />
+            <span>Listen on Spotify</span>
+          </a>
+        )}
+      </div>
+
+      {/* 2. Toolkit & Work Tools Card */}
+      <div className="details-card toolkit-card">
+        <h4 className="details-card-sub-title">Technical Toolkit</h4>
+        <div className="skills-grid-clean">
+          {aboutData.skills.map((skill) => (
+            <div className="skill-item-clean" key={skill.id}>
+              <DynamicIcon name={skill.icon_name} />
+              <span>{skill.name}</span>
             </div>
-          </div>
-          <div className="section-block mt-4">
-            <h3 className="section-heading">Work Tools</h3>
-            <div className="skills-grid">
-              {aboutData.tools.map((tool) => (
-                <div className="skill-item" key={tool.id}>
-                  <DynamicIcon name={tool.icon_name} />
-                  <span>{tool.name}</span>
-                </div>
-              ))}
+          ))}
+        </div>
+        
+        <h4 className="details-card-sub-title mt-4">Work Tools</h4>
+        <div className="skills-grid-clean">
+          {aboutData.tools.map((tool) => (
+            <div className="skill-item-clean" key={tool.id}>
+              <DynamicIcon name={tool.icon_name} />
+              <span>{tool.name}</span>
             </div>
-          </div>
-        </Col>
-      </Row>
-      <Row className="mt-5 pt-5">
-        <Col>
-          <HowIWork />
-        </Col>
-      </Row>
-      <Row className="mt-5 pt-5">
-        <Col>
-          <div className="text-center mb-5">
-            <h2 className="section-heading">Work Journey</h2>
-          </div>
-          <Accordion className="timeline-accordion">
-            {aboutData.work_experiences.map((job, index) => (
-              <Accordion.Item
-                eventKey={String(index)}
-                key={index}
-                className="timeline-accordion-item"
-              >
-                <Accordion.Header className="timeline-accordion-header">
-                  <div
-                    className={`timeline-item ${
-                      index % 2 === 0 ? "left" : "right"
-                    }`}
-                  >
-                    <div className="timeline-content">
-                      <h5 className="role">{job.role}</h5>
-                      <p className="company text-secondary">{job.company}</p>
-                      <span className="duration">{job.duration}</span>
-                    </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 3. How I Work Workflow */}
+      <div className="details-card workflow-card">
+        <HowIWork />
+      </div>
+
+      {/* 4. Work Journey Timeline */}
+      <div className="details-card timeline-card">
+        <h4 className="details-card-sub-title">Work Journey</h4>
+        <div className="clean-timeline-list">
+          {aboutData.work_experiences.map((job, index) => (
+            <div className="timeline-item-clean" key={index}>
+              <div className="timeline-dot"></div>
+              {index < aboutData.work_experiences.length - 1 && <div className="timeline-line"></div>}
+              
+              <div className="timeline-info-block">
+                <div className="timeline-job-header">
+                  <h5 className="timeline-job-role">{job.role}</h5>
+                  <span className="timeline-job-duration">{job.duration}</span>
+                </div>
+                <p className="timeline-job-company">{job.company}</p>
+                {job.description && (
+                  <div className="timeline-job-desc">
+                    <ReactMarkdown>{job.description}</ReactMarkdown>
                   </div>
-                </Accordion.Header>
-                <Accordion.Body className="timeline-accordion-body">
-                  <div
-                    className={`timeline-item-body ${
-                      index % 2 === 0 ? "left" : "right"
-                    }`}
-                  >
-                    {job.description && (
-                      <div className="work-description text-secondary">
-                        <ReactMarkdown>{job.description}</ReactMarkdown>
-                      </div>
-                    )}
-                  </div>
-                </Accordion.Body>
-              </Accordion.Item>
-            ))}
-          </Accordion>
-        </Col>
-      </Row>
-    </Container>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+    </div>
   );
 }
 

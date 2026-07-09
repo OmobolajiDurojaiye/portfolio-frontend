@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Container, Row, Col, Form, Button, Spinner, Alert } from "react-bootstrap";
-import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa";
+import { Form, Button, Spinner, Alert } from "react-bootstrap";
 import axios from "axios";
 import BookingComponent from "../../components/Contact/BookingComponent";
 import "./Contact.css";
@@ -49,10 +48,9 @@ const ContactForm = () => {
   };
 
   return (
-    <Form onSubmit={handleSubmit} noValidate>
-      <h5 className="mb-4" style={{ color: "var(--text-primary)", fontWeight: "600" }}>Send a Message</h5>
-      {status.success && <Alert variant="success">{status.success}</Alert>}
-      {status.error && <Alert variant="danger">{status.error}</Alert>}
+    <Form onSubmit={handleSubmit} noValidate className="clean-contact-form">
+      {status.success && <Alert variant="success" className="mb-4">{status.success}</Alert>}
+      {status.error && <Alert variant="danger" className="mb-4">{status.error}</Alert>}
 
       <Form.Group className="mb-3">
         <Form.Label>Name</Form.Label>
@@ -65,6 +63,7 @@ const ContactForm = () => {
           onChange={handleChange}
         />
       </Form.Group>
+      
       <Form.Group className="mb-3">
         <Form.Label>Email</Form.Label>
         <Form.Control
@@ -76,6 +75,7 @@ const ContactForm = () => {
           onChange={handleChange}
         />
       </Form.Group>
+      
       <Form.Group className="mb-4">
         <Form.Label>Message</Form.Label>
         <Form.Control
@@ -88,6 +88,7 @@ const ContactForm = () => {
           onChange={handleChange}
         />
       </Form.Group>
+      
       <div className="d-grid">
         <Button
           type="submit"
@@ -115,64 +116,37 @@ function ContactPage() {
   const [view, setView] = useState("contact");
 
   return (
-    <Container className="contact-page-container">
-      <div className="text-center mb-5">
-        <h2 className="section-title">Let's Connect</h2>
-        <p className="section-subtitle">
-          Have a project idea, a question, or just want to say hi? I'd love to
-          hear from you.
+    <div className="contact-page-container">
+      <div className="contact-page-header">
+        <h2 className="section-title text-center">Let's Connect</h2>
+        <p className="section-subtitle text-center">
+          Have a project idea, a question, or just want to say hi? I'd love to hear from you.
         </p>
       </div>
-      <Row className="justify-content-center">
-        <Col md={12} lg={10}>
-          <div className="contact-wrapper">
-            <div className="contact-info">
-              <h3>Get in Touch</h3>
-              <p>
-                Use the form for general messages or book a dedicated session
-                with me. You can also find me on these platforms:
-              </p>
-              <div className="social-links">
-                <a
-                  href="https://github.com/OmobolajiDurojaiye"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <FaGithub /> GitHub
-                </a>
-                <a
-                  href="https://www.linkedin.com/in/omobolaji-durojaiye-527872294/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <FaLinkedin /> LinkedIn
-                </a>
-                <a href="mailto:durojaiyeomobolaji93@gmail.com">
-                  <FaEnvelope /> Email
-                </a>
-              </div>
-            </div>
-            <div className="contact-form-section">
-              <div className="view-switcher">
-                <button
-                  className={view === "contact" ? "active" : ""}
-                  onClick={() => setView("contact")}
-                >
-                  Send a Message
-                </button>
-                <button
-                  className={view === "booking" ? "active" : ""}
-                  onClick={() => setView("booking")}
-                >
-                  Book a Session
-                </button>
-              </div>
-              {view === "contact" ? <ContactForm /> : <BookingComponent />}
-            </div>
-          </div>
-        </Col>
-      </Row>
-    </Container>
+
+      <div className="contact-centered-box">
+        {/* Switcher tabs */}
+        <div className="view-switcher">
+          <button
+            className={view === "contact" ? "active" : ""}
+            onClick={() => setView("contact")}
+          >
+            Send a Message
+          </button>
+          <button
+            className={view === "booking" ? "active" : ""}
+            onClick={() => setView("booking")}
+          >
+            Book a Session
+          </button>
+        </div>
+
+        {/* Content Section (No side panel) */}
+        <div className="contact-content-pane">
+          {view === "contact" ? <ContactForm /> : <BookingComponent />}
+        </div>
+      </div>
+    </div>
   );
 }
 

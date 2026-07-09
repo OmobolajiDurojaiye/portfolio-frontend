@@ -1,8 +1,5 @@
-import { Routes, Route, useLocation, Outlet } from "react-router-dom";
-import { Container } from "react-bootstrap";
+import { Routes, Route } from "react-router-dom";
 
-import AppNavbar from "./components/Navbar";
-import Footer from "./components/Footer";
 import LandingPage from "./pages/Landing/LandingPage";
 import AboutPage from "./pages/About/AboutPage";
 import ServicesPage from "./pages/Services/ServicesPage";
@@ -13,6 +10,7 @@ import ProductDetailPage from "./pages/Marketplace/ProductDetailPage";
 import CartPage from "./pages/Marketplace/CartPage";
 import ContactPage from "./pages/Contact/ContactPage";
 import ScrollToTop from "./components/ScrollToTop";
+import DashboardLayout from "./components/DashboardLayout";
 
 import AdminLoginPage from "./pages/Admin/AdminLoginPage";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -35,49 +33,31 @@ import BlogSearchResults from "./pages/Blog/BlogSearchResults";
 import ReadlistsListPage from "./pages/Blog/ReadlistsListPage";
 
 function App() {
-  const location = useLocation();
-  const isAdminRoute = location.pathname.startsWith("/admin");
-  const isBlogRoute = location.pathname.startsWith("/blog");
-
   return (
     <>
       <ScrollToTop />
-      {!isAdminRoute && <AppNavbar />}
+      <Routes>
+        {/* Admin Portal Routes */}
+        <Route path="/admin" element={<AdminLoginPage />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/admin/dashboard" element={<AdminLayout />}>
+            <Route path="overview" element={<DashboardOverview />} />
+            <Route path="about" element={<AboutManager />} />
+            <Route path="portfolio" element={<ProjectManager />} />
+            <Route path="blog" element={<BlogManager />} />
+            <Route path="marketplace" element={<MarketplaceManager />} />
+            <Route path="orders" element={<OrderManager />} />
+            <Route path="bookings" element={<BookingManager />} />
+          </Route>
+        </Route>
 
-      <main style={{ minHeight: "80vh" }}>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <Container fluid className="px-md-5">
-                <LandingPage />
-              </Container>
-            }
-          />
-          <Route
-            path="/about"
-            element={
-              <Container fluid className="py-5 px-md-5">
-                <AboutPage />
-              </Container>
-            }
-          />
-          <Route
-            path="/services"
-            element={
-              <Container fluid className="py-5 px-md-5">
-                <ServicesPage />
-              </Container>
-            }
-          />
-          <Route
-            path="/portfolio"
-            element={
-              <Container fluid className="py-5 px-md-5">
-                <PortfolioPage />
-              </Container>
-            }
-          />
+        {/* Client Portal with Dashboard Layout (Sticky Sidebar) */}
+        <Route element={<DashboardLayout />}>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/services" element={<ServicesPage />} />
+          <Route path="/portfolio" element={<PortfolioPage />} />
+          <Route path="/contact" element={<ContactPage />} />
 
           <Route path="/blog" element={<BlogLayout />}>
             <Route index element={<BlogHomePage />} />
@@ -94,31 +74,8 @@ function App() {
             <Route path="cart" element={<CartPage />} />
             <Route path=":slug" element={<ProductDetailPage />} />
           </Route>
-
-          <Route
-            path="/contact"
-            element={
-              <Container fluid className="py-5 px-md-5">
-                <ContactPage />
-              </Container>
-            }
-          />
-          <Route path="/admin" element={<AdminLoginPage />} />
-          <Route element={<ProtectedRoute />}>
-            <Route path="/admin/dashboard" element={<AdminLayout />}>
-              <Route path="overview" element={<DashboardOverview />} />
-              <Route path="about" element={<AboutManager />} />
-              <Route path="portfolio" element={<ProjectManager />} />
-              <Route path="blog" element={<BlogManager />} />
-              <Route path="marketplace" element={<MarketplaceManager />} />
-              <Route path="orders" element={<OrderManager />} />
-              <Route path="bookings" element={<BookingManager />} />
-            </Route>
-          </Route>
-        </Routes>
-      </main>
-
-      {!isAdminRoute && !isBlogRoute && <Footer />}
+        </Route>
+      </Routes>
     </>
   );
 }
