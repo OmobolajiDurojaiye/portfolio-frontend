@@ -9,8 +9,7 @@ import {
   FaCalendarCheck,
   FaArrowRight,
   FaBookOpen,
-  FaUser,
-  FaSpotify
+  FaUser
 } from "react-icons/fa";
 import headshot from "../../assets/PFP.png";
 import apiClient from "../../services/api";
@@ -133,25 +132,8 @@ function LandingPage() {
   const [aboutData, setAboutData] = useState(null);
   const [featuredProjects, setFeaturedProjects] = useState([]);
   const [techArticles, setTechArticles] = useState([]);
-  const [spotifyTrack, setSpotifyTrack] = useState({
-    is_playing: false,
-    title: "Last Last",
-    artist: "Burna Boy",
-    album_art: "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=300&auto=format&fit=crop",
-    progress_ms: 180000,
-    duration_ms: 230000,
-    track_url: "https://open.spotify.com/user/31uyiyix7zv5vnia63hcvdt4xzry?si=67e9059882504770"
-  });
 
   useEffect(() => {
-    // Fetch spotify now playing status
-    apiClient.get("/api/about/spotify")
-      .then((res) => {
-        setSpotifyTrack(res.data);
-      })
-      .catch((err) => {
-        console.log("Spotify now playing endpoint failed, using default track.");
-      });
 
     // 1. Fetch profile bio details
     apiClient.get("/api/about/")
@@ -339,77 +321,22 @@ function LandingPage() {
             </div>
           )}
 
-          {/* GitHub Activity & Spotify Playing Card Side-by-Side */}
-          <div className="activity-row">
-            
-            {/* GitHub Card */}
-            <div className="details-card github-card-redesign">
-              <h4 className="details-card-sub-title">GitHub Contributions</h4>
-              <div className="github-chart-container">
-                <a href="https://github.com/OmobolajiDurojaiye" target="_blank" rel="noopener noreferrer">
-                  <img 
-                    src="https://ghchart.rshah.org/a162f7/OmobolajiDurojaiye" 
-                    alt="Omobolaji Durojaiye's GitHub contributions" 
-                    className="github-chart-img" 
-                  />
-                </a>
-              </div>
-              <div className="github-activity-footer">
-                <span className="github-handle">@OmobolajiDurojaiye</span>
-                <span className="github-streak-text">841 contributions in the last year</span>
-              </div>
+          {/* GitHub Activity Card */}
+          <div className="details-card github-card-redesign">
+            <h4 className="details-card-sub-title">GitHub Contributions</h4>
+            <div className="github-chart-container">
+              <a href="https://github.com/OmobolajiDurojaiye" target="_blank" rel="noopener noreferrer">
+                <img 
+                  src="https://ghchart.rshah.org/a162f7/OmobolajiDurojaiye" 
+                  alt="Omobolaji Durojaiye's GitHub contributions" 
+                  className="github-chart-img" 
+                />
+              </a>
             </div>
-
-            {/* Spotify Card */}
-            {spotifyTrack && (
-              <div className="details-card spotify-now-playing-card">
-                <h4 className="details-card-sub-title">On Repeat</h4>
-                <a 
-                  href={spotifyTrack.track_url || "https://open.spotify.com/user/31uyiyix7zv5vnia63hcvdt4xzry?si=67e9059882504770"} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="spotify-track-container"
-                >
-                  <div className="spotify-album-art-wrapper">
-                    <img 
-                      src={spotifyTrack.album_art} 
-                      alt={spotifyTrack.title} 
-                      className="spotify-album-art" 
-                    />
-                    <div className="spotify-icon-badge">
-                      <FaSpotify />
-                    </div>
-                  </div>
-                  <div className="spotify-track-info">
-                    <div className="spotify-now-playing-header">
-                      <span className={`now-playing-dot ${spotifyTrack.is_playing ? "active" : ""}`}></span>
-                      <span className="now-playing-text">
-                        {spotifyTrack.is_playing ? "Now Playing" : "Recently Played"}
-                      </span>
-                    </div>
-                    <span className="spotify-track-name">{spotifyTrack.title}</span>
-                    <span className="spotify-artist-name">{spotifyTrack.artist}</span>
-                    <div className="spotify-player-simulation">
-                      <div className="spotify-progress-bar">
-                        <div 
-                          className="spotify-progress-fill" 
-                          style={{ 
-                            width: `${spotifyTrack.duration_ms > 0 ? (spotifyTrack.progress_ms / spotifyTrack.duration_ms) * 100 : 35}%` 
-                          }}
-                        ></div>
-                      </div>
-                      <div className={`soundwave-indicator ${spotifyTrack.is_playing ? "animating" : ""}`}>
-                        <span className="wave-bar"></span>
-                        <span className="wave-bar"></span>
-                        <span className="wave-bar"></span>
-                        <span className="wave-bar"></span>
-                      </div>
-                    </div>
-                  </div>
-                </a>
-              </div>
-            )}
-            
+            <div className="github-activity-footer">
+              <span className="github-handle">@OmobolajiDurojaiye</span>
+              <span className="github-streak-text">841 contributions in the last year</span>
+            </div>
           </div>
 
           {/* Writing Section (Tech Articles Only, Up to 5) */}

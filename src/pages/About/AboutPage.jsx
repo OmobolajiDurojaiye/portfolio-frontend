@@ -102,26 +102,8 @@ const formatBioText = (bio) => {
 
 function AboutPage() {
   const [aboutData, setAboutData] = useState(null);
-  const [spotifyTrack, setSpotifyTrack] = useState({
-    is_playing: false,
-    title: "Last Last",
-    artist: "Burna Boy",
-    album_art: "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=300&auto=format&fit=crop",
-    progress_ms: 180000,
-    duration_ms: 230000,
-    track_url: "https://open.spotify.com/user/31uyiyix7zv5vnia63hcvdt4xzry?si=67e9059882504770"
-  });
 
   useEffect(() => {
-    // Fetch spotify now playing status
-    apiClient.get("/api/about/spotify")
-      .then((res) => {
-        setSpotifyTrack(res.data);
-      })
-      .catch((err) => {
-        console.log("Spotify now playing failed, using default track.");
-      });
-
     apiClient.get("/api/about/")
       .then((res) => {
         setAboutData(res.data);
@@ -253,61 +235,6 @@ function AboutPage() {
           <span className="github-streak-text">841 contributions in the last year</span>
         </div>
       </div>
-
-      {spotifyTrack && (
-        <div className="details-card spotify-card-about-full">
-          <h4 className="details-card-sub-title">Currently listening to</h4>
-          <a 
-            href={spotifyTrack.track_url || "https://open.spotify.com/user/31uyiyix7zv5vnia63hcvdt4xzry?si=67e9059882504770"} 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="spotify-track-container-about"
-          >
-            <div className="spotify-album-art-wrapper-about">
-              <img 
-                src={spotifyTrack.album_art} 
-                alt={spotifyTrack.title} 
-                className="spotify-album-art-about" 
-              />
-              <div className="spotify-icon-badge-about">
-                <FaSpotify />
-              </div>
-            </div>
-            <div className="spotify-track-info-about">
-              <div className="spotify-now-playing-header">
-                <span className={`now-playing-dot ${spotifyTrack.is_playing ? "active" : ""}`}></span>
-                <span className="now-playing-text">
-                  {spotifyTrack.is_playing ? "Now Playing Live" : "Last Played Track"}
-                </span>
-              </div>
-              <span className="spotify-track-name-about">{spotifyTrack.title}</span>
-              <span className="spotify-artist-name-about">{spotifyTrack.artist}</span>
-              
-              <div className="spotify-player-simulation-about">
-                <span className="player-time-label">0:00</span>
-                <div className="spotify-progress-bar-about">
-                  <div 
-                    className="spotify-progress-fill-about" 
-                    style={{ 
-                      width: `${spotifyTrack.duration_ms > 0 ? (spotifyTrack.progress_ms / spotifyTrack.duration_ms) * 100 : 35}%` 
-                    }}
-                  ></div>
-                </div>
-                <span className="player-time-label">
-                  {spotifyTrack.duration_ms > 0 ? `${Math.floor(spotifyTrack.duration_ms / 60000)}:${Math.floor((spotifyTrack.duration_ms % 60000) / 1000).toString().padStart(2, '0')}` : "3:30"}
-                </span>
-                
-                <div className={`soundwave-indicator ${spotifyTrack.is_playing ? "animating" : ""}`}>
-                  <span className="wave-bar"></span>
-                  <span className="wave-bar"></span>
-                  <span className="wave-bar"></span>
-                  <span className="wave-bar"></span>
-                </div>
-              </div>
-            </div>
-          </a>
-        </div>
-      )}
 
       {/* 3. How I Work Workflow */}
       <div className="details-card workflow-card">
