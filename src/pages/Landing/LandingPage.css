@@ -563,3 +563,225 @@
     align-self: flex-start;
   }
 }
+
+/* Activity Row & Cards */
+.activity-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .activity-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.github-card-redesign {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.github-chart-container {
+  background-color: #030303;
+  border: 1px solid var(--border-color);
+  padding: 1rem;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  margin: 0.5rem 0 1rem 0;
+}
+
+.github-chart-img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  filter: saturate(1.2);
+  transition: transform 0.2s ease;
+}
+
+.github-chart-img:hover {
+  transform: scale(1.02);
+}
+
+.github-activity-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.github-handle {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Spotify Card Styling */
+.spotify-now-playing-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.spotify-track-container {
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+  text-decoration: none;
+  background-color: rgba(255, 255, 255, 0.01);
+  border: 1px solid var(--border-color);
+  padding: 1.1rem;
+  border-radius: 12px;
+  margin-top: 0.5rem;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.spotify-track-container:hover {
+  border-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.spotify-album-art-wrapper {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1px solid var(--border-color);
+}
+
+.spotify-album-art {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.spotify-icon-badge {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  background-color: #000000;
+  color: #1ed760; /* Spotify Green */
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  border: 1px solid var(--border-color);
+}
+
+.spotify-track-info {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.spotify-now-playing-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.25rem;
+}
+
+.now-playing-dot {
+  width: 6px;
+  height: 6px;
+  background-color: #1ed760;
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+}
+
+.now-playing-text {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #1ed760;
+}
+
+.spotify-track-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.15rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.spotify-artist-name {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.65rem;
+}
+
+.spotify-player-simulation {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.spotify-progress-bar {
+  flex-grow: 1;
+  height: 3px;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.spotify-progress-fill {
+  height: 100%;
+  background-color: #ffffff;
+  border-radius: 2px;
+}
+
+/* Soundwave Animation */
+.soundwave-indicator {
+  display: flex;
+  align-items: flex-end;
+  gap: 2.5px;
+  height: 14px;
+  width: 16px;
+}
+
+.wave-bar {
+  width: 2px;
+  height: 100%;
+  background-color: #ffffff;
+  animation: soundWave 1.2s ease-in-out infinite alternate;
+  transform-origin: bottom;
+}
+
+.wave-bar:nth-child(1) { animation-delay: 0.1s; height: 30%; }
+.wave-bar:nth-child(2) { animation-delay: 0.4s; height: 80%; }
+.wave-bar:nth-child(3) { animation-delay: 0.2s; height: 50%; }
+.wave-bar:nth-child(4) { animation-delay: 0.6s; height: 95%; }
+
+@keyframes soundWave {
+  0% { transform: scaleY(0.2); }
+  100% { transform: scaleY(1); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.9); opacity: 0.6; }
+  50% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.6; }
+}
+
+.secondary-action-btn {
+  background-color: transparent !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+.secondary-action-btn:hover {
+  background-color: var(--accent-color-bg) !important;
+  border-color: #ffffff !important;
+}

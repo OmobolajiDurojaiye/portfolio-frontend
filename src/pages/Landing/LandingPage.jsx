@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import ReactMarkdown from "react-markdown";
+import { Link } from "react-router-dom";
 import { 
   FaCheckCircle, 
   FaMapMarkerAlt, 
   FaEnvelope, 
   FaCalendarCheck,
   FaArrowRight,
-  FaBookOpen
+  FaBookOpen,
+  FaUser,
+  FaSpotify
 } from "react-icons/fa";
 import headshot from "../../assets/PFP.png";
 import apiClient from "../../services/api";
@@ -235,6 +238,10 @@ function LandingPage() {
             <a href="mailto:omobolajidurojaiye57@gmail.com" className="icon-action-btn" title="Contact Me">
               <FaEnvelope />
             </a>
+            <Link to="/about" className="book-session-btn secondary-action-btn">
+              <FaUser className="btn-icon" />
+              <span>About Me</span>
+            </Link>
             <a href="/contact" className="book-session-btn">
               <FaCalendarCheck className="btn-icon" />
               <span>Book a Call</span>
@@ -313,6 +320,72 @@ function LandingPage() {
               </div>
             </div>
           )}
+
+          {/* GitHub Activity & Spotify Playing Card Side-by-Side */}
+          <div className="activity-row">
+            
+            {/* GitHub Card */}
+            <div className="details-card github-card-redesign">
+              <h4 className="details-card-sub-title">GitHub Contributions</h4>
+              <div className="github-chart-container">
+                <a href="https://github.com/OmobolajiDurojaiye" target="_blank" rel="noopener noreferrer">
+                  <img 
+                    src="https://ghchart.rshah.org/a162f7/OmobolajiDurojaiye" 
+                    alt="Omobolaji Durojaiye's GitHub contributions" 
+                    className="github-chart-img" 
+                  />
+                </a>
+              </div>
+              <div className="github-activity-footer">
+                <span className="github-handle">@OmobolajiDurojaiye</span>
+                <span className="github-streak-text">841 contributions in the last year</span>
+              </div>
+            </div>
+
+            {/* Spotify Card */}
+            {aboutData.spotify_url && (
+              <div className="details-card spotify-now-playing-card">
+                <h4 className="details-card-sub-title">On Repeat</h4>
+                <a 
+                  href={aboutData.spotify_url} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="spotify-track-container"
+                >
+                  <div className="spotify-album-art-wrapper">
+                    <img 
+                      src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=300&auto=format&fit=crop" 
+                      alt="Album Art" 
+                      className="spotify-album-art" 
+                    />
+                    <div className="spotify-icon-badge">
+                      <FaSpotify />
+                    </div>
+                  </div>
+                  <div className="spotify-track-info">
+                    <div className="spotify-now-playing-header">
+                      <span className="now-playing-dot"></span>
+                      <span className="now-playing-text">Recently Played</span>
+                    </div>
+                    <span className="spotify-track-name">Last Last</span>
+                    <span className="spotify-artist-name">Burna Boy</span>
+                    <div className="spotify-player-simulation">
+                      <div className="spotify-progress-bar">
+                        <div className="spotify-progress-fill" style={{ width: '65%' }}></div>
+                      </div>
+                      <div className="soundwave-indicator">
+                        <span className="wave-bar"></span>
+                        <span className="wave-bar"></span>
+                        <span className="wave-bar"></span>
+                        <span className="wave-bar"></span>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            )}
+            
+          </div>
 
           {/* Writing Section (Tech Articles Only, Up to 5) */}
           {techArticles.length > 0 && (
