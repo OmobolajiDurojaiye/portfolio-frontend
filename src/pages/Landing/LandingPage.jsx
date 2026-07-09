@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
+import ReactMarkdown from "react-markdown";
 import { 
   FaCheckCircle, 
   FaMapMarkerAlt, 
   FaEnvelope, 
   FaCalendarCheck,
-  FaArrowRight
+  FaArrowRight,
+  FaBookOpen
 } from "react-icons/fa";
 import headshot from "../../assets/PFP.png";
 import apiClient from "../../services/api";
@@ -39,40 +41,36 @@ const fallbackProjects = [
   }
 ];
 
-const fallbackWriting = {
-  cases: [
-    {
-      id: 2,
-      title: "The Development of CertifyMe (Now ProofDeck)",
-      slug: "the-development-of-certifyme-now-proofdeck",
-      image_url: "",
-      category: { name: "Case Studies" }
-    },
-    {
-      id: 8,
-      title: "Hello, ProofDeck. Goodbye, CertifyMe.",
-      slug: "hello-proofdeck-goodbye-certifyme",
-      image_url: "",
-      category: { name: "Case Studies" }
-    }
-  ],
-  tech: [
-    {
-      id: 9,
-      title: "ProofDeck API Integration Guide",
-      slug: "proofdeck-api-integration-guide",
-      image_url: "",
-      category: { name: "Tech" }
-    },
-    {
-      id: 5,
-      title: "Auditing What We Have",
-      slug: "auditing-what-we-have",
-      image_url: "",
-      category: { name: "Tech" }
-    }
-  ]
-};
+const fallbackWriting = [
+  {
+    id: 9,
+    title: "ProofDeck API Integration Guide",
+    slug: "proofdeck-api-integration-guide",
+    image_url: "",
+    category: { name: "Tech" }
+  },
+  {
+    id: 2,
+    title: "The Development of CertifyMe (Now ProofDeck)",
+    slug: "the-development-of-certifyme-now-proofdeck",
+    image_url: "",
+    category: { name: "Tech" }
+  },
+  {
+    id: 5,
+    title: "Auditing What We Have",
+    slug: "auditing-what-we-have",
+    image_url: "",
+    category: { name: "Tech" }
+  },
+  {
+    id: 8,
+    title: "Hello, ProofDeck. Goodbye, CertifyMe.",
+    slug: "hello-proofdeck-goodbye-certifyme",
+    image_url: "",
+    category: { name: "Tech" }
+  }
+];
 
 const serviceItems = [
   {
@@ -89,34 +87,49 @@ const serviceItems = [
   }
 ];
 
-// Helper to format long bio blocks into layered paragraphs
-const formatParagraphs = (text) => {
-  if (!text) return null;
-  const paragraphs = text.split(/\n+/);
-  if (paragraphs.length > 1) {
-    return paragraphs.map((para, i) => (
-      <p className="bio-paragraph mb-3" key={i}>{para.trim()}</p>
-    ));
-  }
-  const sentences = text.match(/[^.!?]+[.!?]+(\s|$)/g) || [text];
-  const grouped = [];
-  let temp = [];
-  sentences.forEach((sentence, idx) => {
-    temp.push(sentence.trim());
-    if (temp.length === 3 || idx === sentences.length - 1) {
-      grouped.push(temp.join(" "));
-      temp = [];
+const formatBioText = (bio) => {
+  if (!bio) return "";
+  let formatted = bio;
+  
+  // 1. Convert HTTP/HTTPS links into markdown links with clean hostname anchors
+  const urlRegex = /(https?:\/\/(?:www\.)?([a-zA-Z0-9.-]+)(?:\/[^\s\)]*)?)/g;
+  formatted = formatted.replace(urlRegex, (match, fullUrl, domain) => {
+    let cleanUrl = fullUrl;
+    if (cleanUrl.endsWith('.') || cleanUrl.endsWith(',') || cleanUrl.endsWith(')')) {
+      // Avoid capturing trailing punctuation
+      if (cleanUrl.endsWith(')')) {
+        cleanUrl = cleanUrl.slice(0, -1);
+      } else {
+        cleanUrl = cleanUrl.slice(0, -1);
+      }
     }
+    return `[${domain}](${cleanUrl})`;
   });
-  return grouped.map((para, i) => (
-    <p className="bio-paragraph mb-3" key={i}>{para}</p>
-  ));
+
+  // Replace raw "techbe.online" with its link version if not already in markdown format
+  formatted = formatted.replace(/(?<!\[)techbe\.online(?!\])/g, "[techbe.online](https://techbe.online/)");
+
+  // 2. Automatically split into spaced paragraphs (every 2 sentences) to prevent walls of text
+  const paragraphs = formatted.split(/\n+/);
+  const reformattedParagraphs = paragraphs.map(p => {
+    const sentences = p.split(/(?<=[.!?])\s+/);
+    const chunks = [];
+    for (let i = 0; i < sentences.length; i += 2) {
+      const chunk = sentences.slice(i, i + 2).join(" ");
+      if (chunk.trim()) {
+        chunks.push(chunk.trim());
+      }
+    }
+    return chunks.join("\n\n");
+  });
+
+  return reformattedParagraphs.join("\n\n");
 };
 
 function LandingPage() {
   const [aboutData, setAboutData] = useState(null);
   const [featuredProjects, setFeaturedProjects] = useState([]);
-  const [writingData, setWritingData] = useState({ cases: [], tech: [] });
+  const [techArticles, setTechArticles] = useState([]);
 
   useEffect(() => {
     // 1. Fetch profile bio details
@@ -130,12 +143,17 @@ function LandingPage() {
           name: "Bolaji",
           role: "Software Engineer & Digital Architect",
           location: "Abuja, Nigeria",
-          bio: "I’m Omobolaji Durojaiye; you can call me Bolaji. I’m a software engineer, writer, and startup founder. I build software solutions for industries spanning logistics, education, finance, and many more. I also write for various industries, including crypto, conservation, and others.",
+          bio: "I’m Omobolaji Durojaiye; you can call me Bolaji. I’m a software engineer and startup founder building easy-to-use software for businesses, reducing admin burden and streamlining workflows.\n\nSome of what I've built: Kasi AI (AI-powered WhatsApp sales & booking agent), ProofDeck (digital credentialing platform), TeachJS, and Student Progress Tracker, plus client work through my agency - BE Tech Agency (https://techbe.online/).\n\nI'm inquisitive by nature and see every project through to the end. If you work with me, expect commitment till it's done.\n\nWant to talk? Drop a message, book a call, or find me on socials below.",
           skills: [
             { id: 1, name: "React", icon_name: "FaReact" },
             { id: 2, name: "Node.js", icon_name: "FaNodeJs" },
             { id: 3, name: "Python", icon_name: "FaPython" },
             { id: 4, name: "UI Design", icon_name: "FaPalette" }
+          ],
+          tools: [
+            { id: 1, name: "VS Code", icon_name: "FaCode" },
+            { id: 2, name: "Figma", icon_name: "FaFigma" },
+            { id: 3, name: "Git", icon_name: "FaGithub" }
           ]
         });
       });
@@ -150,21 +168,17 @@ function LandingPage() {
         setFeaturedProjects(fallbackProjects);
       });
 
-    // 3. Fetch blog posts and filter locally by categories
+    // 3. Fetch blog posts and filter only Tech articles (up to 5)
     apiClient.get("/api/blog/home-data")
       .then((res) => {
         const posts = res.data.posts || [];
-        const cases = posts.filter(p => p.category?.slug === "case-studies" || p.category?.name === "Case Studies").slice(0, 2);
-        const tech = posts.filter(p => p.category?.slug === "tech" || p.category?.name === "Tech").slice(0, 3);
+        const tech = posts.filter(p => p.category?.slug === "tech" || p.category?.name === "Tech").slice(0, 5);
         
-        setWritingData({
-          cases: cases.length > 0 ? cases : fallbackWriting.cases,
-          tech: tech.length > 0 ? tech : fallbackWriting.tech
-        });
+        setTechArticles(tech.length > 0 ? tech : fallbackWriting.slice(0, 5));
       })
       .catch((err) => {
         console.log("Blog data endpoint failed, using local writing fallbacks.");
-        setWritingData(fallbackWriting);
+        setTechArticles(fallbackWriting.slice(0, 5));
       });
   }, []);
 
@@ -176,8 +190,8 @@ function LandingPage() {
     );
   }
 
-  // Combine cases and tech into one writing list
-  const combinedWriting = [...writingData.cases, ...writingData.tech];
+  // Combine Skills and Tools/Principles
+  const allStackItems = [...(aboutData.skills || []), ...(aboutData.tools || [])];
 
   return (
     <div className="profile-redesign-wrapper">
@@ -231,7 +245,7 @@ function LandingPage() {
           <div className="details-card bio-card">
             <h3 className="details-card-title">I create softwares to simplify life and business workflow.</h3>
             <div className="bio-paragraph-container">
-              {formatParagraphs(aboutData.bio)}
+              <ReactMarkdown>{formatBioText(aboutData.bio)}</ReactMarkdown>
             </div>
           </div>
 
@@ -263,27 +277,27 @@ function LandingPage() {
             </div>
           </div>
 
-          {/* Stack Section */}
-          {aboutData.skills && aboutData.skills.length > 0 && (
+          {/* Combined Stack, Tools & Principles Section */}
+          {allStackItems.length > 0 && (
             <div className="details-card stack-card">
               <h4 className="details-card-sub-title">Stack, Tools & Principles</h4>
               <div className="stack-tags-grid">
-                {aboutData.skills.map((skill) => (
-                  <div className="stack-tag-item" key={skill.id}>
-                    <DynamicIcon name={skill.icon_name} />
-                    <span>{skill.name}</span>
+                {allStackItems.map((item, index) => (
+                  <div className="stack-tag-item" key={item.id || index}>
+                    <DynamicIcon name={item.icon_name} />
+                    <span>{item.name}</span>
                   </div>
                 ))}
               </div>
             </div>
           )}
 
-          {/* Writing Section (Combined list with images on the left) */}
-          {combinedWriting.length > 0 && (
+          {/* Writing Section (Tech Articles Only, Up to 5) */}
+          {techArticles.length > 0 && (
             <div className="details-card writing-card">
               <h4 className="details-card-sub-title">Writing</h4>
               <div className="featured-projects-list">
-                {combinedWriting.map((post) => (
+                {techArticles.map((post) => (
                   <a href={`/blog/${post.slug}`} className="featured-project-item" key={post.id}>
                     <div className="project-preview-icon">
                       {post.image_url || post.image ? (

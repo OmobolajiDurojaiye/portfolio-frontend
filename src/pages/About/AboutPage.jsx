@@ -60,6 +60,45 @@ const HowIWork = () => {
   );
 };
 
+const formatBioText = (bio) => {
+  if (!bio) return "";
+  let formatted = bio;
+  
+  // 1. Convert HTTP/HTTPS links into markdown links with clean hostname anchors
+  const urlRegex = /(https?:\/\/(?:www\.)?([a-zA-Z0-9.-]+)(?:\/[^\s\)]*)?)/g;
+  formatted = formatted.replace(urlRegex, (match, fullUrl, domain) => {
+    let cleanUrl = fullUrl;
+    if (cleanUrl.endsWith('.') || cleanUrl.endsWith(',') || cleanUrl.endsWith(')')) {
+      // Avoid capturing trailing punctuation
+      if (cleanUrl.endsWith(')')) {
+        cleanUrl = cleanUrl.slice(0, -1);
+      } else {
+        cleanUrl = cleanUrl.slice(0, -1);
+      }
+    }
+    return `[${domain}](${cleanUrl})`;
+  });
+
+  // Replace raw "techbe.online" with its link version if not already in markdown format
+  formatted = formatted.replace(/(?<!\[)techbe\.online(?!\])/g, "[techbe.online](https://techbe.online/)");
+
+  // 2. Automatically split into spaced paragraphs (every 2 sentences) to prevent walls of text
+  const paragraphs = formatted.split(/\n+/);
+  const reformattedParagraphs = paragraphs.map(p => {
+    const sentences = p.split(/(?<=[.!?])\s+/);
+    const chunks = [];
+    for (let i = 0; i < sentences.length; i += 2) {
+      const chunk = sentences.slice(i, i + 2).join(" ");
+      if (chunk.trim()) {
+        chunks.push(chunk.trim());
+      }
+    }
+    return chunks.join("\n\n");
+  });
+
+  return reformattedParagraphs.join("\n\n");
+};
+
 function AboutPage() {
   const [aboutData, setAboutData] = useState(null);
 
@@ -117,7 +156,7 @@ function AboutPage() {
       <div className="details-card about-bio-card">
         <h3 className="details-card-title">About Me</h3>
         <div className="bio-paragraph">
-          <ReactMarkdown>{aboutData.bio}</ReactMarkdown>
+          <ReactMarkdown>{formatBioText(aboutData.bio)}</ReactMarkdown>
         </div>
         {aboutData.spotify_url && (
           <a

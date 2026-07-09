@@ -14,7 +14,7 @@ const BlogNavbar = () => {
   useEffect(() => {
     apiClient
       .get("/api/blog/categories")
-      .then((res) => setCategories(res.data.slice(0, 4)))
+      .then((res) => setCategories(res.data.slice(0, 5)))
       .catch((err) => console.error("Failed to fetch categories", err));
   }, []);
 
@@ -30,63 +30,105 @@ const BlogNavbar = () => {
   return (
     <div className={`blog-nav-wrapper ${expanded ? "expanded" : "collapsed"}`}>
       <Container className="blog-nav-container">
-        <div className="blog-nav-top">
-            <Nav className="blog-nav-links">
+        
+        {/* Row 1: Brand/Links + Search Form (Desktop) */}
+        <div className="blog-nav-row-1">
+          <Nav className="blog-nav-links">
             <Nav.Link as={NavLink} to="/blog" end onClick={() => setExpanded(false)}>
-                <FaHome />
-                <span className="d-none d-md-inline">Home</span>
+              <FaHome />
+              <span>Home</span>
             </Nav.Link>
             <Nav.Link as={NavLink} to="/blog/categories" onClick={() => setExpanded(false)}>
-                <FaThLarge />
-                <span className="d-none d-md-inline">Categories</span>
+              <FaThLarge />
+              <span>Categories</span>
             </Nav.Link>
             <Nav.Link as={NavLink} to="/blog/readlists" onClick={() => setExpanded(false)}>
-                <FaStream />
-                <span className="d-none d-md-inline">Readlists</span>
+              <FaStream />
+              <span>Readlists</span>
             </Nav.Link>
-            </Nav>
+          </Nav>
 
-            <button 
-                className="blog-nav-toggle d-lg-none" 
-                onClick={() => setExpanded(!expanded)}
-                aria-label="Toggle navigation"
-            >
-                {expanded ? <FaChevronUp /> : <FaChevronDown />}
+          {/* Search bar on desktop */}
+          <Form onSubmit={handleSearch} className="blog-search-form d-none d-lg-flex">
+            <Form.Control
+              type="search"
+              placeholder="Search..."
+              className="blog-search-input"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <button type="submit" className="search-icon-btn">
+              <FaSearch />
             </button>
+          </Form>
+
+          {/* Hamburger toggle button on mobile */}
+          <button 
+            className="blog-nav-toggle d-lg-none" 
+            onClick={() => setExpanded(!expanded)}
+            aria-label="Toggle navigation"
+          >
+            {expanded ? <FaChevronUp /> : <FaChevronDown />}
+          </button>
         </div>
 
-        <div className="blog-nav-collapsible">
-            <Nav className="blog-nav-categories">
+        {/* Row 2: Category Pills (Desktop only) */}
+        <div className="blog-nav-row-2 d-none d-lg-flex">
+          <Nav className="blog-nav-categories">
             {categories.map((cat) => (
-                <Nav.Link
+              <Nav.Link
                 as={NavLink}
                 to={`/blog/categories/${cat.slug}`}
                 key={cat.id}
                 className="category-pill-link"
-                onClick={() => setExpanded(false)}
-                >
+              >
                 <span
+                  className="category-pill"
+                  style={{ "--category-color": cat.color }}
+                >
+                  {cat.name}
+                </span>
+              </Nav.Link>
+            ))}
+          </Nav>
+        </div>
+
+        {/* Mobile Collapsible Panel */}
+        {expanded && (
+          <div className="blog-nav-collapsible-mobile d-lg-none">
+            <Nav className="blog-nav-categories-mobile">
+              {categories.map((cat) => (
+                <Nav.Link
+                  as={NavLink}
+                  to={`/blog/categories/${cat.slug}`}
+                  key={cat.id}
+                  className="category-pill-link"
+                  onClick={() => setExpanded(false)}
+                >
+                  <span
                     className="category-pill"
                     style={{ "--category-color": cat.color }}
-                >
+                  >
                     {cat.name}
-                </span>
+                  </span>
                 </Nav.Link>
-            ))}
+              ))}
             </Nav>
-            <Form onSubmit={handleSearch} className="blog-search-form">
-            <Form.Control
+            <Form onSubmit={handleSearch} className="blog-search-form-mobile mt-3">
+              <Form.Control
                 type="search"
                 placeholder="Search..."
                 className="blog-search-input"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <button type="submit" className="search-icon-btn">
+              />
+              <button type="submit" className="search-icon-btn">
                 <FaSearch />
-            </button>
+              </button>
             </Form>
-        </div>
+          </div>
+        )}
+
       </Container>
     </div>
   );

@@ -5,7 +5,7 @@
   gap: 1.25rem;
   width: 100%;
   background-color: #000000;
-  font-family: "Plus Jakarta Sans", sans-serif;
+  font-family: "Bricolage Grotesque", sans-serif;
 }
 
 /* Loading state */
@@ -244,11 +244,27 @@
   letter-spacing: 0.5px;
 }
 
-.bio-paragraph {
+.bio-paragraph-container p {
   color: var(--text-secondary);
   line-height: 1.6;
   font-size: 0.82rem;
-  margin: 0;
+  margin-bottom: 1rem;
+}
+
+.bio-paragraph-container p:last-child {
+  margin-bottom: 0;
+}
+
+.bio-paragraph-container a {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  text-decoration: underline !important;
+  text-decoration-color: rgba(255, 255, 255, 0.4) !important;
+  transition: text-decoration-color 0.2s ease;
+}
+
+.bio-paragraph-container a:hover {
+  text-decoration-color: #ffffff !important;
 }
 
 /* Featured Projects List (Compact Horizontal Align) */

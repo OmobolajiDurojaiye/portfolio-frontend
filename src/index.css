@@ -10,12 +10,16 @@
   --text-secondary: #888888;
   --border-color: #141416;
   --font-serif: "Bricolage Grotesque", sans-serif;
+  --font-sans: "Bricolage Grotesque", sans-serif;
   --plum-accent: #a162f7;
+}
+
+body, h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, li {
+  font-family: "Bricolage Grotesque", sans-serif !important;
 }
 
 body {
   margin: 0;
-  font-family: "Bricolage Grotesque", sans-serif;
   font-size: 0.88rem;
   font-weight: 300;
   -webkit-font-smoothing: antialiased;
