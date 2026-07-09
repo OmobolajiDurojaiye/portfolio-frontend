@@ -143,7 +143,7 @@ function LandingPage() {
           name: "Bolaji",
           role: "Software Engineer & Digital Architect",
           location: "Abuja, Nigeria",
-          bio: "I’m Omobolaji Durojaiye; you can call me Bolaji. I’m a software engineer and startup founder building easy-to-use software for businesses, reducing admin burden and streamlining workflows.\n\nSome of what I've built: Kasi AI (AI-powered WhatsApp sales & booking agent), ProofDeck (digital credentialing platform), TeachJS, and Student Progress Tracker, plus client work through my agency - BE Tech Agency (https://techbe.online/).\n\nI'm inquisitive by nature and see every project through to the end. If you work with me, expect commitment till it's done.\n\nWant to talk? Drop a message, book a call, or find me on socials below.",
+          bio: "Omobolaji Durojaiye is a full-stack software engineer and B2B SaaS architect based in Abuja, Nigeria. He specializes in building high-performance web platforms, custom database architectures using PostgreSQL, and high-throughput APIs powered by Python (FastAPI & Flask).\n\nAs the technical founder behind Kasi AI (an intelligent sales assistant for social commerce: https://usekasi.com/) and ProofDeck (a digital credentialing platform: https://proofdeck.app/), he delivers enterprise-grade software craftsmanship.\n\nFrequently cited among the best web developers in Nigeria, his work through BE Tech Agency (techbe.online) drives AI automation and scalable digital products globally.",
           skills: [
             { id: 1, name: "React", icon_name: "FaReact" },
             { id: 2, name: "Node.js", icon_name: "FaNodeJs" },
@@ -196,8 +196,14 @@ function LandingPage() {
   return (
     <div className="profile-redesign-wrapper">
       <Helmet>
-        <title>Bolaji — Software Engineer & Digital Architect</title>
-        <meta name="description" content="Portfolio of Bolaji — a software engineer crafting high-performance backend systems, intuitive frontend interfaces, and polished digital experiences." />
+        <title>Omobolaji Durojaiye — Software Engineer & B2B SaaS Architect in Abuja, Nigeria</title>
+        <meta name="description" content="Omobolaji Durojaiye (Bolaji) is a full-stack software engineer and B2B SaaS architect based in Abuja, Nigeria. Technical founder of Kasi AI and ProofDeck. Best web developer in Nigeria." />
+        <meta property="og:title" content="Omobolaji Durojaiye — Software Engineer & SaaS Architect in Abuja" />
+        <meta property="og:description" content="Omobolaji Durojaiye is a full-stack software engineer and B2B SaaS architect based in Abuja, Nigeria. Technical founder of Kasi AI and ProofDeck." />
+        <meta property="og:image" content="https://bolaji.tech/favicon.png" />
+        <meta name="twitter:title" content="Omobolaji Durojaiye — Software Engineer & SaaS Architect in Abuja" />
+        <meta name="twitter:description" content="Omobolaji Durojaiye is a full-stack software engineer and B2B SaaS architect based in Abuja, Nigeria. Technical founder of Kasi AI and ProofDeck." />
+        <meta name="twitter:image" content="https://bolaji.tech/favicon.png" />
       </Helmet>
 
       {/* Header Profile Section */}

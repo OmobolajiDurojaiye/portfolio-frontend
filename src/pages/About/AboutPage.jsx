@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import { FaSpotify } from "react-icons/fa";
+import { Helmet } from "react-helmet-async";
 import apiClient from "../../services/api";
 import DynamicIcon from "../../utils/iconMap";
 import "./AboutPage.css";
@@ -111,7 +112,7 @@ function AboutPage() {
         console.log("Backend failed, using local offline about fallback.");
         setAboutData({
           spotify_url: "https://open.spotify.com",
-          bio: "I’m Omobolaji Durojaiye; you can call me Bolaji. I’m a software engineer, writer, and startup founder. I build software solutions for industries spanning logistics, education, finance, and many more. I also write for various industries, including crypto, conservation, and others.",
+          bio: "Omobolaji Durojaiye is a full-stack software engineer and B2B SaaS architect based in Abuja, Nigeria. He specializes in building high-performance web platforms, custom database architectures using PostgreSQL, and high-throughput APIs powered by Python (FastAPI & Flask).\n\nAs the technical founder behind Kasi AI (an intelligent sales assistant for social commerce: https://usekasi.com/) and ProofDeck (a digital credentialing platform: https://proofdeck.app/), he delivers enterprise-grade software craftsmanship.\n\nFrequently cited among the best web developers in Nigeria, his work through BE Tech Agency (techbe.online) drives AI automation and scalable digital products globally.",
           skills: [
             { id: 1, name: "React", icon_name: "FaReact" },
             { id: 2, name: "Node.js", icon_name: "FaNodeJs" },
@@ -151,6 +152,13 @@ function AboutPage() {
 
   return (
     <div className="about-page-wrapper">
+      <Helmet>
+        <title>About Omobolaji Durojaiye | SaaS Developer & AI Engineer in Abuja</title>
+        <meta name="description" content="Omobolaji Durojaiye is a software developer in Abuja, Nigeria, crafting high-performance B2B SaaS platforms and custom database systems. Technical founder of Kasi AI." />
+        <meta property="og:title" content="About Omobolaji Durojaiye | SaaS Developer & AI Engineer" />
+        <meta property="og:description" content="Omobolaji Durojaiye is a software developer in Abuja, Nigeria, crafting high-performance B2B SaaS platforms and custom database systems. Technical founder of Kasi AI." />
+        <meta property="og:image" content="https://bolaji.tech/favicon.png" />
+      </Helmet>
       
       {/* 1. About Bio Card */}
       <div className="details-card about-bio-card">

@@ -76,20 +76,20 @@ function SinglePostPage() {
   return (
     <>
       <Helmet>
-        <title>{`${post.title} - The B Blog`}</title>
-        <meta name="description" content={post.excerpt} />
-        <meta property="og:title" content={`${post.title} - The B Blog`} />
-        <meta property="og:description" content={post.excerpt} />
-        <meta property="og:image" content={post.image_url || "https://bolaji.tech/favicon.jpg"} />
+        <title>{`${post.title} | Blog by Omobolaji Durojaiye - Software Engineer in Abuja`}</title>
+        <meta name="description" content={post.excerpt || `Read '${post.title}' by Omobolaji Durojaiye, full-stack software engineer and SaaS developer in Abuja, Nigeria.`} />
+        <meta property="og:title" content={`${post.title} | Blog by Omobolaji Durojaiye`} />
+        <meta property="og:description" content={post.excerpt || `Read '${post.title}' by Omobolaji Durojaiye, full-stack software engineer and SaaS developer in Abuja, Nigeria.`} />
+        <meta property="og:image" content={post.image_url || "https://bolaji.tech/favicon.png"} />
         <meta property="og:type" content="article" />
         <meta
           property="og:url"
           content={`https://bolaji.tech/blog/${post.slug}`}
         />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={`${post.title} - The B Blog`} />
-        <meta name="twitter:description" content={post.excerpt} />
-        <meta name="twitter:image" content={post.image_url || "https://bolaji.tech/favicon.jpg"} />
+        <meta name="twitter:title" content={`${post.title} | Blog by Omobolaji Durojaiye`} />
+        <meta name="twitter:description" content={post.excerpt || `Read '${post.title}' by Omobolaji Durojaiye, full-stack software engineer and SaaS developer in Abuja, Nigeria.`} />
+        <meta name="twitter:image" content={post.image_url || "https://bolaji.tech/favicon.png"} />
       </Helmet>
 
       <div className="single-post-container">
