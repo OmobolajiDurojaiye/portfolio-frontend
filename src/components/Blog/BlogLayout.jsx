@@ -1,5 +1,4 @@
 import { Outlet } from "react-router-dom";
-import BlogFooter from "./BlogFooter";
 import BlogNavbar from "./BlogNavbar";
 
 const BlogLayout = () => {
@@ -9,7 +8,6 @@ const BlogLayout = () => {
       <div style={{ minHeight: "60vh" }}>
         <Outlet />
       </div>
-      <BlogFooter />
     </div>
   );
 };
