@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200;300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@200;300;400;500;600;700&display=swap");
 
 :root {
   --background-dark: #000000;
@@ -9,13 +9,17 @@
   --text-primary: #ffffff;
   --text-secondary: #888888;
   --border-color: #141416;
-  --font-serif: "Bricolage Grotesque", sans-serif;
-  --font-sans: "Bricolage Grotesque", sans-serif;
+  --font-serif: "Space Grotesk", sans-serif;
+  --font-sans: "Inter", sans-serif;
   --plum-accent: #a162f7;
 }
 
-body, h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, li {
-  font-family: "Bricolage Grotesque", sans-serif !important;
+body, p, span, a, button, input, textarea, select, li, label {
+  font-family: "Inter", sans-serif !important;
+}
+
+h1, h2, h3, h4, h5, h6, .profile-name, .logo-text, .main-featured-title, .details-card-title, .details-card-sub-title, .step-title, .product-title {
+  font-family: "Space Grotesk", sans-serif !important;
 }
 
 body {

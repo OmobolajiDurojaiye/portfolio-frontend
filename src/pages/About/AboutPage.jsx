@@ -156,7 +156,23 @@ function AboutPage() {
       <div className="details-card about-bio-card">
         <h3 className="details-card-title">About Me</h3>
         <div className="bio-paragraph">
-          <ReactMarkdown>{formatBioText(aboutData.bio)}</ReactMarkdown>
+          <ReactMarkdown
+            components={{
+              a: ({ href, children }) => {
+                let absoluteHref = href;
+                if (href && !href.startsWith('http://') && !href.startsWith('https://') && !href.startsWith('mailto:')) {
+                  absoluteHref = `https://${href}`;
+                }
+                return (
+                  <a href={absoluteHref} target="_blank" rel="noopener noreferrer">
+                    {children}
+                  </a>
+                );
+              }
+            }}
+          >
+            {formatBioText(aboutData.bio)}
+          </ReactMarkdown>
         </div>
         {aboutData.spotify_url && (
           <a

@@ -245,7 +245,23 @@ function LandingPage() {
           <div className="details-card bio-card">
             <h3 className="details-card-title">I create softwares to simplify life and business workflow.</h3>
             <div className="bio-paragraph-container">
-              <ReactMarkdown>{formatBioText(aboutData.bio)}</ReactMarkdown>
+              <ReactMarkdown
+                components={{
+                  a: ({ href, children }) => {
+                    let absoluteHref = href;
+                    if (href && !href.startsWith('http://') && !href.startsWith('https://') && !href.startsWith('mailto:')) {
+                      absoluteHref = `https://${href}`;
+                    }
+                    return (
+                      <a href={absoluteHref} target="_blank" rel="noopener noreferrer">
+                        {children}
+                      </a>
+                    );
+                  }
+                }}
+              >
+                {formatBioText(aboutData.bio)}
+              </ReactMarkdown>
             </div>
           </div>
 
