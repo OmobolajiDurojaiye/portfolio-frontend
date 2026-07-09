@@ -207,6 +207,24 @@
   border: 1px solid var(--border-color);
   border-radius: 16px;
   padding: 1.5rem;
+  animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.details-card:nth-child(1) { animation-delay: 0.05s; }
+.details-card:nth-child(2) { animation-delay: 0.1s; }
+.details-card:nth-child(3) { animation-delay: 0.15s; }
+.details-card:nth-child(4) { animation-delay: 0.2s; }
+.details-card:nth-child(5) { animation-delay: 0.25s; }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .details-card-title {
@@ -249,12 +267,13 @@
   border: 1px solid var(--border-color);
   border-radius: 10px;
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .featured-project-item:hover {
   border-color: var(--accent-color-border);
   background-color: rgba(255, 255, 255, 0.02);
+  transform: translateY(-2px);
 }
 
 .project-preview-icon {

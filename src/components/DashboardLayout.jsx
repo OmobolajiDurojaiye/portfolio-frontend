@@ -9,11 +9,12 @@ import {
   FaTwitter, 
   FaGithub, 
   FaLinkedin, 
-  FaGlobe, 
+  FaCloud, 
   FaBookmark,
   FaBars,
   FaTimes
 } from "react-icons/fa";
+import headshot from "../assets/PFP.png";
 import "./DashboardLayout.css";
 
 function DashboardLayout() {
@@ -40,7 +41,15 @@ function DashboardLayout() {
     { name: "X", url: "https://x.com/bjtolu", icon: <FaTwitter /> },
     { name: "GitHub", url: "https://github.com/OmobolajiDurojaiye", icon: <FaGithub /> },
     { name: "LinkedIn", url: "https://www.linkedin.com/in/omobolaji-durojaiye-527872294/", icon: <FaLinkedin /> },
-    { name: "Bluesky", url: "https://bsky.app/profile/bolaji.tech", icon: <FaGlobe /> },
+    { 
+      name: "Bluesky", 
+      url: "https://bsky.app/profile/bolaji.tech", 
+      icon: (
+        <svg viewBox="0 0 512 512" fill="currentColor" style={{ width: "0.95em", height: "0.95em" }}>
+          <path d="M111.8 62.2C170.2 105.9 226.5 186 256 237.5c29.5-51.5 85.8-131.6 144.2-175.3C443.7 30.8 483 18.1 483 66.8c0 48.7-36.9 167.3-56.1 217.1-23.7 61.4-85.1 76.7-142.1 63.6 57 85.4 100.8 116.1 76 156.4-36.5 59.2-104.8-63-104.8-63s-68.3 122.2-104.8 63c-24.8-40.3 19-111 76-156.4-57 13.1-118.4-2.2-142.1-63.6C36.9 234.1 0 115.5 0 66.8 0 18.1 39.3 30.8 111.8 62.2z"/>
+        </svg>
+      )
+    },
     { name: "Substack", url: "https://substack.com/@bjtolu", icon: <FaBookmark /> },
   ];
 
@@ -112,6 +121,15 @@ function DashboardLayout() {
               ))}
             </ul>
           </nav>
+
+          {/* User Profile Slot on the side of the profile image (like X) */}
+          <div className="sidebar-profile-footer">
+            <img src={headshot} alt="Bolaji" className="sidebar-profile-avatar" />
+            <div className="sidebar-profile-info">
+              <span className="sidebar-profile-name">Bolaji</span>
+              <span className="sidebar-profile-handle">@bjtolu</span>
+            </div>
+          </div>
 
           {/* Social Links on Sidebar */}
           <div className="sidebar-socials">

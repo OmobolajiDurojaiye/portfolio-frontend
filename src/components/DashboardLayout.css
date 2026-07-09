@@ -4,7 +4,7 @@
   min-height: 100vh;
   background-color: #000000;
   color: var(--text-primary);
-  font-family: "Plus Jakarta Sans", sans-serif;
+  font-family: "Bricolage Grotesque", sans-serif;
 }
 
 /* Centered Wrapper for Desktop (Similar to X page layout) */
@@ -101,13 +101,47 @@
   color: var(--text-primary);
 }
 
+/* Profile Footer Slot (similar to X) */
+.sidebar-profile-footer {
+  margin-top: auto; /* Push to bottom */
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 1rem 0.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.sidebar-profile-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border-color);
+}
+
+.sidebar-profile-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-profile-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.sidebar-profile-handle {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
 /* Social links at bottom of sidebar */
 .sidebar-socials {
-  margin-top: auto;
   display: flex;
   flex-wrap: wrap;
   gap: 0.88rem;
-  padding: 1rem 0.5rem 0.5rem 0.5rem;
+  padding: 0.75rem 0.5rem 0.5rem 0.5rem;
   border-top: 1px solid var(--border-color);
 }
 

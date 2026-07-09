@@ -2,7 +2,7 @@
 .contact-page-container {
   padding-top: 0.5rem;
   padding-bottom: 2rem;
-  font-family: "Plus Jakarta Sans", sans-serif;
+  font-family: "Bricolage Grotesque", sans-serif;
   width: 100%;
 }
 
@@ -88,9 +88,14 @@
   padding: 0.65rem 0.88rem !important;
 }
 
+.clean-contact-form input::placeholder,
+.clean-contact-form textarea::placeholder {
+  color: rgba(255, 255, 255, 0.4) !important;
+}
+
 .clean-contact-form input:focus,
 .clean-contact-form textarea:focus {
-  border-color: var(--accent-color-border) !important;
+  border-color: #ffffff !important;
   box-shadow: none !important;
 }
 

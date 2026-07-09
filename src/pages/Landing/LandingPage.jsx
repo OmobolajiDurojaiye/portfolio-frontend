@@ -3,14 +3,11 @@ import { Helmet } from "react-helmet-async";
 import { 
   FaCheckCircle, 
   FaMapMarkerAlt, 
-  FaCalendarAlt, 
   FaEnvelope, 
   FaCalendarCheck,
-  FaArrowRight,
-  FaBriefcase,
-  FaBookOpen
+  FaArrowRight
 } from "react-icons/fa";
-import headshot from "../../assets/PFP.jpg";
+import headshot from "../../assets/PFP.png";
 import apiClient from "../../services/api";
 import DynamicIcon from "../../utils/iconMap";
 import "./LandingPage.css";
@@ -48,12 +45,14 @@ const fallbackWriting = {
       id: 2,
       title: "The Development of CertifyMe (Now ProofDeck)",
       slug: "the-development-of-certifyme-now-proofdeck",
+      image_url: "",
       category: { name: "Case Studies" }
     },
     {
       id: 8,
       title: "Hello, ProofDeck. Goodbye, CertifyMe.",
       slug: "hello-proofdeck-goodbye-certifyme",
+      image_url: "",
       category: { name: "Case Studies" }
     }
   ],
@@ -62,12 +61,14 @@ const fallbackWriting = {
       id: 9,
       title: "ProofDeck API Integration Guide",
       slug: "proofdeck-api-integration-guide",
+      image_url: "",
       category: { name: "Tech" }
     },
     {
       id: 5,
       title: "Auditing What We Have",
       slug: "auditing-what-we-have",
+      image_url: "",
       category: { name: "Tech" }
     }
   ]
@@ -88,6 +89,30 @@ const serviceItems = [
   }
 ];
 
+// Helper to format long bio blocks into layered paragraphs
+const formatParagraphs = (text) => {
+  if (!text) return null;
+  const paragraphs = text.split(/\n+/);
+  if (paragraphs.length > 1) {
+    return paragraphs.map((para, i) => (
+      <p className="bio-paragraph mb-3" key={i}>{para.trim()}</p>
+    ));
+  }
+  const sentences = text.match(/[^.!?]+[.!?]+(\s|$)/g) || [text];
+  const grouped = [];
+  let temp = [];
+  sentences.forEach((sentence, idx) => {
+    temp.push(sentence.trim());
+    if (temp.length === 3 || idx === sentences.length - 1) {
+      grouped.push(temp.join(" "));
+      temp = [];
+    }
+  });
+  return grouped.map((para, i) => (
+    <p className="bio-paragraph mb-3" key={i}>{para}</p>
+  ));
+};
+
 function LandingPage() {
   const [aboutData, setAboutData] = useState(null);
   const [featuredProjects, setFeaturedProjects] = useState([]);
@@ -104,9 +129,8 @@ function LandingPage() {
         setAboutData({
           name: "Bolaji",
           role: "Software Engineer & Digital Architect",
-          location: "Lagos, Nigeria",
-          joined: "March 2020",
-          bio: "I’m Bolaji. I’m a software engineer, writer, and startup founder. I aim to work with you to build software, collaborate on software projects, or write a short article. I love to create and try things out. I’m an inquisitive person, and I make sure I see ideas and projects through to the end.",
+          location: "Abuja, Nigeria",
+          bio: "I’m Omobolaji Durojaiye; you can call me Bolaji. I’m a software engineer, writer, and startup founder. I build software solutions for industries spanning logistics, education, finance, and many more. I also write for various industries, including crypto, conservation, and others.",
           skills: [
             { id: 1, name: "React", icon_name: "FaReact" },
             { id: 2, name: "Node.js", icon_name: "FaNodeJs" },
@@ -152,6 +176,9 @@ function LandingPage() {
     );
   }
 
+  // Combine cases and tech into one writing list
+  const combinedWriting = [...writingData.cases, ...writingData.tech];
+
   return (
     <div className="profile-redesign-wrapper">
       <Helmet>
@@ -167,17 +194,17 @@ function LandingPage() {
         {/* User Info Bar */}
         <div className="profile-info-bar">
           <div className="profile-avatar-wrapper">
-            <img src={headshot} alt={aboutData.name} className="profile-avatar-img" />
+            <img src={headshot} alt="Bolaji" className="profile-avatar-img" />
             <div className="avatar-status-dot"></div>
           </div>
 
           <div className="profile-identity">
             <div className="profile-name-row">
-              <h2 className="profile-name">{aboutData.name}</h2>
+              <h2 className="profile-name">Bolaji</h2>
               <FaCheckCircle className="verification-check" title="Verified Developer" />
             </div>
             
-            <div className="profile-rate">{aboutData.role}</div>
+            <div className="profile-rate">Software Engineer & Digital Architect</div>
 
             <div className="profile-meta-row">
               <span className="meta-item"><FaMapMarkerAlt /> Abuja, Nigeria</span>
@@ -203,7 +230,9 @@ function LandingPage() {
           {/* Hero Copy / Bio Card */}
           <div className="details-card bio-card">
             <h3 className="details-card-title">I create softwares to simplify life and business workflow.</h3>
-            <p className="bio-paragraph">{aboutData.bio}</p>
+            <div className="bio-paragraph-container">
+              {formatParagraphs(aboutData.bio)}
+            </div>
           </div>
 
           {/* Featured Projects Card */}
@@ -237,7 +266,7 @@ function LandingPage() {
           {/* Stack Section */}
           {aboutData.skills && aboutData.skills.length > 0 && (
             <div className="details-card stack-card">
-              <h4 className="details-card-sub-title">Tech Stack</h4>
+              <h4 className="details-card-sub-title">Stack, Tools & Principles</h4>
               <div className="stack-tags-grid">
                 {aboutData.skills.map((skill) => (
                   <div className="stack-tag-item" key={skill.id}>
@@ -249,36 +278,29 @@ function LandingPage() {
             </div>
           )}
 
-          {/* Writing Section (2 from Use Cases, 3 from Tech) */}
-          <div className="details-card writing-card">
-            <h4 className="details-card-sub-title">Writing</h4>
-            
-            <div className="writing-sub-block">
-              <h5 className="writing-category-label">Use Cases</h5>
-              <div className="writing-list">
-                {writingData.cases.map((post) => (
-                  <a href={`/blog/${post.slug}`} className="writing-item" key={post.id}>
-                    <FaBriefcase className="writing-item-icon" />
-                    <span className="writing-item-title">{post.title}</span>
-                    <span className="writing-item-arrow"><FaArrowRight /></span>
+          {/* Writing Section (Combined list with images on the left) */}
+          {combinedWriting.length > 0 && (
+            <div className="details-card writing-card">
+              <h4 className="details-card-sub-title">Writing</h4>
+              <div className="featured-projects-list">
+                {combinedWriting.map((post) => (
+                  <a href={`/blog/${post.slug}`} className="featured-project-item" key={post.id}>
+                    <div className="project-preview-icon">
+                      {post.image_url || post.image ? (
+                        <img src={post.image_url || post.image} alt={post.title} className="project-thumbnail-img" />
+                      ) : (
+                        <span className="project-icon-placeholder">{post.title[0]}</span>
+                      )}
+                    </div>
+                    <div className="project-info">
+                      <h5 className="project-title">{post.title}</h5>
+                      <span className="project-view-tag">Read Article <FaArrowRight className="arrow-icon" /></span>
+                    </div>
                   </a>
                 ))}
               </div>
             </div>
-
-            <div className="writing-sub-block mt-4">
-              <h5 className="writing-category-label">Tech Articles</h5>
-              <div className="writing-list">
-                {writingData.tech.map((post) => (
-                  <a href={`/blog/${post.slug}`} className="writing-item" key={post.id}>
-                    <FaBookOpen className="writing-item-icon" />
-                    <span className="writing-item-title">{post.title}</span>
-                    <span className="writing-item-arrow"><FaArrowRight /></span>
-                  </a>
-                ))}
-              </div>
-            </div>
-          </div>
+          )}
 
           {/* Services Section */}
           <div className="details-card services-card">
