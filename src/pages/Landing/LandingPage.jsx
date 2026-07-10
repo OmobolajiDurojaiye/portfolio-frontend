@@ -146,8 +146,17 @@ function LandingPage() {
       .then((res) => res.json())
       .then((data) => {
         if (data && data.contributions) {
-          const last365 = data.contributions.slice(-365);
-          const total = last365.reduce((sum, day) => sum + day.count, 0);
+          const today = new Date();
+          const oneYearAgo = new Date();
+          oneYearAgo.setDate(today.getDate() - 365);
+
+          const total = data.contributions.reduce((sum, day) => {
+            const dayDate = new Date(day.date);
+            if (dayDate >= oneYearAgo && dayDate <= today) {
+              return sum + day.count;
+            }
+            return sum;
+          }, 0);
           setGithubContributions(total);
         }
       })
