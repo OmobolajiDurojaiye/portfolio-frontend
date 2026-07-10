@@ -16,6 +16,64 @@ import apiClient from "../../services/api";
 import DynamicIcon from "../../utils/iconMap";
 import "./LandingPage.css";
 
+const PROFILE_BIO = `I'm Omobolaji Durojaiye; you can call me Bolaji. I'm a software engineer and startup founder building easy-to-use software for businesses, reducing admin burden and streamlining workflows.
+
+Some of what I've built: Kasi AI (social commerce AI & booking agent: https://usekasi.com) and ProofDeck (digital credentialing platform: https://proofdeck.app), plus client work through my agency — BE Tech Agency (https://techbe.online).
+
+I'm inquisitive by nature and see every project through to the end. If you work with me, expect commitment till it's done.
+
+Want to talk? Drop a message, book a call, or find me on socials below.`;
+
+const HARDCODED_SKILLS = [
+  { id: 1, name: "React", icon_name: "FaReact" },
+  { id: 2, name: "Flask", icon_name: "SiFlask" },
+  { id: 3, name: "FastAPI", icon_name: "SiFastapi" },
+  { id: 4, name: "Python", icon_name: "FaPython" },
+  { id: 5, name: "JavaScript", icon_name: "SiJavascript" },
+  { id: 6, name: "MySQL", icon_name: "SiMysql" },
+  { id: 7, name: "Postman", icon_name: "SiPostman" },
+  { id: 8, name: "System Design", icon_name: "FaSitemap" },
+  { id: 9, name: "CLI / Terminal", icon_name: "FaTerminal" },
+  { id: 10, name: "VS Code", icon_name: "SiVisualstudiocode" },
+  { id: 11, name: "Git", icon_name: "FaGitAlt" },
+  { id: 12, name: "GitHub", icon_name: "FaGithub" },
+  { id: 13, name: "Google Docs", icon_name: "SiGoogledocs" },
+  { id: 14, name: "AI Research", icon_name: "FaRobot" }
+];
+
+const HARDCODED_PROJECTS = [
+  {
+    id: 1,
+    title: "ProofDeck",
+    live_url: "https://www.proofdeck.app/",
+    image_url: "https://res.cloudinary.com/dgmpklnor/image/upload/v1768927154/feature-bulk_lo3mcj.png"
+  },
+  {
+    id: 2,
+    title: "BE Tech Agency",
+    live_url: "https://techbe.online/",
+    image_url: "https://res.cloudinary.com/dgmpklnor/image/upload/v1783669140/b75d6a7b-bf0b-4b3b-bff9-9f22a3f874a9.png"
+  },
+  {
+    id: 3,
+    title: "Kasi AI",
+    live_url: "https://usekasi.com/",
+    image_url: "https://www.usekasi.com/kasi.png"
+  },
+  {
+    id: 4,
+    title: "TeachJS",
+    live_url: "https://teachjs.proofdeck.app/",
+    image_url: "https://res.cloudinary.com/dgmpklnor/image/upload/q_auto/f_auto/v1775927803/cfc82239-4115-4dd4-95fe-c1aa16b5032b.png"
+  },
+  {
+    id: 5,
+    title: "PAF Engineering",
+    live_url: "https://pafelng.com/",
+    image_url: "https://res.cloudinary.com/dgmpklnor/image/upload/v1765632895/Screenshot_2025-12-13_143435_y8fxvd.png"
+  }
+];
+
 const serviceItems = [
   {
     title: "AI Agents & AI-Powered Apps",
@@ -71,34 +129,10 @@ const formatBioText = (bio) => {
 };
 
 function LandingPage() {
-  const [aboutData, setAboutData] = useState(null);
-  const [featuredProjects, setFeaturedProjects] = useState([]);
   const [techArticles, setTechArticles] = useState([]);
-  const [loadError, setLoadError] = useState(false);
 
-  const fetchAllData = () => {
-    setLoadError(false);
-
-    // 1. Fetch profile bio details
-    apiClient.get("/api/about/")
-      .then((res) => {
-        setAboutData(res.data);
-      })
-      .catch((err) => {
-        console.error("Failed to fetch about data.", err);
-        setLoadError(true);
-      });
-
-    // 2. Fetch real featured projects from API
-    apiClient.get("/api/portfolio/projects/featured")
-      .then((res) => {
-        setFeaturedProjects(res.data.slice(0, 4));
-      })
-      .catch((err) => {
-        console.error("Failed to fetch projects.", err);
-      });
-
-    // 3. Fetch blog posts and filter only Tech articles (up to 5)
+  useEffect(() => {
+    // Only blog posts are fetched dynamically — everything else is hardcoded
     apiClient.get("/api/blog/home-data")
       .then((res) => {
         const posts = res.data.posts || [];
@@ -108,29 +142,7 @@ function LandingPage() {
       .catch((err) => {
         console.error("Failed to fetch blog data.", err);
       });
-  };
-
-  useEffect(() => {
-    fetchAllData();
   }, []);
-
-  if (!aboutData) {
-    return (
-      <div className="profile-loading-container">
-        {loadError ? (
-          <div className="profile-error-state">
-            <p className="error-message">Couldn't connect to the server. Please check your internet connection.</p>
-            <button className="retry-btn" onClick={fetchAllData}>Try Again</button>
-          </div>
-        ) : (
-          <div className="profile-loading-spinner"></div>
-        )}
-      </div>
-    );
-  }
-
-  // Combine Skills and Tools/Principles
-  const allStackItems = [...(aboutData.skills || []), ...(aboutData.tools || [])];
 
   return (
     <div className="profile-redesign-wrapper">
@@ -209,7 +221,7 @@ function LandingPage() {
                   }
                 }}
               >
-                {formatBioText(aboutData.bio)}
+                {formatBioText(PROFILE_BIO)}
               </ReactMarkdown>
             </div>
           </div>
@@ -218,9 +230,9 @@ function LandingPage() {
           <div className="details-card featured-projects-card">
             <h4 className="details-card-sub-title">Featured Projects</h4>
             <div className="featured-projects-list">
-              {featuredProjects.map((project) => (
+              {HARDCODED_PROJECTS.map((project) => (
                 <a
-                  href={project.case_study_url || project.live_url || project.github_url || "#"}
+                  href={project.live_url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="featured-project-item"
@@ -243,19 +255,17 @@ function LandingPage() {
           </div>
 
           {/* Combined Stack, Tools & Principles Section */}
-          {allStackItems.length > 0 && (
-            <div className="details-card stack-card">
-              <h4 className="details-card-sub-title">Stack, Tools & Principles</h4>
-              <div className="stack-tags-grid">
-                {allStackItems.map((item, index) => (
-                  <div className="stack-tag-item" key={item.id || index}>
-                    <DynamicIcon name={item.icon_name} />
-                    <span>{item.name}</span>
-                  </div>
-                ))}
-              </div>
+          <div className="details-card stack-card">
+            <h4 className="details-card-sub-title">Stack, Tools & Principles</h4>
+            <div className="stack-tags-grid">
+              {HARDCODED_SKILLS.map((item) => (
+                <div className="stack-tag-item" key={item.id}>
+                  <DynamicIcon name={item.icon_name} />
+                  <span>{item.name}</span>
+                </div>
+              ))}
             </div>
-          )}
+          </div>
 
           {/* GitHub Activity Card */}
           <div className="details-card github-card-redesign">

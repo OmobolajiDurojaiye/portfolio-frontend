@@ -1,8 +1,5 @@
-import { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
-import { FaSpotify } from "react-icons/fa";
 import { Helmet } from "react-helmet-async";
-import apiClient from "../../services/api";
 import DynamicIcon from "../../utils/iconMap";
 import "./AboutPage.css";
 
@@ -100,40 +97,53 @@ const formatBioText = (bio) => {
   return reformattedParagraphs.join("\n\n");
 };
 
-function AboutPage() {
-  const [aboutData, setAboutData] = useState(null);
-  const [loadError, setLoadError] = useState(false);
+const ABOUT_BIO = `I'm Omobolaji Durojaiye; you can call me Bolaji. I'm a software engineer and startup founder building easy-to-use software for businesses, reducing admin burden and streamlining workflows.
 
-  const fetchAboutData = () => {
-    setLoadError(false);
-    apiClient.get("/api/about/")
-      .then((res) => {
-        setAboutData(res.data);
-      })
-      .catch((err) => {
-        console.error("Failed to fetch about data.", err);
-        setLoadError(true);
-      });
-  };
+Some of what I've built: Kasi AI (social commerce AI & booking agent: https://usekasi.com) and ProofDeck (digital credentialing platform: https://proofdeck.app), plus client work through my agency — BE Tech Agency (https://techbe.online).
 
-  useEffect(() => {
-    fetchAboutData();
-  }, []);
+I'm inquisitive by nature and see every project through to the end. If you work with me, expect commitment till it's done.
 
-  if (!aboutData) {
-    return (
-      <div className="about-loading-container">
-        {loadError ? (
-          <div className="profile-error-state">
-            <p className="error-message">Couldn't connect to the server. Please check your internet connection.</p>
-            <button className="retry-btn" onClick={fetchAboutData}>Try Again</button>
-          </div>
-        ) : (
-          <div className="about-loading-spinner"></div>
-        )}
-      </div>
-    );
+Want to talk? Drop a message, book a call, or find me on socials below.`;
+
+const ABOUT_SKILLS = [
+  { id: 1, name: "React", icon_name: "FaReact" },
+  { id: 2, name: "Flask", icon_name: "SiFlask" },
+  { id: 3, name: "FastAPI", icon_name: "SiFastapi" },
+  { id: 4, name: "Python", icon_name: "FaPython" },
+  { id: 5, name: "JavaScript", icon_name: "SiJavascript" },
+  { id: 6, name: "MySQL", icon_name: "SiMysql" },
+  { id: 7, name: "Postman", icon_name: "SiPostman" },
+  { id: 8, name: "System Design", icon_name: "FaSitemap" }
+];
+
+const ABOUT_TOOLS = [
+  { id: 9, name: "CLI / Terminal", icon_name: "FaTerminal" },
+  { id: 10, name: "VS Code", icon_name: "SiVisualstudiocode" },
+  { id: 11, name: "Git", icon_name: "FaGitAlt" },
+  { id: 12, name: "GitHub", icon_name: "FaGithub" },
+  { id: 13, name: "Google Docs", icon_name: "SiGoogledocs" },
+  { id: 14, name: "AI Research", icon_name: "FaRobot" }
+];
+
+const WORK_JOURNEY = [
+  {
+    role: "Software Engineer",
+    company: "Freelance",
+    duration: "March 2022 - Present"
+  },
+  {
+    role: "Lead Software Engineer",
+    company: "BE Tech Agency",
+    duration: "April 2023 - Present"
+  },
+  {
+    role: "CTO",
+    company: "Kasi AI",
+    duration: "February 2026 - Present"
   }
+];
+
+function AboutPage() {
 
   return (
     <div className="about-page-wrapper">
@@ -164,27 +174,17 @@ function AboutPage() {
               }
             }}
           >
-            {formatBioText(aboutData.bio)}
+            {formatBioText(ABOUT_BIO)}
           </ReactMarkdown>
         </div>
-        {aboutData.spotify_url && (
-          <a
-            href={aboutData.spotify_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="spotify-link"
-          >
-            <FaSpotify />
-            <span>Listen on Spotify</span>
-          </a>
-        )}
+
       </div>
 
       {/* 2. Toolkit & Work Tools Card */}
       <div className="details-card toolkit-card">
         <h4 className="details-card-sub-title">Technical Toolkit</h4>
         <div className="skills-grid-clean">
-          {aboutData.skills.map((skill) => (
+          {ABOUT_SKILLS.map((skill) => (
             <div className="skill-item-clean" key={skill.id}>
               <DynamicIcon name={skill.icon_name} />
               <span>{skill.name}</span>
@@ -194,7 +194,7 @@ function AboutPage() {
         
         <h4 className="details-card-sub-title mt-4">Work Tools</h4>
         <div className="skills-grid-clean">
-          {aboutData.tools.map((tool) => (
+          {ABOUT_TOOLS.map((tool) => (
             <div className="skill-item-clean" key={tool.id}>
               <DynamicIcon name={tool.icon_name} />
               <span>{tool.name}</span>
@@ -230,10 +230,10 @@ function AboutPage() {
       <div className="details-card timeline-card">
         <h4 className="details-card-sub-title">Work Journey</h4>
         <div className="clean-timeline-list">
-          {aboutData.work_experiences.map((job, index) => (
+          {WORK_JOURNEY.map((job, index) => (
             <div className="timeline-item-clean" key={index}>
               <div className="timeline-dot"></div>
-              {index < aboutData.work_experiences.length - 1 && <div className="timeline-line"></div>}
+              {index < WORK_JOURNEY.length - 1 && <div className="timeline-line"></div>}
               
               <div className="timeline-info-block">
                 <div className="timeline-job-header">
