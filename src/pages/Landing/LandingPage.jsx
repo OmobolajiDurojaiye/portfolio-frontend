@@ -211,10 +211,10 @@ function LandingPage() {
               <FaUser className="btn-icon" />
               <span>About Me</span>
             </Link>
-            <a href="/contact" className="book-session-btn">
+            <Link to="/contact" className="book-session-btn">
               <FaCalendarCheck className="btn-icon" />
               <span>Book a Call</span>
-            </a>
+            </Link>
           </div>
         </div>
       </section>
@@ -314,7 +314,7 @@ function LandingPage() {
               <h4 className="details-card-sub-title">Writing</h4>
               <div className="featured-projects-list">
                 {techArticles.map((post) => (
-                  <a href={`/blog/${post.slug}`} className="featured-project-item" key={post.id}>
+                  <Link to={`/blog/${post.slug}`} className="featured-project-item" key={post.id}>
                     <div className="project-preview-icon">
                       {post.image_url || post.image ? (
                         <img src={post.image_url || post.image} alt={post.title} className="project-thumbnail-img" />
@@ -326,7 +326,7 @@ function LandingPage() {
                       <h5 className="project-title">{post.title}</h5>
                       <span className="project-view-tag">Read Article <FaArrowRight className="arrow-icon" /></span>
                     </div>
-                  </a>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -345,10 +345,10 @@ function LandingPage() {
             </div>
             
             <div className="services-cta-bar border-top-subtle mt-4 pt-3">
-              <a href="/contact" className="services-cta-btn">
+              <Link to="/contact" className="services-cta-btn">
                 <span>Let's Collaborate</span>
                 <FaArrowRight className="cta-arrow-icon" />
-              </a>
+              </Link>
             </div>
           </div>
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { 
   FaUser, 
   FaBriefcase, 
@@ -58,9 +58,9 @@ function DashboardLayout() {
       
       {/* Mobile Top Navbar (Original design) */}
       <header className="mobile-header d-lg-none">
-        <div className="mobile-logo">
+        <Link to="/" className="mobile-logo" style={{ textDecoration: "none" }}>
           <span>Bolaji</span><span className="logo-dot">.</span>
-        </div>
+        </Link>
         <button className={`hamburger-menu ${isMobileOpen ? "is-active" : ""}`} onClick={toggleMobileSidebar}>
           <div className="bar"></div>
           <div className="bar"></div>
@@ -99,9 +99,9 @@ function DashboardLayout() {
         {/* Sticky Sidebar */}
         <aside className="dashboard-sidebar d-none d-lg-flex">
           {/* Logo Brand with Purple Dot */}
-          <div className="sidebar-logo">
+          <Link to="/" className="sidebar-logo" style={{ textDecoration: "none" }}>
             <span className="logo-text">Bolaji<span className="logo-dot">.</span></span>
-          </div>
+          </Link>
 
           {/* Navigation Links */}
           <nav className="sidebar-nav">
