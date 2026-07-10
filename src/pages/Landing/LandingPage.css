@@ -29,6 +29,41 @@
   to { transform: rotate(360deg); }
 }
 
+/* Error / Retry state */
+.profile-error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.profile-error-state .error-message {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  font-family: "Inter", sans-serif;
+  line-height: 1.5;
+  max-width: 340px;
+}
+
+.retry-btn {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 0.6rem 1.6rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-family: "Inter", sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.retry-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
 /* Profile header card */
 .profile-header-card {
   background-color: var(--background-elevated);

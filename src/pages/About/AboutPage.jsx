@@ -102,50 +102,35 @@ const formatBioText = (bio) => {
 
 function AboutPage() {
   const [aboutData, setAboutData] = useState(null);
+  const [loadError, setLoadError] = useState(false);
 
-  useEffect(() => {
+  const fetchAboutData = () => {
+    setLoadError(false);
     apiClient.get("/api/about/")
       .then((res) => {
         setAboutData(res.data);
       })
       .catch((err) => {
-        console.log("Backend failed, using local offline about fallback.");
-        setAboutData({
-          spotify_url: "https://open.spotify.com",
-          bio: "Omobolaji Durojaiye is a full-stack software engineer and B2B SaaS architect based in Abuja, Nigeria. He specializes in building high-performance web platforms, custom database architectures using PostgreSQL, and high-throughput APIs powered by Python (FastAPI & Flask).\n\nAs the technical founder behind Kasi AI (an intelligent sales assistant for social commerce: https://usekasi.com/) and ProofDeck (a digital credentialing platform: https://proofdeck.app/), he delivers enterprise-grade software craftsmanship.\n\nFrequently cited among the best web developers in Nigeria, his work through BE Tech Agency (techbe.online) drives AI automation and scalable digital products globally.",
-          skills: [
-            { id: 1, name: "React", icon_name: "FaReact" },
-            { id: 2, name: "Node.js", icon_name: "FaNodeJs" },
-            { id: 3, name: "Python", icon_name: "FaPython" },
-            { id: 4, name: "UI Design", icon_name: "FaPalette" }
-          ],
-          tools: [
-            { id: 1, name: "VS Code", icon_name: "FaCode" },
-            { id: 2, name: "Figma", icon_name: "FaFigma" },
-            { id: 3, name: "Git", icon_name: "FaGithub" }
-          ],
-          work_experiences: [
-            {
-              role: "Frontend Software Developer",
-              company: "Freelance",
-              duration: "2020 - Present",
-              description: "Building premium React applications, optimizing web performance, and writing clean, scalable frontend code."
-            },
-            {
-              role: "Junior Web Developer",
-              company: "TechAgency",
-              duration: "2018 - 2020",
-              description: "Collaborated on web portal assets, designed client dashboards, and maintained codebase repositories."
-            }
-          ]
-        });
+        console.error("Failed to fetch about data.", err);
+        setLoadError(true);
       });
+  };
+
+  useEffect(() => {
+    fetchAboutData();
   }, []);
 
   if (!aboutData) {
     return (
       <div className="about-loading-container">
-        <div className="about-loading-spinner"></div>
+        {loadError ? (
+          <div className="profile-error-state">
+            <p className="error-message">Couldn't connect to the server. Please check your internet connection.</p>
+            <button className="retry-btn" onClick={fetchAboutData}>Try Again</button>
+          </div>
+        ) : (
+          <div className="about-loading-spinner"></div>
+        )}
       </div>
     );
   }

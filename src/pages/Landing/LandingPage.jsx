@@ -16,64 +16,6 @@ import apiClient from "../../services/api";
 import DynamicIcon from "../../utils/iconMap";
 import "./LandingPage.css";
 
-const fallbackProjects = [
-  {
-    id: 1,
-    title: "ProofDeck",
-    live_url: "https://proofdeck.com",
-    image_url: ""
-  },
-  {
-    id: 2,
-    title: "Kasi",
-    live_url: "https://kasi.com",
-    image_url: ""
-  },
-  {
-    id: 3,
-    title: "TeachJS",
-    live_url: "https://teachjs.com",
-    image_url: ""
-  },
-  {
-    id: 4,
-    title: "Paf Engineering and Logistics",
-    live_url: "https://paf.com",
-    image_url: ""
-  }
-];
-
-const fallbackWriting = [
-  {
-    id: 9,
-    title: "ProofDeck API Integration Guide",
-    slug: "proofdeck-api-integration-guide",
-    image_url: "",
-    category: { name: "Tech" }
-  },
-  {
-    id: 2,
-    title: "The Development of CertifyMe (Now ProofDeck)",
-    slug: "the-development-of-certifyme-now-proofdeck",
-    image_url: "",
-    category: { name: "Tech" }
-  },
-  {
-    id: 5,
-    title: "Auditing What We Have",
-    slug: "auditing-what-we-have",
-    image_url: "",
-    category: { name: "Tech" }
-  },
-  {
-    id: 8,
-    title: "Hello, ProofDeck. Goodbye, CertifyMe.",
-    slug: "hello-proofdeck-goodbye-certifyme",
-    image_url: "",
-    category: { name: "Tech" }
-  }
-];
-
 const serviceItems = [
   {
     title: "AI Agents & AI-Powered Apps",
@@ -132,8 +74,10 @@ function LandingPage() {
   const [aboutData, setAboutData] = useState(null);
   const [featuredProjects, setFeaturedProjects] = useState([]);
   const [techArticles, setTechArticles] = useState([]);
+  const [loadError, setLoadError] = useState(false);
 
-  useEffect(() => {
+  const fetchAllData = () => {
+    setLoadError(false);
 
     // 1. Fetch profile bio details
     apiClient.get("/api/about/")
@@ -141,24 +85,8 @@ function LandingPage() {
         setAboutData(res.data);
       })
       .catch((err) => {
-        console.log("Backend failed, using offline fallback bio.");
-        setAboutData({
-          name: "Bolaji",
-          role: "Software Engineer & Digital Architect",
-          location: "Abuja, Nigeria",
-          bio: "Omobolaji Durojaiye is a full-stack software engineer and B2B SaaS architect based in Abuja, Nigeria. He specializes in building high-performance web platforms, custom database architectures using PostgreSQL, and high-throughput APIs powered by Python (FastAPI & Flask).\n\nAs the technical founder behind Kasi AI (an intelligent sales assistant for social commerce: https://usekasi.com/) and ProofDeck (a digital credentialing platform: https://proofdeck.app/), he delivers enterprise-grade software craftsmanship.\n\nFrequently cited among the best web developers in Nigeria, his work through BE Tech Agency (techbe.online) drives AI automation and scalable digital products globally.",
-          skills: [
-            { id: 1, name: "React", icon_name: "FaReact" },
-            { id: 2, name: "Node.js", icon_name: "FaNodeJs" },
-            { id: 3, name: "Python", icon_name: "FaPython" },
-            { id: 4, name: "UI Design", icon_name: "FaPalette" }
-          ],
-          tools: [
-            { id: 1, name: "VS Code", icon_name: "FaCode" },
-            { id: 2, name: "Figma", icon_name: "FaFigma" },
-            { id: 3, name: "Git", icon_name: "FaGithub" }
-          ]
-        });
+        console.error("Failed to fetch about data.", err);
+        setLoadError(true);
       });
 
     // 2. Fetch real featured projects from API
@@ -167,8 +95,7 @@ function LandingPage() {
         setFeaturedProjects(res.data.slice(0, 4));
       })
       .catch((err) => {
-        console.log("Backend failed, using local fallback projects.");
-        setFeaturedProjects(fallbackProjects);
+        console.error("Failed to fetch projects.", err);
       });
 
     // 3. Fetch blog posts and filter only Tech articles (up to 5)
@@ -176,19 +103,28 @@ function LandingPage() {
       .then((res) => {
         const posts = res.data.posts || [];
         const tech = posts.filter(p => p.category?.slug === "tech" || p.category?.name === "Tech").slice(0, 5);
-        
-        setTechArticles(tech.length > 0 ? tech : fallbackWriting.slice(0, 5));
+        setTechArticles(tech);
       })
       .catch((err) => {
-        console.log("Blog data endpoint failed, using local writing fallbacks.");
-        setTechArticles(fallbackWriting.slice(0, 5));
+        console.error("Failed to fetch blog data.", err);
       });
+  };
+
+  useEffect(() => {
+    fetchAllData();
   }, []);
 
   if (!aboutData) {
     return (
       <div className="profile-loading-container">
-        <div className="profile-loading-spinner"></div>
+        {loadError ? (
+          <div className="profile-error-state">
+            <p className="error-message">Couldn't connect to the server. Please check your internet connection.</p>
+            <button className="retry-btn" onClick={fetchAllData}>Try Again</button>
+          </div>
+        ) : (
+          <div className="profile-loading-spinner"></div>
+        )}
       </div>
     );
   }
