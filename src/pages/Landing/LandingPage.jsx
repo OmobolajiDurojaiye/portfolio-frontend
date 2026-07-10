@@ -108,9 +108,6 @@ const formatBioText = (bio) => {
     return `[${domain}](${cleanUrl})`;
   });
 
-  // Replace raw "techbe.online" with its link version if not already in markdown format
-  formatted = formatted.replace(/(?<!\[)techbe\.online(?!\])/g, "[techbe.online](https://techbe.online/)");
-
   // 2. Automatically split into spaced paragraphs (every 2 sentences) to prevent walls of text
   const paragraphs = formatted.split(/\n+/);
   const reformattedParagraphs = paragraphs.map(p => {
