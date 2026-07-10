@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import { Helmet } from "react-helmet-async";
 import DynamicIcon from "../../utils/iconMap";
@@ -142,6 +142,23 @@ const WORK_JOURNEY = [
 ];
 
 function AboutPage() {
+  const [githubContributions, setGithubContributions] = useState(null);
+
+  useEffect(() => {
+    // Fetch live GitHub contributions count
+    fetch("https://github-contributions-api.jogruber.de/v4/OmobolajiDurojaiye")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.contributions) {
+          const last365 = data.contributions.slice(-365);
+          const total = last365.reduce((sum, day) => sum + day.count, 0);
+          setGithubContributions(total);
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to fetch GitHub contributions", err);
+      });
+  }, []);
 
   return (
     <div className="about-page-wrapper">
@@ -215,7 +232,9 @@ function AboutPage() {
         </div>
         <div className="github-activity-footer">
           <span className="github-handle">@OmobolajiDurojaiye on GitHub</span>
-          <span className="github-streak-text">841 contributions in the last year</span>
+          <span className="github-streak-text">
+            {githubContributions !== null ? `${githubContributions.toLocaleString()} contributions` : "Loading contributions..."} in the last year
+          </span>
         </div>
       </div>
 
