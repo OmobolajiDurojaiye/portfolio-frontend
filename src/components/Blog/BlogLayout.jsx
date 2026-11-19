@@ -1,12 +1,17 @@
 import { Outlet } from "react-router-dom";
 import BlogNavbar from "./BlogNavbar";
+import "../../pages/Blog/Blog.css";
 
 const BlogLayout = () => {
   return (
-    <div className="blog-ecosystem">
-      <BlogNavbar />
-      <div style={{ minHeight: "60vh" }}>
-        <Outlet />
+    <div className="paper-desk">
+      <div className="paper-notebook-sheet">
+        {/* Continuous vertical red notebook margin line */}
+        <div className="paper-margin-rule" aria-hidden="true" />
+        <BlogNavbar />
+        <div className="paper-sheet-body">
+          <Outlet />
+        </div>
       </div>
     </div>
   );

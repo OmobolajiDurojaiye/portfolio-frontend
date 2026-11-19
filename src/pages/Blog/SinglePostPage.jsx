@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { Container, Row, Col, Spinner, Nav } from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
 import { useParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import { FiArrowUpRight } from "react-icons/fi";
 import apiClient from "../../services/api";
-import RelatedPostCard from "../../components/Blog/RelatedPostCard";
 import "./Blog.css";
 
 function SinglePostPage() {
@@ -22,29 +22,19 @@ function SinglePostPage() {
         const postRes = await apiClient.get(`/api/blog/posts/${slug}`);
         setPost(postRes.data);
 
-        // --- TABLE RESPONSIVE FIX ---
-        // After DOM update (small delay to ensure content is rendered), wrap tables
         setTimeout(() => {
-          const tables = document.querySelectorAll(".post-body table");
+          const tables = document.querySelectorAll(".paper-article-body table");
           tables.forEach((table) => {
             if (!table.parentElement.classList.contains("table-responsive")) {
               const wrapper = document.createElement("div");
               wrapper.className = "table-responsive";
-              // Copy margins to wrapper to maintain vertical spacing
-              wrapper.style.marginBottom = "2rem";
-              wrapper.style.marginTop = "2rem";
               table.parentNode.insertBefore(wrapper, table);
               wrapper.appendChild(table);
-               // Reset table margins inside wrapper to avoid double spacing
-              table.style.marginTop = "0";
-              table.style.marginBottom = "0";
             }
           });
         }, 100);
 
-        const relatedRes = await apiClient.get(
-          `/api/blog/posts/${slug}/related`
-        );
+        const relatedRes = await apiClient.get(`/api/blog/posts/${slug}/related`);
         setRelatedContent(relatedRes.data);
 
         apiClient.post(`/api/blog/posts/${slug}/view`).catch(console.error);
@@ -59,163 +49,221 @@ function SinglePostPage() {
 
   if (loading) {
     return (
-      <Container className="text-center py-5">
-        <Spinner animation="border" variant="primary" />
-      </Container>
+      <div className="paper-loading-box">
+        <Spinner animation="border" size="sm" className="me-2" />
+        Opening entry...
+      </div>
     );
   }
+
   if (error || !post) {
     return (
-      <Container className="text-center py-5">
-        <h2 className="section-title">404 - Not Found</h2>
-        <p className="section-subtitle">{error}</p>
-      </Container>
+      <div className="paper-row">
+        <div className="paper-margin-cell">
+          <span className="paper-margin-label">404</span>
+        </div>
+        <div className="paper-content-cell">
+          <p className="paper-line-text">{error || "Post not found."}</p>
+        </div>
+      </div>
     );
   }
 
   return (
     <>
       <Helmet>
-        <title>{`${post.title} | Blog by Omobolaji Durojaiye - Software Engineer in Abuja`}</title>
-        <meta name="description" content={post.excerpt || `Read '${post.title}' by Omobolaji Durojaiye, full-stack software engineer and SaaS developer in Abuja, Nigeria.`} />
+        <title>{`${post.title} | Blog by Omobolaji Durojaiye`}</title>
+        <meta
+          name="description"
+          content={
+            post.excerpt ||
+            `Read '${post.title}' by Omobolaji Durojaiye, software engineer in Abuja, Nigeria.`
+          }
+        />
         <meta property="og:title" content={`${post.title} | Blog by Omobolaji Durojaiye`} />
-        <meta property="og:description" content={post.excerpt || `Read '${post.title}' by Omobolaji Durojaiye, full-stack software engineer and SaaS developer in Abuja, Nigeria.`} />
+        <meta
+          property="og:description"
+          content={post.excerpt || `Read '${post.title}' by Omobolaji Durojaiye.`}
+        />
         <meta property="og:image" content={post.image_url || "https://bolaji.tech/favicon.png"} />
         <meta property="og:type" content="article" />
-        <meta
-          property="og:url"
-          content={`https://bolaji.tech/blog/${post.slug}`}
-        />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={`${post.title} | Blog by Omobolaji Durojaiye`} />
-        <meta name="twitter:description" content={post.excerpt || `Read '${post.title}' by Omobolaji Durojaiye, full-stack software engineer and SaaS developer in Abuja, Nigeria.`} />
-        <meta name="twitter:image" content={post.image_url || "https://bolaji.tech/favicon.png"} />
       </Helmet>
 
-      <div className="single-post-container">
-        {post.image_url && (
-          <header
-            className="post-header"
-            style={{ backgroundImage: `url(${post.image_url})` }}
-          >
-            <div className="post-header-overlay">
-              <Container className="h-100 d-flex flex-column justify-content-center text-center">
-                {post.category && (
+      <article>
+        {/* Title & Meta Header */}
+        <div className="paper-row" style={{ alignItems: "start" }}>
+          <div className="paper-margin-cell" style={{ paddingTop: "1.6rem" }}>
+            <span className="paper-margin-label">Entry</span>
+          </div>
+          <div className="paper-article-header">
+            <nav className="paper-breadcrumb" aria-label="Breadcrumb">
+              <Link to="/">Home</Link>
+              <span>/</span>
+              <Link to="/blog">Blog</Link>
+              {post.category && (
+                <>
+                  <span>/</span>
                   <Link to={`/blog/categories/${post.category.slug}`}>
-                    <span
-                      className="category-tag mx-auto mb-3"
-                      style={{ backgroundColor: post.category.color }}
-                    >
-                      {post.category.name}
-                    </span>
+                    {post.category.name}
                   </Link>
-                )}
-                <h1 className="post-title display-4">{post.title}</h1>
-                <div className="post-meta mt-2">
-                  By {post.author} on{" "}
+                </>
+              )}
+            </nav>
+
+            <h1 className="paper-article-title">{post.title}</h1>
+
+            <div className="paper-article-meta">
+              {post.author && <span>By {post.author}</span>}
+              {post.date_posted && (
+                <span>
                   {new Date(post.date_posted).toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "long",
                     day: "numeric",
                   })}
-                </div>
-              </Container>
+                </span>
+              )}
+              {post.category && (
+                <Link
+                  to={`/blog/categories/${post.category.slug}`}
+                  className="paper-tag-stamp"
+                  style={{ textDecoration: "none" }}
+                >
+                  {post.category.name}
+                </Link>
+              )}
             </div>
-          </header>
-        )}
-        <Container className="post-content-container">
-          <Row>
-            <Col lg={{ span: 8, offset: 2 }}>
-              <Nav className="breadcrumb-nav">
-                <Nav.Item>
-                  <Link to="/">Home</Link>
-                </Nav.Item>
-                <Nav.Item>/</Nav.Item>
-                <Nav.Item>
-                  <Link to="/blog">Blog</Link>
-                </Nav.Item>
-                {post.category && (
-                  <>
-                    <Nav.Item>/</Nav.Item>
-                    <Nav.Item
-                      as={Link}
-                      to={`/blog/categories/${post.category.slug}`}
-                    >
-                      {post.category.name}
-                    </Nav.Item>
-                  </>
-                )}
-              </Nav>
-              <div className="ql-snow">
-                <div
-                  className="post-body ql-editor"
-                  dangerouslySetInnerHTML={{ __html: post.content }}
-                />
+
+            {post.image_url && (
+              <div className="paper-article-cover">
+                <img src={post.image_url} alt={post.title} />
               </div>
-            </Col>
-          </Row>
-        </Container>
-        {relatedContent && (
-          <Container className="see-more-section">
-            <Row>
-              {relatedContent.inThisSeries &&
-                relatedContent.inThisSeries.length > 0 && (
-                  <Col lg={6} className="mb-5">
-                    <h3 className="related-section-title">In This Series</h3>
-                    <div className="related-posts-grid">
-                      {relatedContent.inThisSeries.map((p) => (
-                        <RelatedPostCard key={p.id} post={p} />
-                      ))}
-                    </div>
-                  </Col>
-                )}
-              {relatedContent.moreInCategory &&
-                relatedContent.moreInCategory.length > 0 && (
-                  <Col lg={6} className="mb-5">
-                    <h3 className="related-section-title">
-                      More in {post.category?.name}
-                    </h3>
-                    <div className="related-posts-grid">
-                      {relatedContent.moreInCategory.map((p) => (
-                        <RelatedPostCard key={p.id} post={p} />
-                      ))}
-                    </div>
-                  </Col>
-                )}
-            </Row>
-            {(relatedContent.previousPost || relatedContent.nextPost) && (
-              <Row className="mt-4">
-                <Col>
-                  <div className="prev-next-nav">
-                    {relatedContent.previousPost ? (
-                      <Link
-                        to={`/blog/${relatedContent.previousPost.slug}`}
-                        className="prev-next-link prev-link"
-                      >
-                        <span>&larr; Previous Article</span>
-                        <h5>{relatedContent.previousPost.title}</h5>
-                      </Link>
-                    ) : (
-                      <div></div>
-                    )}
-                    {relatedContent.nextPost ? (
-                      <Link
-                        to={`/blog/${relatedContent.nextPost.slug}`}
-                        className="prev-next-link next-link"
-                      >
-                        <span>Next Article &rarr;</span>
-                        <h5>{relatedContent.nextPost.title}</h5>
-                      </Link>
-                    ) : (
-                      <div></div>
-                    )}
-                  </div>
-                </Col>
-              </Row>
             )}
-          </Container>
+          </div>
+        </div>
+
+        {/* Main Body */}
+        <div className="paper-row" style={{ alignItems: "start" }}>
+          <div className="paper-margin-cell" style={{ paddingTop: "1.4rem" }}>
+            <span className="paper-margin-label">Notes</span>
+          </div>
+          <div
+            className="paper-article-body"
+            dangerouslySetInnerHTML={{ __html: post.content }}
+          />
+        </div>
+
+        {/* Related Content: In This Series */}
+        {relatedContent?.inThisSeries?.length > 0 && (
+          <>
+            <div className="paper-row paper-row--spacer">
+              <div className="paper-margin-cell" />
+              <div className="paper-content-cell" />
+            </div>
+            {relatedContent.inThisSeries.map((p, idx) => (
+              <Link
+                key={p.id}
+                to={`/blog/${p.slug}`}
+                className="paper-row paper-row--interactive"
+              >
+                <div className="paper-margin-cell">
+                  {idx === 0 ? (
+                    <span className="paper-margin-label">In Series</span>
+                  ) : (
+                    <span className="paper-margin-num">
+                      {String(idx + 1).padStart(2, "0")}
+                    </span>
+                  )}
+                </div>
+                <div className="paper-content-cell">
+                  <div className="paper-entry-grid">
+                    <div className="paper-entry-icon">
+                      {p.image_url ? <img src={p.image_url} alt={p.title} /> : <span>§</span>}
+                    </div>
+                    <div className="paper-entry-main">
+                      <span className="paper-entry-title">{p.title}</span>
+                    </div>
+                    <FiArrowUpRight className="paper-entry-arrow" />
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </>
         )}
-      </div>
+
+        {/* Related Content: More in Category */}
+        {relatedContent?.moreInCategory?.length > 0 && (
+          <>
+            <div className="paper-row paper-row--spacer">
+              <div className="paper-margin-cell" />
+              <div className="paper-content-cell" />
+            </div>
+            {relatedContent.moreInCategory.map((p, idx) => (
+              <Link
+                key={p.id}
+                to={`/blog/${p.slug}`}
+                className="paper-row paper-row--interactive"
+              >
+                <div className="paper-margin-cell">
+                  {idx === 0 ? (
+                    <span className="paper-margin-label">More</span>
+                  ) : (
+                    <span className="paper-margin-num">
+                      {String(idx + 1).padStart(2, "0")}
+                    </span>
+                  )}
+                </div>
+                <div className="paper-content-cell">
+                  <div className="paper-entry-grid">
+                    <div className="paper-entry-icon">
+                      {p.image_url ? <img src={p.image_url} alt={p.title} /> : <span>•</span>}
+                    </div>
+                    <div className="paper-entry-main">
+                      <span className="paper-entry-title">{p.title}</span>
+                    </div>
+                    <FiArrowUpRight className="paper-entry-arrow" />
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </>
+        )}
+
+        {/* Previous / Next Navigation */}
+        {(relatedContent?.previousPost || relatedContent?.nextPost) && (
+          <div className="paper-row">
+            <div className="paper-margin-cell">
+              <span className="paper-margin-label">Pages</span>
+            </div>
+            <div className="paper-content-cell" style={{ paddingTop: "1rem", paddingBottom: "1rem" }}>
+              <div className="paper-prev-next">
+                {relatedContent.previousPost ? (
+                  <Link
+                    to={`/blog/${relatedContent.previousPost.slug}`}
+                    className="paper-pn-link"
+                  >
+                    <span className="paper-pn-dir">← Previous</span>
+                    <span className="paper-pn-title">{relatedContent.previousPost.title}</span>
+                  </Link>
+                ) : (
+                  <div />
+                )}
+                {relatedContent.nextPost ? (
+                  <Link
+                    to={`/blog/${relatedContent.nextPost.slug}`}
+                    className="paper-pn-link paper-pn-link--next"
+                  >
+                    <span className="paper-pn-dir">Next →</span>
+                    <span className="paper-pn-title">{relatedContent.nextPost.title}</span>
+                  </Link>
+                ) : (
+                  <div />
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </article>
     </>
   );
 }

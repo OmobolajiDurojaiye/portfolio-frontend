@@ -1,12 +1,7 @@
 import { useState, useEffect } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Spinner,
-  Button,
-} from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { FiArrowUpRight, FiCornerDownLeft } from "react-icons/fi";
 import apiClient from "../../services/api";
 import ErrorDisplay from "../../components/ErrorDisplay";
 import "./Blog.css";
@@ -27,29 +22,29 @@ function BlogHomePage() {
     try {
       if (pageNum === 1) setLoading(true);
       else setLoadingMore(true);
-      
+
       const [homeRes, readlistsRes] = await Promise.all([
         apiClient.get(`/api/blog/home-data?page=${pageNum}`),
-        // Only fetch readlists on initial load to get full data including posts for count
-        pageNum === 1 ? apiClient.get("/api/blog/readlists") : Promise.resolve({ data: null })
+        pageNum === 1
+          ? apiClient.get("/api/blog/readlists")
+          : Promise.resolve({ data: null }),
       ]);
-      
+
       const newData = homeRes.data;
       const readlistsData = readlistsRes.data;
-      
-      setData(prevData => {
+
+      setData((prevData) => {
         if (pageNum === 1) {
-             return {
-                 ...newData,
-                 // Use the separately fetched readlists which include 'posts' array for counting
-                 readlists: readlistsData || newData.readlists 
-             };
+          return {
+            ...newData,
+            readlists: readlistsData || newData.readlists || [],
+          };
         }
         return {
           ...newData,
-          posts: [...prevData.posts, ...newData.posts], // Append new posts
-          featuredPost: prevData.featuredPost, // Keep original featured post
-          readlists: prevData.readlists // Keep readlists
+          posts: [...prevData.posts, ...(newData.posts || [])],
+          featuredPost: prevData.featuredPost,
+          readlists: prevData.readlists,
         };
       });
     } catch (err) {
@@ -65,155 +60,280 @@ function BlogHomePage() {
     fetchBlogData(page);
   }, [page]);
 
-  const handleLoadMore = () => {
-    setPage(prev => prev + 1);
-  };
-
   if (loading && page === 1) {
     return (
-      <Container className="text-center py-5 vh-100 d-flex align-items-center justify-content-center">
-        <Spinner animation="border" variant="primary" />
-      </Container>
+      <div className="paper-loading-box">
+        <Spinner animation="border" size="sm" className="me-2" />
+        Opening notebook...
+      </div>
     );
   }
 
   if (error) {
-    return <ErrorDisplay onRetry={() => fetchBlogData(1)} />;
+    return (
+      <div className="p-4">
+        <ErrorDisplay onRetry={() => fetchBlogData(1)} />
+      </div>
+    );
   }
 
-  const { featuredPost, posts, readlists, pagination } = data;
+  const { featuredPost, posts = [], readlists = [], pagination = {} } = data;
+
+  // Polaroid preview covers from featured/latest posts
+  const polaroidImages = [
+    featuredPost?.image_url,
+    ...posts.map((p) => p.image_url),
+  ]
+    .filter(Boolean)
+    .slice(0, 2);
 
   return (
-    <Container fluid className="blog-home-container px-md-5">
-      <div className="text-center my-5 py-3">
-        <h1 className="blog-title display-3 mb-2">The B Blog</h1>
-        <p className="text-secondary lead">Thoughts, tutorials, and insights on software engineering.</p>
-      </div>
-
-      {/* Hero Section - Featured Post */}
-      {featuredPost && (
-        <div className="featured-hero-section mb-5">
-            <Link to={`/blog/${featuredPost.slug}`} className="main-featured-post-link">
-                <div className="featured-hero-card">
-                    <Row className="g-0 align-items-center h-100">
-                        <Col lg={7} className="h-100">
-                            <div className="featured-img-wrapper h-100">
-                                <img
-                                    src={featuredPost.image_url}
-                                    alt={featuredPost.title}
-                                    className="featured-hero-img"
-                                />
-                            </div>
-                        </Col>
-                        <Col lg={5}>
-                            <div className="featured-content p-4 p-lg-5">
-                                <span className="eyebrow-text text-primary mb-2 d-inline-block">Featured Article</span>
-                                <h2 className="main-featured-title mb-3">{featuredPost.title}</h2>
-                                <p className="main-featured-excerpt text-secondary mb-4">
-                                    {featuredPost.excerpt}
-                                </p>
-                                {featuredPost.category && (
-                                    <span
-                                        className="category-tag mb-3 d-inline-block"
-                                        style={{ backgroundColor: featuredPost.category?.color || 'var(--plum-accent)' }}
-                                    >
-                                        {featuredPost.category?.name}
-                                    </span>
-                                )}
-                                <div className="mt-3">
-                                    <span className="read-more-btn">Read Article &rarr;</span>
-                                </div>
-                            </div>
-                        </Col>
-                    </Row>
-                </div>
-            </Link>
+    <div className="paper-home-content">
+      {/* Decorative Fanned Polaroid Stack (top right, like Image 6) */}
+      {polaroidImages.length > 0 && (
+        <div className="paper-polaroid-cluster" aria-hidden="true">
+          {polaroidImages[1] && (
+            <div className="paper-polaroid-card paper-polaroid-card--back">
+              <img src={polaroidImages[1]} alt="" />
+            </div>
+          )}
+          <div className="paper-polaroid-card paper-polaroid-card--front">
+            <img src={polaroidImages[0]} alt="" />
+          </div>
         </div>
       )}
 
-      <Row className="g-4 g-lg-5">
-        {/* Main Feed */}
-        <Col lg={8}>
-            <div className="section-header mb-4 d-flex align-items-center justify-content-between">
-                <h3 className="section-heading fw-bold text-white mb-0">Latest Articles</h3>
-            </div>
+      {/* About / Intro lines */}
+      <div className="paper-row">
+        <div className="paper-margin-cell">
+          <span className="paper-margin-label">About</span>
+        </div>
+        <div className="paper-content-cell">
+          <p className="paper-line-text">
+            Thoughts, tutorials &amp; field notes on software engineering and startups.
+          </p>
+        </div>
+      </div>
 
-            <div className="posts-grid-unified">
-                {posts.map((post) => (
-                    <Link to={`/blog/${post.slug}`} key={post.id} className="modern-post-card">
-                        <div className="post-card-img-container">
-                            <img src={post.image_url} alt={post.title} loading="lazy" />
-                            {post.category && (
-                                <span 
-                                    className="post-card-category"
-                                    style={{ backgroundColor: post.category?.color || 'var(--plum-accent)' }}
-                                >
-                                    {post.category?.name}
-                                </span>
-                            )}
-                        </div>
-                        <div className="post-card-body">
-                            <div className="post-meta mb-2">
-                                <span className="post-date">{new Date(post.date_posted).toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric'})}</span>
-                            </div>
-                            <h4 className="post-title">{post.title}</h4>
-                            <p className="post-excerpt">{post.excerpt}</p>
-                            <span className="read-more-link">Read More</span>
-                        </div>
-                    </Link>
-                ))}
-            </div>
+      <div className="paper-row">
+        <div className="paper-margin-cell" />
+        <div className="paper-content-cell">
+          <p className="paper-line-text paper-line-muted">
+            Written by Omobolaji Durojaiye — systems, AI agents, music &amp; curiosities.
+          </p>
+        </div>
+      </div>
 
-            {/* Load More Section */}
-            {pagination.hasNext && (
-                <div className="text-center mt-5 mb-5 pb-5">
-                    <Button 
-                        onClick={handleLoadMore} 
-                        disabled={loadingMore}
-                        className="load-more-btn"
-                        size="lg"
-                    >
-                        {loadingMore ? <Spinner animation="border" size="sm" /> : "Load More Articles"}
-                    </Button>
+      <div className="paper-row paper-row--spacer">
+        <div className="paper-margin-cell" />
+        <div className="paper-content-cell" />
+      </div>
+
+      {/* Featured Article */}
+      {featuredPost && (
+        <>
+          <Link
+            to={`/blog/${featuredPost.slug}`}
+            className="paper-row paper-row--interactive"
+          >
+            <div className="paper-margin-cell">
+              <span className="paper-margin-label">Featured</span>
+            </div>
+            <div className="paper-content-cell">
+              <div className="paper-entry-grid">
+                <div className="paper-entry-icon">
+                  {featuredPost.image_url ? (
+                    <img src={featuredPost.image_url} alt={featuredPost.title} />
+                  ) : (
+                    <span>★</span>
+                  )}
                 </div>
-            )}
-            
-            {!pagination.hasNext && posts.length > 0 && (
-                <div className="text-center mt-5 mb-5 pb-5 text-secondary">
-                    <p>You've reached the end of the list.</p>
+                <div className="paper-entry-main">
+                  <span className="paper-entry-title">{featuredPost.title}</span>
+                  {featuredPost.excerpt && (
+                    <span className="paper-entry-desc">{featuredPost.excerpt}</span>
+                  )}
                 </div>
-            )}
-        </Col>
-
-        {/* Sidebar */}
-        <Col lg={4} className="sidebar-column">
-          <div className="readlists-sidebar sticky-top" style={{ top: "100px", zIndex: 10 }}>
-            <h4 className="column-title mb-4 fw-bold text-white">Curated Readlists</h4>
-            <div className="readlist-items">
-                {readlists &&
-                readlists.map((readlist) => (
-                    <Link
-                    to={`/blog/readlists/${readlist.slug}`}
-                    key={readlist.id}
-                    className="readlist-mini-card"
-                    >
-                    <div className="readlist-mini-img">
-                        <img
-                            src={readlist.image_url || "https://via.placeholder.com/80x80"}
-                            alt={readlist.name}
-                        />
-                    </div>
-                    <div className="readlist-mini-info">
-                        <h6 className="readlist-name">{readlist.name}</h6>
-                        <p className="readlist-count">{readlist.posts?.length || 0} Articles</p>
-                    </div>
-                    </Link>
-                ))}
+                <div className="paper-entry-meta">
+                  {featuredPost.category && (
+                    <span className="paper-tag-stamp">{featuredPost.category.name}</span>
+                  )}
+                  <FiArrowUpRight className="paper-entry-arrow" />
+                </div>
+              </div>
             </div>
+          </Link>
+
+          <div className="paper-row paper-row--spacer">
+            <div className="paper-margin-cell" />
+            <div className="paper-content-cell" />
           </div>
-        </Col>
-      </Row>
-    </Container>
+        </>
+      )}
+
+      {/* Latest Articles */}
+      {posts.length > 0 ? (
+        posts.map((post, idx) => (
+          <Link
+            key={post.id}
+            to={`/blog/${post.slug}`}
+            className="paper-row paper-row--interactive"
+          >
+            <div className="paper-margin-cell">
+              {idx === 0 ? (
+                <span className="paper-margin-label">Latest</span>
+              ) : (
+                <span className="paper-margin-num">
+                  {String(idx + 1).padStart(2, "0")}
+                </span>
+              )}
+            </div>
+            <div className="paper-content-cell">
+              <div className="paper-entry-grid">
+                <div className="paper-entry-icon">
+                  {post.image_url ? (
+                    <img src={post.image_url} alt={post.title} loading="lazy" />
+                  ) : (
+                    <span>{post.title?.[0] || "B"}</span>
+                  )}
+                </div>
+                <div className="paper-entry-main">
+                  <span className="paper-entry-title">{post.title}</span>
+                  {post.excerpt && (
+                    <span className="paper-entry-desc">{post.excerpt}</span>
+                  )}
+                </div>
+                <div className="paper-entry-meta">
+                  {post.category && (
+                    <span className="paper-tag-stamp">{post.category.name}</span>
+                  )}
+                  {post.date_posted && (
+                    <span className="paper-date-stamp d-none d-md-inline">
+                      {new Date(post.date_posted).toLocaleDateString(undefined, {
+                        month: "short",
+                        day: "numeric",
+                      })}
+                    </span>
+                  )}
+                  <FiArrowUpRight className="paper-entry-arrow" />
+                </div>
+              </div>
+            </div>
+          </Link>
+        ))
+      ) : (
+        <div className="paper-row">
+          <div className="paper-margin-cell">
+            <span className="paper-margin-label">Latest</span>
+          </div>
+          <div className="paper-content-cell">
+            <p className="paper-line-text paper-line-muted">No articles published yet.</p>
+          </div>
+        </div>
+      )}
+
+      {/* Load More Row */}
+      {pagination.hasNext && (
+        <div className="paper-row">
+          <div className="paper-margin-cell" />
+          <div className="paper-content-cell">
+            <button
+              type="button"
+              className="paper-load-more-btn"
+              onClick={() => setPage((prev) => prev + 1)}
+              disabled={loadingMore}
+            >
+              {loadingMore ? "Turning page..." : "Load more notes ↓"}
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="paper-row paper-row--spacer">
+        <div className="paper-margin-cell" />
+        <div className="paper-content-cell" />
+      </div>
+
+      {/* Curated Readlists Section */}
+      {readlists.length > 0 && (
+        <>
+          {readlists.map((rl, idx) => (
+            <Link
+              key={rl.id}
+              to={`/blog/readlists/${rl.slug}`}
+              className="paper-row paper-row--interactive"
+            >
+              <div className="paper-margin-cell">
+                {idx === 0 ? (
+                  <span className="paper-margin-label">Readlists</span>
+                ) : (
+                  <span className="paper-margin-num">
+                    {String(idx + 1).padStart(2, "0")}
+                  </span>
+                )}
+              </div>
+              <div className="paper-content-cell">
+                <div className="paper-entry-grid">
+                  <div className="paper-entry-icon">
+                    {rl.image_url ? (
+                      <img src={rl.image_url} alt={rl.name} loading="lazy" />
+                    ) : (
+                      <span>§</span>
+                    )}
+                  </div>
+                  <div className="paper-entry-main">
+                    <span className="paper-entry-title">{rl.name}</span>
+                    {rl.description && (
+                      <span className="paper-entry-desc">{rl.description}</span>
+                    )}
+                  </div>
+                  <div className="paper-entry-meta">
+                    <span className="paper-tag-stamp">
+                      {rl.posts?.length || 0} Articles
+                    </span>
+                    <FiArrowUpRight className="paper-entry-arrow" />
+                  </div>
+                </div>
+              </div>
+            </Link>
+          ))}
+
+          <Link to="/blog/readlists" className="paper-row paper-row--interactive">
+            <div className="paper-margin-cell" />
+            <div className="paper-content-cell">
+              <div className="paper-entry-grid">
+                <span className="paper-line-text paper-line-muted">
+                  Browse all curated readlists
+                </span>
+                <FiArrowUpRight className="paper-entry-arrow ms-auto" />
+              </div>
+            </div>
+          </Link>
+        </>
+      )}
+
+      {/* Yellow Sticky Note (Bottom Right like Image 6) */}
+      <div className="paper-sticky-wrapper">
+        <div className="paper-sticky-note">
+          <div className="paper-sticky-tape" aria-hidden="true" />
+          <h3 className="paper-sticky-heading">Subscribe to The B Blog?</h3>
+          <p className="paper-sticky-text">
+            Catch new essays &amp; engineering notes on Substack or via RSS ;)
+          </p>
+          <a
+            href="https://substack.com/@bjtolu"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="paper-sticky-cta"
+          >
+            <span>substack.com/@bjtolu</span>
+            <span className="paper-sticky-btn-badge">
+              <FiCornerDownLeft />
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
   );
 }
 

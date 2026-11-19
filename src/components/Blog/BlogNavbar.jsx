@@ -1,136 +1,103 @@
 import { useState, useEffect } from "react";
-import { Container, Nav, Form } from "react-bootstrap";
 import { NavLink, useNavigate } from "react-router-dom";
-import { FaHome, FaThLarge, FaStream, FaSearch, FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 import apiClient from "../../services/api";
 import "./BlogNavbar.css";
 
 const BlogNavbar = () => {
   const [categories, setCategories] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [expanded, setExpanded] = useState(false); // Default collapsed on mobile
   const navigate = useNavigate();
 
   useEffect(() => {
     apiClient
       .get("/api/blog/categories")
-      .then((res) => setCategories(res.data.slice(0, 5)))
+      .then((res) => setCategories(Array.isArray(res.data) ? res.data.slice(0, 6) : []))
       .catch((err) => console.error("Failed to fetch categories", err));
   }, []);
 
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/blog/search?q=${searchQuery.trim()}`);
+      navigate(`/blog/search?q=${encodeURIComponent(searchQuery.trim())}`);
       setSearchQuery("");
-      setExpanded(false); // Collapse after search
     }
   };
 
   return (
-    <div className={`blog-nav-wrapper ${expanded ? "expanded" : "collapsed"}`}>
-      <Container className="blog-nav-container">
-        
-        {/* Row 1: Brand/Links + Search Form (Desktop) */}
-        <div className="blog-nav-row-1">
-          <Nav className="blog-nav-links">
-            <Nav.Link as={NavLink} to="/blog" end onClick={() => setExpanded(false)}>
-              <FaHome />
-              <span>Home</span>
-            </Nav.Link>
-            <Nav.Link as={NavLink} to="/blog/categories" onClick={() => setExpanded(false)}>
-              <FaThLarge />
-              <span>Categories</span>
-            </Nav.Link>
-            <Nav.Link as={NavLink} to="/blog/readlists" onClick={() => setExpanded(false)}>
-              <FaStream />
-              <span>Readlists</span>
-            </Nav.Link>
-          </Nav>
+    <header className="paper-nav-header">
+      {/* Top blank notebook header band */}
+      <div className="paper-row paper-row--top-pad">
+        <div className="paper-margin-cell" />
+        <div className="paper-content-cell paper-brand-line">
+          <div className="paper-brand-title">
+            <span className="paper-brand-name">bolaji</span>
+            <span className="paper-brand-glyph" aria-hidden="true">✎</span>
+            <span className="paper-brand-sub">The B Blog &amp; Notebook</span>
+          </div>
 
-          {/* Search bar on desktop */}
-          <Form onSubmit={handleSearch} className="blog-search-form d-none d-lg-flex">
-            <Form.Control
+          <form onSubmit={handleSearch} className="paper-search-form">
+            <FaSearch className="paper-search-icon" />
+            <input
               type="search"
-              placeholder="Search..."
-              className="blog-search-input"
+              placeholder="Search notes..."
+              className="paper-search-input"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              aria-label="Search blog articles"
             />
-            <button type="submit" className="search-icon-btn">
-              <FaSearch />
-            </button>
-          </Form>
-
-          {/* Hamburger toggle button on mobile */}
-          <button 
-            className="blog-nav-toggle d-lg-none" 
-            onClick={() => setExpanded(!expanded)}
-            aria-label="Toggle navigation"
-          >
-            {expanded ? <FaChevronUp /> : <FaChevronDown />}
-          </button>
+          </form>
         </div>
+      </div>
 
-        {/* Row 2: Category Pills (Desktop only) */}
-        <div className="blog-nav-row-2 d-none d-lg-flex">
-          <Nav className="blog-nav-categories">
-            {categories.map((cat) => (
-              <Nav.Link
-                as={NavLink}
-                to={`/blog/categories/${cat.slug}`}
-                key={cat.id}
-                className="category-pill-link"
-              >
-                <span
-                  className="category-pill"
-                  style={{ "--category-color": cat.color }}
-                >
-                  {cat.name}
-                </span>
-              </Nav.Link>
-            ))}
-          </Nav>
+      {/* Navigation line */}
+      <div className="paper-row">
+        <div className="paper-margin-cell">
+          <span className="paper-margin-label">Index</span>
         </div>
+        <div className="paper-content-cell paper-nav-tabs-line">
+          <nav className="paper-nav-tabs" aria-label="Blog sections">
+            <NavLink
+              to="/blog"
+              end
+              className={({ isActive }) => `paper-nav-tab ${isActive ? "is-active" : ""}`}
+            >
+              All Notes
+            </NavLink>
+            <NavLink
+              to="/blog/readlists"
+              className={({ isActive }) => `paper-nav-tab ${isActive ? "is-active" : ""}`}
+            >
+              Readlists
+            </NavLink>
+            <NavLink
+              to="/blog/categories"
+              className={({ isActive }) => `paper-nav-tab ${isActive ? "is-active" : ""}`}
+            >
+              Categories
+            </NavLink>
+          </nav>
 
-        {/* Mobile Collapsible Panel */}
-        {expanded && (
-          <div className="blog-nav-collapsible-mobile d-lg-none">
-            <Nav className="blog-nav-categories-mobile">
+          {categories.length > 0 && (
+            <div className="paper-topic-chips">
               {categories.map((cat) => (
-                <Nav.Link
-                  as={NavLink}
-                  to={`/blog/categories/${cat.slug}`}
+                <NavLink
                   key={cat.id}
-                  className="category-pill-link"
-                  onClick={() => setExpanded(false)}
+                  to={`/blog/categories/${cat.slug}`}
+                  className={({ isActive }) => `paper-topic-chip ${isActive ? "is-active" : ""}`}
                 >
                   <span
-                    className="category-pill"
-                    style={{ "--category-color": cat.color }}
-                  >
-                    {cat.name}
-                  </span>
-                </Nav.Link>
+                    className="paper-ink-dot"
+                    style={{ backgroundColor: cat.color || "#a162f7" }}
+                  />
+                  <span>{cat.name}</span>
+                </NavLink>
               ))}
-            </Nav>
-            <Form onSubmit={handleSearch} className="blog-search-form-mobile mt-3">
-              <Form.Control
-                type="search"
-                placeholder="Search..."
-                className="blog-search-input"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <button type="submit" className="search-icon-btn">
-                <FaSearch />
-              </button>
-            </Form>
-          </div>
-        )}
-
-      </Container>
-    </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </header>
   );
 };
 

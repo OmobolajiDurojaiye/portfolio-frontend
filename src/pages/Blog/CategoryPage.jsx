@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { Container, Spinner, Card, Row, Col } from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
 import { useParams, Link } from "react-router-dom";
+import { FiArrowUpRight } from "react-icons/fi";
 import apiClient from "../../services/api";
 import "./Blog.css";
 
@@ -24,45 +25,98 @@ function CategoryPage() {
     fetchData();
   }, [slug]);
 
-  if (loading)
+  if (loading) {
     return (
-      <Container className="text-center py-5">
-        <Spinner />
-      </Container>
+      <div className="paper-loading-box">
+        <Spinner animation="border" size="sm" className="me-2" />
+        Loading topic...
+      </div>
     );
-  if (!data.category)
+  }
+
+  if (!data.category) {
     return (
-      <Container className="text-center py-5">
-        <h2>Category not found.</h2>
-      </Container>
+      <div className="paper-row">
+        <div className="paper-margin-cell">
+          <span className="paper-margin-label">404</span>
+        </div>
+        <div className="paper-content-cell">
+          <p className="paper-line-text">Category not found.</p>
+        </div>
+      </div>
     );
+  }
 
   return (
-    <Container className="py-5">
-      <div
-        className="text-center mb-5 category-header"
-        style={{ "--category-color": data.category.color }}
-      >
-        <h1 className="section-title">{data.category.name}</h1>
+    <div>
+      <div className="paper-row">
+        <div className="paper-margin-cell">
+          <span className="paper-margin-label">Topic</span>
+        </div>
+        <div className="paper-content-cell">
+          <div className="paper-entry-grid">
+            <span
+              className="paper-entry-icon paper-entry-icon--dot"
+              style={{ backgroundColor: data.category.color || "#a162f7" }}
+            />
+            <span className="paper-entry-title" style={{ fontSize: "1.05rem" }}>
+              {data.category.name}
+            </span>
+            <span className="paper-tag-stamp ms-auto">
+              {data.posts?.length || 0} Articles
+            </span>
+          </div>
+        </div>
       </div>
-      <Row>
-        {data.posts.map((post) => (
-          <Col lg={4} md={6} key={post.id} className="mb-4">
-            <Link to={`/blog/${post.slug}`} className="grid-post-card">
-              <div className="grid-post-img-container">
-                <img src={post.image_url} alt={post.title} />
+
+      <div className="paper-row paper-row--spacer">
+        <div className="paper-margin-cell" />
+        <div className="paper-content-cell" />
+      </div>
+
+      {data.posts && data.posts.length > 0 ? (
+        data.posts.map((post, idx) => (
+          <Link
+            key={post.id}
+            to={`/blog/${post.slug}`}
+            className="paper-row paper-row--interactive"
+          >
+            <div className="paper-margin-cell">
+              <span className="paper-margin-num">
+                {String(idx + 1).padStart(2, "0")}
+              </span>
+            </div>
+            <div className="paper-content-cell">
+              <div className="paper-entry-grid">
+                <div className="paper-entry-icon">
+                  {post.image_url ? (
+                    <img src={post.image_url} alt={post.title} />
+                  ) : (
+                    <span>{post.title?.[0] || "B"}</span>
+                  )}
+                </div>
+                <div className="paper-entry-main">
+                  <span className="paper-entry-title">{post.title}</span>
+                  {post.excerpt && (
+                    <span className="paper-entry-desc">{post.excerpt}</span>
+                  )}
+                </div>
+                <FiArrowUpRight className="paper-entry-arrow" />
               </div>
-              <div className="grid-post-content">
-                <h5 className="grid-post-title">{post.title}</h5>
-                <p className="grid-post-excerpt text-secondary">
-                  {post.excerpt}
-                </p>
-              </div>
-            </Link>
-          </Col>
-        ))}
-      </Row>
-    </Container>
+            </div>
+          </Link>
+        ))
+      ) : (
+        <div className="paper-row">
+          <div className="paper-margin-cell" />
+          <div className="paper-content-cell">
+            <p className="paper-line-text paper-line-muted">
+              No articles in this category yet.
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 

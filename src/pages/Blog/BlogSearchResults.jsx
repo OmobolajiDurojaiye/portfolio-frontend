@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { Container, Spinner, Row, Col } from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
 import { useSearchParams, Link } from "react-router-dom";
+import { FiArrowUpRight } from "react-icons/fi";
 import apiClient from "../../services/api";
 import "./Blog.css";
 
@@ -14,57 +15,84 @@ const BlogSearchResults = () => {
     if (query) {
       setLoading(true);
       apiClient
-        .get(`/api/blog/search?q=${query}`)
-        .then((res) => setResults(res.data))
+        .get(`/api/blog/search?q=${encodeURIComponent(query)}`)
+        .then((res) => setResults(Array.isArray(res.data) ? res.data : []))
         .catch((err) => console.error(err))
         .finally(() => setLoading(false));
     }
   }, [query]);
 
   return (
-    <Container className="py-5">
-      <div className="text-center mb-5">
-        <h1 className="section-title">Search Results</h1>
-        <p className="section-subtitle">Showing results for: "{query}"</p>
-      </div>
-      {loading ? (
-        <div className="text-center">
-          <Spinner />
+    <div>
+      <div className="paper-row">
+        <div className="paper-margin-cell">
+          <span className="paper-margin-label">Search</span>
         </div>
-      ) : (
-        <Row>
-          {results.length > 0 ? (
-            results.map((post) => (
-              <Col lg={4} md={6} key={post.id} className="mb-4">
-                <Link to={`/blog/${post.slug}`} className="grid-post-card">
-                  <div className="grid-post-img-container">
+        <div className="paper-content-cell">
+          <p className="paper-line-text">
+            Results for <strong>"{query}"</strong>
+          </p>
+        </div>
+      </div>
+
+      <div className="paper-row paper-row--spacer">
+        <div className="paper-margin-cell" />
+        <div className="paper-content-cell" />
+      </div>
+
+      {loading ? (
+        <div className="paper-loading-box">
+          <Spinner animation="border" size="sm" className="me-2" />
+          Searching notebook...
+        </div>
+      ) : results.length > 0 ? (
+        results.map((post, idx) => (
+          <Link
+            key={post.id}
+            to={`/blog/${post.slug}`}
+            className="paper-row paper-row--interactive"
+          >
+            <div className="paper-margin-cell">
+              <span className="paper-margin-num">
+                {String(idx + 1).padStart(2, "0")}
+              </span>
+            </div>
+            <div className="paper-content-cell">
+              <div className="paper-entry-grid">
+                <div className="paper-entry-icon">
+                  {post.image_url ? (
                     <img src={post.image_url} alt={post.title} />
-                  </div>
-                  <div className="grid-post-content">
-                    {post.category && (
-                      <span
-                        className="category-tag-sm"
-                        style={{ backgroundColor: post.category.color }}
-                      >
-                        {post.category.name}
-                      </span>
-                    )}
-                    <h5 className="grid-post-title">{post.title}</h5>
-                    <p className="grid-post-excerpt text-secondary">
-                      {post.excerpt}
-                    </p>
-                  </div>
-                </Link>
-              </Col>
-            ))
-          ) : (
-            <p className="text-center text-secondary">
-              No articles found matching your search.
+                  ) : (
+                    <span>{post.title?.[0] || "B"}</span>
+                  )}
+                </div>
+                <div className="paper-entry-main">
+                  <span className="paper-entry-title">{post.title}</span>
+                  {post.excerpt && (
+                    <span className="paper-entry-desc">{post.excerpt}</span>
+                  )}
+                </div>
+                <div className="paper-entry-meta">
+                  {post.category && (
+                    <span className="paper-tag-stamp">{post.category.name}</span>
+                  )}
+                  <FiArrowUpRight className="paper-entry-arrow" />
+                </div>
+              </div>
+            </div>
+          </Link>
+        ))
+      ) : (
+        <div className="paper-row">
+          <div className="paper-margin-cell" />
+          <div className="paper-content-cell">
+            <p className="paper-line-text paper-line-muted">
+              No articles found matching "{query}".
             </p>
-          )}
-        </Row>
+          </div>
+        </div>
       )}
-    </Container>
+    </div>
   );
 };
 

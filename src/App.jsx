@@ -4,10 +4,6 @@ import LandingPage from "./pages/Landing/LandingPage";
 import AboutPage from "./pages/About/AboutPage";
 import ServicesPage from "./pages/Services/ServicesPage";
 import PortfolioPage from "./pages/Portfolio/PortfolioPage";
-import MarketplaceLayout from "./components/Marketplace/MarketplaceLayout";
-import MarketplacePage from "./pages/Marketplace/MarketplacePage";
-import ProductDetailPage from "./pages/Marketplace/ProductDetailPage";
-import CartPage from "./pages/Marketplace/CartPage";
 import ContactPage from "./pages/Contact/ContactPage";
 import ScrollToTop from "./components/ScrollToTop";
 import DashboardLayout from "./components/DashboardLayout";
@@ -18,8 +14,6 @@ import AdminLayout from "./components/Admin/AdminLayout";
 import AboutManager from "./components/Admin/AboutManager";
 import ProjectManager from "./components/Admin/ProjectManager";
 import BlogManager from "./components/Admin/BlogManager";
-import MarketplaceManager from "./components/Admin/MarketplaceManager";
-import OrderManager from "./components/Admin/OrderManager";
 import BookingManager from "./components/Admin/BookingManager";
 import DashboardOverview from "./components/Admin/DashboardOverview";
 
@@ -45,13 +39,11 @@ function App() {
             <Route path="about" element={<AboutManager />} />
             <Route path="portfolio" element={<ProjectManager />} />
             <Route path="blog" element={<BlogManager />} />
-            <Route path="marketplace" element={<MarketplaceManager />} />
-            <Route path="orders" element={<OrderManager />} />
             <Route path="bookings" element={<BookingManager />} />
           </Route>
         </Route>
 
-        {/* Client Portal with Dashboard Layout (Sticky Sidebar) */}
+        {/* Client Portal with Editorial Top-Nav & Dashed-Grid Layout */}
         <Route element={<DashboardLayout />}>
           <Route path="/" element={<LandingPage />} />
           <Route path="/about" element={<AboutPage />} />
@@ -67,12 +59,6 @@ function App() {
             <Route path="readlists" element={<ReadlistsListPage />} />
             <Route path="readlists/:slug" element={<ReadlistPage />} />
             <Route path=":slug" element={<SinglePostPage />} />
-          </Route>
-
-          <Route path="/marketplace" element={<MarketplaceLayout />}>
-            <Route index element={<MarketplacePage />} />
-            <Route path="cart" element={<CartPage />} />
-            <Route path=":slug" element={<ProductDetailPage />} />
           </Route>
         </Route>
       </Routes>

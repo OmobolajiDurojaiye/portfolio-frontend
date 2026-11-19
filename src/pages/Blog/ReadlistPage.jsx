@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { Container, Spinner, Card } from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
 import { useParams, Link } from "react-router-dom";
+import { FiArrowUpRight } from "react-icons/fi";
 import apiClient from "../../services/api";
 import "./Blog.css";
 
@@ -27,62 +28,103 @@ function ReadlistPage() {
 
   if (loading) {
     return (
-      <Container className="text-center py-5">
-        <Spinner animation="border" variant="primary" />
-      </Container>
+      <div className="paper-loading-box">
+        <Spinner animation="border" size="sm" className="me-2" />
+        Loading readlist...
+      </div>
     );
   }
 
   if (error || !readlist) {
     return (
-      <Container className="text-center py-5">
-        <h2 className="section-title">404 - Not Found</h2>
-        <p className="section-subtitle">{error}</p>
-      </Container>
+      <div className="paper-row">
+        <div className="paper-margin-cell">
+          <span className="paper-margin-label">404</span>
+        </div>
+        <div className="paper-content-cell">
+          <p className="paper-line-text">{error || "Readlist not found."}</p>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Container className="readlist-page-container py-5 px-md-5">
-      <div className="text-center mb-5 readlist-header">
-        {readlist.image_url && (
-          <img
-            src={readlist.image_url}
-            alt={readlist.name}
-            className="readlist-cover-img"
-          />
-        )}
-        <h1 className="section-title mt-4">{readlist.name}</h1>
-        <p className="section-subtitle">{readlist.description}</p>
+    <div>
+      {/* Header Row */}
+      <div className="paper-row">
+        <div className="paper-margin-cell">
+          <span className="paper-margin-label">Readlist</span>
+        </div>
+        <div className="paper-content-cell">
+          <div className="paper-readlist-banner">
+            {readlist.image_url && (
+              <img
+                src={readlist.image_url}
+                alt={readlist.name}
+                className="paper-readlist-thumb"
+              />
+            )}
+            <div>
+              <h1 className="paper-article-title" style={{ fontSize: "2rem", marginBottom: "0.25rem" }}>
+                {readlist.name}
+              </h1>
+              {readlist.description && (
+                <p className="paper-line-text paper-line-muted">{readlist.description}</p>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="posts-column">
-        {readlist.posts &&
-          readlist.posts.map((post, index) => (
-            <Link
-              to={`/blog/${post.slug}`}
-              key={post.id}
-              className="readlist-magazine-item"
-            >
-              <div className="readlist-magazine-number">
-                <span>{(index + 1).toString().padStart(2, "0")}</span>
-              </div>
-              <div className="readlist-magazine-img-container">
-                <img
-                  src={post.image_url || "https://via.placeholder.com/600x400"}
-                  alt={post.title}
-                />
-              </div>
-              <div className="readlist-magazine-content">
-                <h4 className="magazine-title">{post.title}</h4>
-                <p className="magazine-excerpt">{post.excerpt}</p>
-                <div className="magazine-meta">
-                  Read Article &rarr;
+
+      <div className="paper-row paper-row--spacer">
+        <div className="paper-margin-cell" />
+        <div className="paper-content-cell" />
+      </div>
+
+      {/* Articles in Readlist */}
+      {readlist.posts && readlist.posts.length > 0 ? (
+        readlist.posts.map((post, index) => (
+          <Link
+            to={`/blog/${post.slug}`}
+            key={post.id}
+            className="paper-row paper-row--interactive"
+          >
+            <div className="paper-margin-cell">
+              <span className="paper-margin-num">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+            </div>
+            <div className="paper-content-cell">
+              <div className="paper-entry-grid">
+                <div className="paper-entry-icon">
+                  {post.image_url ? (
+                    <img src={post.image_url} alt={post.title} />
+                  ) : (
+                    <span>{index + 1}</span>
+                  )}
                 </div>
+                <div className="paper-entry-main">
+                  <span className="paper-entry-title">{post.title}</span>
+                  {post.excerpt && (
+                    <span className="paper-entry-desc">{post.excerpt}</span>
+                  )}
+                </div>
+                <FiArrowUpRight className="paper-entry-arrow" />
               </div>
-            </Link>
-          ))}
-      </div>
-    </Container>
+            </div>
+          </Link>
+        ))
+      ) : (
+        <div className="paper-row">
+          <div className="paper-margin-cell" />
+          <div className="paper-content-cell">
+            <p className="paper-line-text paper-line-muted">
+              No articles added to this readlist yet.
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
