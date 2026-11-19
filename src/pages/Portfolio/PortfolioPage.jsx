@@ -80,19 +80,26 @@ function PortfolioPage() {
   };
 
   // Convert vertical mouse wheel to horizontal scroll over the project gallery
-  const handleWheel = (e) => {
+  // Attached natively with { passive: false } so preventDefault() never warns
+  useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
-    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-      const atStart = track.scrollLeft <= 2 && e.deltaY < 0;
-      const atEnd =
-        track.scrollLeft + track.clientWidth >= track.scrollWidth - 2 && e.deltaY > 0;
-      if (!atStart && !atEnd) {
-        e.preventDefault();
-        track.scrollLeft += e.deltaY * 1.4;
+
+    const onWheel = (e) => {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        const atStart = track.scrollLeft <= 2 && e.deltaY < 0;
+        const atEnd =
+          track.scrollLeft + track.clientWidth >= track.scrollWidth - 2 && e.deltaY > 0;
+        if (!atStart && !atEnd) {
+          e.preventDefault();
+          track.scrollLeft += e.deltaY * 1.4;
+        }
       }
-    }
-  };
+    };
+
+    track.addEventListener("wheel", onWheel, { passive: false });
+    return () => track.removeEventListener("wheel", onWheel);
+  }, [loading, projects.length]);
 
   // Mouse drag-to-scroll support
   const handleMouseDown = (e) => {
@@ -216,7 +223,6 @@ function PortfolioPage() {
             className="hportfolio-track"
             ref={trackRef}
             onScroll={handleScroll}
-            onWheel={handleWheel}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={stopDragging}
