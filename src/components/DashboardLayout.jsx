@@ -19,9 +19,6 @@ function DashboardLayout() {
     return localStorage.getItem("bolaji-theme") || "dark";
   });
 
-  const isBlogRoute = location.pathname.startsWith("/blog");
-  const isProjectsRoute = location.pathname.startsWith("/portfolio");
-
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("bolaji-theme", theme);
@@ -38,7 +35,6 @@ function DashboardLayout() {
   const navItems = [
     { name: "Home", path: "/", end: true },
     { name: "Projects", path: "/portfolio" },
-    { name: "About", path: "/about" },
     { name: "Blog", path: "/blog" },
     { name: "Contact", path: "/contact" },
   ];
@@ -60,7 +56,7 @@ function DashboardLayout() {
   ];
 
   return (
-    <div className={`editorial-shell ${isBlogRoute ? "editorial-shell--blog" : ""} ${isProjectsRoute ? "editorial-shell--wide" : ""}`}>
+    <div className="editorial-shell">
       {/* Sticky Top Navbar */}
       <header className="editorial-navbar">
         <div className="editorial-navbar-inner">
@@ -83,30 +79,26 @@ function DashboardLayout() {
               </NavLink>
             ))}
 
-            {!isBlogRoute && (
-              <button
-                type="button"
-                className="editorial-theme-btn"
-                onClick={toggleTheme}
-                aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-                title={theme === "dark" ? "Light mode" : "Dark mode"}
-              >
-                {theme === "dark" ? <FaSun /> : <FaMoon />}
-              </button>
-            )}
+            <button
+              type="button"
+              className="editorial-theme-btn"
+              onClick={toggleTheme}
+              aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              title={theme === "dark" ? "Light mode" : "Dark mode"}
+            >
+              {theme === "dark" ? <FaSun /> : <FaMoon />}
+            </button>
           </nav>
 
           <div className="editorial-mobile-controls">
-            {!isBlogRoute && (
-              <button
-                type="button"
-                className="editorial-theme-btn"
-                onClick={toggleTheme}
-                aria-label="Toggle color theme"
-              >
-                {theme === "dark" ? <FaSun /> : <FaMoon />}
-              </button>
-            )}
+            <button
+              type="button"
+              className="editorial-theme-btn"
+              onClick={toggleTheme}
+              aria-label="Toggle color theme"
+            >
+              {theme === "dark" ? <FaSun /> : <FaMoon />}
+            </button>
             <button
               type="button"
               className="editorial-menu-btn"
@@ -150,40 +142,38 @@ function DashboardLayout() {
         </div>
       </div>
 
-      {/* Main Content */}
+      {/* Main Content — consistent 820px width across ALL pages */}
       <main className="editorial-main">
-        <div className={`editorial-column ${isBlogRoute ? "editorial-column--blog" : ""} ${isProjectsRoute ? "editorial-column--wide" : ""}`}>
+        <div className="editorial-column">
           <Outlet />
         </div>
       </main>
 
       {/* Subtle Editorial Footer */}
-      {!isBlogRoute && (
-        <footer className="editorial-footer">
-          <div className="editorial-footer-inner">
-            <div className="editorial-footer-left">
-              <span className="editorial-footer-brand">Bolaji.</span>
-              <span className="editorial-footer-copy">
-                © {new Date().getFullYear()} Omobolaji Durojaiye · Abuja, Nigeria
-              </span>
-            </div>
-            <div className="editorial-footer-socials">
-              {socialLinks.map((s) => (
-                <a
-                  key={s.name}
-                  href={s.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title={s.name}
-                  aria-label={s.name}
-                >
-                  {s.icon}
-                </a>
-              ))}
-            </div>
+      <footer className="editorial-footer">
+        <div className="editorial-footer-inner">
+          <div className="editorial-footer-left">
+            <span className="editorial-footer-brand">Bolaji.</span>
+            <span className="editorial-footer-copy">
+              © {new Date().getFullYear()} Omobolaji Durojaiye · Abuja, Nigeria
+            </span>
           </div>
-        </footer>
-      )}
+          <div className="editorial-footer-socials">
+            {socialLinks.map((s) => (
+              <a
+                key={s.name}
+                href={s.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={s.name}
+                aria-label={s.name}
+              >
+                {s.icon}
+              </a>
+            ))}
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

@@ -1,7 +1,6 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import LandingPage from "./pages/Landing/LandingPage";
-import AboutPage from "./pages/About/AboutPage";
 import ServicesPage from "./pages/Services/ServicesPage";
 import PortfolioPage from "./pages/Portfolio/PortfolioPage";
 import ContactPage from "./pages/Contact/ContactPage";
@@ -46,7 +45,7 @@ function App() {
         {/* Client Portal with Editorial Top-Nav & Dashed-Grid Layout */}
         <Route element={<DashboardLayout />}>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/about" element={<AboutPage />} />
+          <Route path="/about" element={<Navigate to="/" replace />} />
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/portfolio" element={<PortfolioPage />} />
           <Route path="/contact" element={<ContactPage />} />

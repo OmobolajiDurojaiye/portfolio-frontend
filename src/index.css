@@ -4,7 +4,7 @@
   --bg-elevated: #141418;
   --bg-pill: #131316;
   --bg-pill-hover: #1c1c21;
-  --text-primary: #f4f4f5;
+  --text-primary: #fafafa;
   --text-secondary: #a1a1aa;
   --text-muted: #71717a;
   --border-color: rgba(255, 255, 255, 0.08);
@@ -16,12 +16,19 @@
   --plum-accent: #a162f7;
   --live-green: #22c55e;
 
-  /* Legacy var aliases for subpages / admin */
+  /* Notebook ruling variables (Dark mode default) */
+  --notebook-bg: #0c0c0f;
+  --notebook-rule: rgba(255, 255, 255, 0.075);
+  --notebook-margin: rgba(235, 108, 120, 0.35);
+  --notebook-hover: rgba(255, 255, 255, 0.035);
+
+  /* Legacy var aliases */
   --background-dark: var(--bg-page);
   --background-elevated: var(--bg-surface);
 
-  --font-serif: "Instrument Serif", Georgia, serif;
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: "Hanken Grotesk", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: "Hanken Grotesk", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: "Hanken Grotesk", -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: "JetBrains Mono", monospace;
   --font-hand: "Caveat", cursive;
 }
@@ -41,6 +48,12 @@
   --accent-color: #09090b;
   --accent-color-bg: rgba(9, 9, 11, 0.05);
   --accent-color-border: rgba(9, 9, 11, 0.15);
+
+  --notebook-bg: #ffffff;
+  --notebook-rule: #d6eef2;
+  --notebook-margin: rgba(235, 108, 120, 0.48);
+  --notebook-hover: rgba(214, 238, 242, 0.28);
+
   --background-dark: var(--bg-page);
   --background-elevated: var(--bg-surface);
 }
@@ -58,7 +71,7 @@ html {
 body {
   margin: 0;
   font-family: var(--font-sans);
-  font-size: 0.92rem;
+  font-size: 0.94rem;
   font-weight: 400;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
@@ -75,8 +88,9 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-serif);
-  font-weight: 400;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.025em;
   color: var(--text-primary);
 }
 
@@ -84,7 +98,7 @@ a {
   color: inherit;
 }
 
-/* Custom Scrollbar */
+/* Custom Vertical Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -101,27 +115,27 @@ a {
 }
 
 .editorial-heading {
-  font-family: var(--font-serif);
-  font-size: clamp(1.75rem, 3vw, 2.15rem);
-  font-weight: 400;
-  letter-spacing: 0.01em;
-  line-height: 1.15;
+  font-family: var(--font-display);
+  font-size: clamp(1.45rem, 2.6vw, 1.75rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
   color: var(--text-primary);
   margin: 0;
 }
 
 .mono-label {
   font-family: var(--font-mono);
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   color: var(--text-muted);
   letter-spacing: 0.02em;
 }
 
 .section-title {
-  font-family: var(--font-serif);
-  font-size: clamp(2rem, 4vw, 2.75rem);
-  font-weight: 400;
-  letter-spacing: -0.01em;
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 3.2vw, 2.25rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
   color: var(--text-primary);
 }
 

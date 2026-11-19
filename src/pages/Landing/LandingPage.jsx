@@ -102,6 +102,57 @@ const FALLBACK_PROJECTS = [
   },
 ];
 
+const WORK_JOURNEY = [
+  {
+    role: "CTO & Co-Founder",
+    company: "Kasi AI",
+    duration: "Feb 2026 — Present",
+  },
+  {
+    role: "Lead Software Engineer",
+    company: "BE Tech Agency",
+    duration: "Apr 2023 — Present",
+  },
+  {
+    role: "Software Engineer",
+    company: "Freelance",
+    duration: "Mar 2022 — Present",
+  },
+];
+
+const WORK_PROCESS = [
+  {
+    num: "01",
+    title: "Discovery Call",
+    description:
+      "We discuss your goals, business workflows, and project requirements so our vision is aligned from day one.",
+  },
+  {
+    num: "02",
+    title: "Project Proposal",
+    description:
+      "I send a clear project roadmap, timeline, and quote. Once agreed, we lock in the first milestone.",
+  },
+  {
+    num: "03",
+    title: "Design & Development",
+    description:
+      "I architect and build your product with steady milestone demos so you can see real progress every step.",
+  },
+  {
+    num: "04",
+    title: "Review & Revisions",
+    description:
+      "We test every flow together and polish the details until the product matches your expectations.",
+  },
+  {
+    num: "05",
+    title: "Launch & Handover",
+    description:
+      "We deploy to production and hand over clean documentation and assets for a seamless transition.",
+  },
+];
+
 const SERVICE_ITEMS = [
   {
     num: "01",
@@ -219,13 +270,15 @@ function LandingPage() {
   const [projects, setProjects] = useState(FALLBACK_PROJECTS);
   const [techArticles, setTechArticles] = useState([]);
   const [activeStackTab, setActiveStackTab] = useState("All");
+  const [activeStep, setActiveStep] = useState(0);
   const [githubTotal, setGithubTotal] = useState(null);
   const [githubWeeks, setGithubWeeks] = useState([]);
   const [monthLabels, setMonthLabels] = useState([]);
+  const [hoveredPost, setHoveredPost] = useState(null);
+  const [hoverPos, setHoverPos] = useState({ x: 0, y: 0 });
   const projectsRailRef = useRef(null);
 
   useEffect(() => {
-    // Fetch live projects from backend (falls back gracefully to FALLBACK_PROJECTS)
     apiClient
       .get("/api/portfolio/projects")
       .then((res) => {
@@ -235,19 +288,17 @@ function LandingPage() {
       })
       .catch((err) => console.error("Failed to fetch projects:", err));
 
-    // Fetch latest writing
     apiClient
       .get("/api/blog/home-data")
       .then((res) => {
         const posts = res.data.posts || [];
         const tech = posts
           .filter((p) => p.category?.slug === "tech" || p.category?.name === "Tech")
-          .slice(0, 4);
-        setTechArticles(tech.length > 0 ? tech : posts.slice(0, 4));
+          .slice(0, 5);
+        setTechArticles(tech.length > 0 ? tech : posts.slice(0, 5));
       })
       .catch((err) => console.error("Failed to fetch blog data:", err));
 
-    // Fetch GitHub contributions for interactive heatmap
     fetch("https://github-contributions-api.jogruber.de/v4/OmobolajiDurojaiye")
       .then((res) => res.json())
       .then((data) => {
@@ -280,11 +331,16 @@ function LandingPage() {
 
   const scrollProjects = (direction) => {
     if (!projectsRailRef.current) return;
-    const cardWidth = 360;
+    const cardWidth = 356;
     projectsRailRef.current.scrollBy({
       left: direction === "left" ? -cardWidth : cardWidth,
       behavior: "smooth",
     });
+  };
+
+  const handleWritingMouseMove = (e, post) => {
+    setHoveredPost(post);
+    setHoverPos({ x: e.clientX, y: e.clientY });
   };
 
   return (
@@ -344,9 +400,6 @@ function LandingPage() {
       <section className="grid-section about-section">
         <div className="section-head-row">
           <h2 className="editorial-heading">About</h2>
-          <Link to="/about" className="section-view-all">
-            Full story <FiArrowUpRight />
-          </Link>
         </div>
 
         <ul className="about-bullet-list">
@@ -420,10 +473,7 @@ function LandingPage() {
       {/* 5. Projects Horizontal Scroll Preview */}
       <section className="grid-section projects-preview-section">
         <div className="section-head-row">
-          <div className="section-head-left">
-            <h2 className="editorial-heading">Projects</h2>
-            <span className="mono-label d-none d-sm-inline">( scroll horizontally )</span>
-          </div>
+          <h2 className="editorial-heading">Projects</h2>
           <div className="projects-head-actions">
             <div className="rail-nav-buttons">
               <button
@@ -527,10 +577,7 @@ function LandingPage() {
       {/* 6. Tech Stack with Category Filter Tabs */}
       <section className="grid-section stack-section">
         <div className="section-head-row stack-head-row">
-          <div className="section-head-left">
-            <h2 className="editorial-heading">Tech Stack</h2>
-            <span className="mono-label">( hover to play )</span>
-          </div>
+          <h2 className="editorial-heading">Tech Stack</h2>
 
           <div className="stack-filter-tabs" role="tablist" aria-label="Filter tech stack">
             {STACK_CATEGORIES.map((cat) => (
@@ -562,7 +609,7 @@ function LandingPage() {
 
       <div className="grid-spacer-band" aria-hidden="true" />
 
-      {/* 7. GitHub Activity Heatmap */}
+      {/* 7. GitHub Activity Heatmap (Full-Fit, Zero Horizontal Scroll) */}
       <section className="grid-section github-section">
         <div className="section-head-row">
           <h2 className="editorial-heading">GitHub Activity</h2>
@@ -579,37 +626,53 @@ function LandingPage() {
         <div className="heatmap-wrapper">
           {githubWeeks.length > 0 ? (
             <>
-              <div className="heatmap-scroll-inner">
-                <div className="heatmap-months">
-                  {monthLabels.map((m) => (
-                    <span
-                      key={`${m.label}-${m.index}`}
-                      className="heatmap-month-label"
-                      style={{ gridColumnStart: m.index + 1 }}
-                    >
-                      {m.label}
-                    </span>
-                  ))}
-                </div>
-                <div className="heatmap-grid">
-                  {githubWeeks.map((week, wIdx) => (
-                    <div key={wIdx} className="heatmap-col">
-                      {week.map((day, dIdx) => {
-                        if (!day) {
-                          return <span key={dIdx} className="heatmap-cell is-empty" />;
-                        }
-                        const level = Math.min(4, day.level ?? (day.count === 0 ? 0 : day.count < 3 ? 1 : day.count < 6 ? 2 : day.count < 10 ? 3 : 4));
-                        return (
-                          <span
-                            key={day.date}
-                            className={`heatmap-cell level-${level}`}
-                            title={`${day.count} contribution${day.count === 1 ? "" : "s"} on ${day.date}`}
-                          />
-                        );
-                      })}
-                    </div>
-                  ))}
-                </div>
+              <div
+                className="heatmap-months"
+                style={{ gridTemplateColumns: `repeat(${githubWeeks.length}, minmax(0, 1fr))` }}
+              >
+                {monthLabels.map((m) => (
+                  <span
+                    key={`${m.label}-${m.index}`}
+                    className="heatmap-month-label"
+                    style={{ gridColumnStart: m.index + 1 }}
+                  >
+                    {m.label}
+                  </span>
+                ))}
+              </div>
+              <div
+                className="heatmap-grid"
+                style={{ gridTemplateColumns: `repeat(${githubWeeks.length}, minmax(0, 1fr))` }}
+              >
+                {githubWeeks.map((week, wIdx) => (
+                  <div key={wIdx} className="heatmap-col">
+                    {week.map((day, dIdx) => {
+                      if (!day) {
+                        return <span key={dIdx} className="heatmap-cell is-empty" />;
+                      }
+                      const level = Math.min(
+                        4,
+                        day.level ??
+                          (day.count === 0
+                            ? 0
+                            : day.count < 3
+                            ? 1
+                            : day.count < 6
+                            ? 2
+                            : day.count < 10
+                            ? 3
+                            : 4)
+                      );
+                      return (
+                        <span
+                          key={day.date}
+                          className={`heatmap-cell level-${level}`}
+                          title={`${day.count} contribution${day.count === 1 ? "" : "s"} on ${day.date}`}
+                        />
+                      );
+                    })}
+                  </div>
+                ))}
               </div>
               <div className="heatmap-footer">
                 <span className="heatmap-count">
@@ -619,11 +682,11 @@ function LandingPage() {
                 </span>
                 <div className="heatmap-legend">
                   <span>Less</span>
-                  <span className="heatmap-cell level-0" />
-                  <span className="heatmap-cell level-1" />
-                  <span className="heatmap-cell level-2" />
-                  <span className="heatmap-cell level-3" />
-                  <span className="heatmap-cell level-4" />
+                  <span className="heatmap-legend-cell level-0" />
+                  <span className="heatmap-legend-cell level-1" />
+                  <span className="heatmap-legend-cell level-2" />
+                  <span className="heatmap-legend-cell level-3" />
+                  <span className="heatmap-legend-cell level-4" />
                   <span>More</span>
                 </div>
               </div>
@@ -648,12 +711,67 @@ function LandingPage() {
 
       <div className="grid-spacer-band" aria-hidden="true" />
 
-      {/* 8. What I Do */}
+      {/* 8. Work Journey (Moved from About) */}
+      <section className="grid-section journey-section">
+        <div className="section-head-row">
+          <h2 className="editorial-heading">Work Journey</h2>
+        </div>
+
+        <div className="home-timeline-list">
+          {WORK_JOURNEY.map((job, index) => (
+            <div className="home-timeline-item" key={index}>
+              <span className="home-timeline-dot" />
+              {index < WORK_JOURNEY.length - 1 && <span className="home-timeline-line" />}
+              <div className="home-timeline-body">
+                <div className="home-timeline-top">
+                  <h3 className="home-timeline-role">{job.role}</h3>
+                  <span className="home-timeline-duration">{job.duration}</span>
+                </div>
+                <p className="home-timeline-company">{job.company}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className="grid-spacer-band" aria-hidden="true" />
+
+      {/* 9. How I Work (Moved from About) */}
+      <section className="grid-section process-section">
+        <div className="section-head-row">
+          <h2 className="editorial-heading">How I Work</h2>
+        </div>
+
+        <div className="home-process-box">
+          <div className="home-process-header">
+            <span className="home-process-num">{WORK_PROCESS[activeStep].num}</span>
+            <h3 className="home-process-title">{WORK_PROCESS[activeStep].title}</h3>
+          </div>
+          <p className="home-process-desc">{WORK_PROCESS[activeStep].description}</p>
+        </div>
+
+        <div className="home-process-tabs">
+          {WORK_PROCESS.map((step, index) => (
+            <button
+              key={step.num}
+              type="button"
+              className={`home-process-btn ${activeStep === index ? "is-active" : ""}`}
+              onClick={() => setActiveStep(index)}
+            >
+              {step.num} · {step.title}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <div className="grid-spacer-band" aria-hidden="true" />
+
+      {/* 10. What I Do */}
       <section className="grid-section services-section">
         <div className="section-head-row">
           <h2 className="editorial-heading">What I Do</h2>
           <Link to="/contact" className="section-view-all">
-            Let's collaborate <FiArrowUpRight />
+            Book a session <FiArrowUpRight />
           </Link>
         </div>
 
@@ -668,16 +786,13 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* 9. Recent Writing (links to Paper Notebook Blog) */}
+      {/* 11. From The Notebook (With Floating Cover Image Hover Preview!) */}
       {techArticles.length > 0 && (
         <>
           <div className="grid-spacer-band" aria-hidden="true" />
           <section className="grid-section writing-section">
             <div className="section-head-row">
-              <div className="section-head-left">
-                <h2 className="editorial-heading">From The Notebook</h2>
-                <span className="mono-label d-none d-sm-inline">( blog )</span>
-              </div>
+              <h2 className="editorial-heading">From The Notebook</h2>
               <Link to="/blog" className="section-view-all">
                 Open notebook <FiArrowUpRight />
               </Link>
@@ -685,23 +800,67 @@ function LandingPage() {
 
             <div className="writing-rows">
               {techArticles.map((post) => (
-                <Link key={post.id} to={`/blog/${post.slug}`} className="writing-row-item">
+                <Link
+                  key={post.id}
+                  to={`/blog/${post.slug}`}
+                  className="writing-row-item"
+                  onMouseEnter={(e) => handleWritingMouseMove(e, post)}
+                  onMouseMove={(e) => handleWritingMouseMove(e, post)}
+                  onMouseLeave={() => setHoveredPost(null)}
+                >
                   <div className="writing-row-left">
                     <span className="writing-row-title">{post.title}</span>
-                    {post.date_posted && (
-                      <span className="writing-row-date">
-                        {new Date(post.date_posted).toLocaleDateString(undefined, {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        })}
-                      </span>
+                    {post.excerpt && (
+                      <span className="writing-row-excerpt">{post.excerpt}</span>
                     )}
+                    <div className="writing-row-meta">
+                      {post.category && (
+                        <span className="writing-row-cat">{post.category.name}</span>
+                      )}
+                      {post.date_posted && (
+                        <span className="writing-row-date">
+                          {new Date(post.date_posted).toLocaleDateString(undefined, {
+                            month: "long",
+                            day: "2-digit",
+                            year: "numeric",
+                          })}
+                        </span>
+                      )}
+                    </div>
                   </div>
-                  <FaArrowRight className="writing-row-arrow" />
+                  <span className="writing-row-readmore">
+                    Read more <FaArrowRight />
+                  </span>
                 </Link>
               ))}
             </div>
+
+            {/* Floating Cover Image Preview Card (Inspired by Image 3) */}
+            {hoveredPost && (hoveredPost.image_url || hoveredPost.image) && (
+              <div
+                className="writing-hover-preview"
+                style={{
+                  left: `${Math.min(Math.max(hoverPos.x, 160), window.innerWidth - 180)}px`,
+                  top: `${Math.max(hoverPos.y - 120, 90)}px`,
+                }}
+                aria-hidden="true"
+              >
+                <div className="writing-hover-img-wrap">
+                  <img
+                    src={hoveredPost.image_url || hoveredPost.image}
+                    alt={hoveredPost.title}
+                  />
+                </div>
+                <div className="writing-hover-caption">
+                  <span className="writing-hover-title">{hoveredPost.title}</span>
+                  {hoveredPost.date_posted && (
+                    <span className="writing-hover-year">
+                      {new Date(hoveredPost.date_posted).getFullYear()}
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
           </section>
         </>
       )}

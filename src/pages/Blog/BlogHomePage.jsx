@@ -79,30 +79,8 @@ function BlogHomePage() {
 
   const { featuredPost, posts = [], readlists = [], pagination = {} } = data;
 
-  // Polaroid preview covers from featured/latest posts
-  const polaroidImages = [
-    featuredPost?.image_url,
-    ...posts.map((p) => p.image_url),
-  ]
-    .filter(Boolean)
-    .slice(0, 2);
-
   return (
     <div className="paper-home-content">
-      {/* Decorative Fanned Polaroid Stack (top right, like Image 6) */}
-      {polaroidImages.length > 0 && (
-        <div className="paper-polaroid-cluster" aria-hidden="true">
-          {polaroidImages[1] && (
-            <div className="paper-polaroid-card paper-polaroid-card--back">
-              <img src={polaroidImages[1]} alt="" />
-            </div>
-          )}
-          <div className="paper-polaroid-card paper-polaroid-card--front">
-            <img src={polaroidImages[0]} alt="" />
-          </div>
-        </div>
-      )}
-
       {/* About / Intro lines */}
       <div className="paper-row">
         <div className="paper-margin-cell">
