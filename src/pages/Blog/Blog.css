@@ -9,6 +9,7 @@
   background-color: var(--notebook-bg);
   color: var(--text-primary);
   padding-bottom: 3rem;
+  overflow-x: clip;
 }
 
 /* Continuous Vertical Soft-Crimson Notebook Margin Line */

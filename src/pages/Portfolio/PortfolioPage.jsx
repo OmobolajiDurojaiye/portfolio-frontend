@@ -133,7 +133,7 @@ function PortfolioPage() {
   return (
     <div className="hportfolio-page">
       <Helmet>
-        <title>Projects | Omobolaji Durojaiye — Software Engineer</title>
+        <title>Projects | Omobolaji Durojaiye, Software Engineer</title>
         <meta
           name="description"
           content="Explore software engineering projects, B2B SaaS platforms, and AI products built by Omobolaji Durojaiye."

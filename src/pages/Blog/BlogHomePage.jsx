@@ -97,7 +97,7 @@ function BlogHomePage() {
         <div className="paper-margin-cell" />
         <div className="paper-content-cell">
           <p className="paper-line-text paper-line-muted">
-            Written by Omobolaji Durojaiye — systems, AI agents, music &amp; curiosities.
+            Written by Omobolaji Durojaiye. Systems, AI agents, music &amp; curiosities.
           </p>
         </div>
       </div>

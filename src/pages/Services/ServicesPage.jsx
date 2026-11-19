@@ -67,12 +67,12 @@ const ServicesPage = () => {
                 <span className="section-label">AI Business Chatbots</span>
                 <h2 className="service-heading">I Build Bots That Work <br /><span className="highlight-text">While You Sleep</span></h2>
                 <h3 className="service-subheading">
-                  AI-powered chatbots for real estate, travel & service businesses — built to capture leads, answer questions, and close deals 24/7.
+                  AI-powered chatbots for real estate, travel & service businesses, built to capture leads, answer questions, and close deals 24/7.
                 </h3>
                 <p className="service-intro">
                   Most businesses in Nigeria lose customers simply because no one replied fast enough. 
-                  I build smart chatbots that respond instantly on WhatsApp and your website — 
-                  qualifying leads, booking appointments, and answering FAQs — so your team wakes 
+                  I build smart chatbots that respond instantly on WhatsApp and your website, 
+                  qualifying leads, booking appointments, and answering FAQs so your team wakes 
                   up to warm prospects, not missed opportunities.
                 </p>
                 <div className="who-it-is-for">
@@ -154,15 +154,15 @@ const ServicesPage = () => {
             <Col lg={6} className="mb-5 mb-lg-0">
               <motion.div {...fadeInUp}>
                 <span className="section-label">Google Business Profile (GMB)</span>
-                <h2 className="service-heading">Get Found on Google — <br /><span className="highlight-text">Before Your Competitor Does</span></h2>
+                <h2 className="service-heading">Get Found on Google <br /><span className="highlight-text">Before Your Competitor Does</span></h2>
                 <h3 className="service-subheading">
-                  I set up and optimise your Google Business Profile so customers in your city find you first — on Maps, Search, and beyond.
+                  I set up and optimise your Google Business Profile so customers in your city find you first on Maps, Search, and beyond.
                 </h3>
                 <p className="service-intro">
                   When someone searches "real estate agent in Lagos" or "travel agency near me," 
                   Google Business Profile determines who shows up. Most businesses in Nigeria 
                   either don't have one, or have one that's incomplete and ignored. I fix that 
-                  — fully setting it up, writing your description, adding your services, 
+                  by fully setting it up, writing your description, adding your services, 
                   and optimising it so Google trusts and ranks your business.
                 </p>
                 <div className="who-it-is-for">

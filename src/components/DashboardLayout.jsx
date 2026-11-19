@@ -28,6 +28,13 @@ function DashboardLayout() {
     setIsMobileOpen(false);
   }, [location.pathname]);
 
+  useEffect(() => {
+    document.body.style.overflow = isMobileOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobileOpen]);
+
   const toggleTheme = () => {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
   };
@@ -41,7 +48,7 @@ function DashboardLayout() {
 
   const socialLinks = [
     { name: "GitHub", url: "https://github.com/OmobolajiDurojaiye", icon: <FaGithub /> },
-    { name: "LinkedIn", url: "https://www.linkedin.com/in/omobolaji-durojaiye-527872294/", icon: <FaLinkedin /> },
+    { name: "LinkedIn", url: "https://www.linkedin.com/in/bjtolu", icon: <FaLinkedin /> },
     { name: "X", url: "https://x.com/bjtolu", icon: <FaTwitter /> },
     {
       name: "Bluesky",

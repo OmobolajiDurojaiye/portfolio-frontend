@@ -22,8 +22,8 @@ import DynamicIcon from "../../utils/iconMap";
 import "./LandingPage.css";
 
 const TECH_STACK = [
-  { id: 1, name: "React", icon_name: "FaReact", category: "Frontend" },
-  { id: 2, name: "JavaScript", icon_name: "SiJavascript", category: "Frontend" },
+  { id: 1, name: "JavaScript", icon_name: "SiJavascript", category: "Frontend" },
+  { id: 2, name: "React", icon_name: "FaReact", category: "Frontend" },
   { id: 3, name: "Python", icon_name: "FaPython", category: "Backend" },
   { id: 4, name: "FastAPI", icon_name: "SiFastapi", category: "Backend" },
   { id: 5, name: "Flask", icon_name: "SiFlask", category: "Backend" },
@@ -106,17 +106,17 @@ const WORK_JOURNEY = [
   {
     role: "CTO & Co-Founder",
     company: "Kasi AI",
-    duration: "Feb 2026 — Present",
+    duration: "Feb 2026 - Present",
   },
   {
     role: "Lead Software Engineer",
     company: "BE Tech Agency",
-    duration: "Apr 2023 — Present",
+    duration: "Apr 2023 - Present",
   },
   {
     role: "Software Engineer",
     company: "Freelance",
-    duration: "Mar 2022 — Present",
+    duration: "Mar 2022 - Present",
   },
 ];
 
@@ -183,7 +183,7 @@ const CONTACT_LINKS = [
   },
   {
     label: "LinkedIn",
-    href: "https://www.linkedin.com/in/omobolaji-durojaiye-527872294/",
+    href: "https://www.linkedin.com/in/bjtolu",
     icon: <FaLinkedin />,
     external: true,
   },
@@ -346,7 +346,7 @@ function LandingPage() {
   return (
     <div className="home-editorial">
       <Helmet>
-        <title>Omobolaji Durojaiye — Software Engineer & B2B SaaS Architect in Abuja, Nigeria</title>
+        <title>Omobolaji Durojaiye | Software Engineer & B2B SaaS Architect in Abuja, Nigeria</title>
         <meta
           name="description"
           content="Omobolaji Durojaiye (Bolaji) is a full-stack software engineer and B2B SaaS architect based in Abuja, Nigeria. Technical founder of Kasi AI and ProofDeck."
@@ -404,13 +404,13 @@ function LandingPage() {
 
         <ul className="about-bullet-list">
           <li>
-            I'm Omobolaji Durojaiye (you can call me <strong>Bolaji</strong>) — a{" "}
+            I'm Omobolaji Durojaiye (you can call me <strong>Bolaji</strong>), a{" "}
             <span className="about-emphasis">Software Engineer &amp; Startup Founder</span>{" "}
             building easy-to-use software that reduces admin burden and streamlines business workflows.
           </li>
           <li>
             I architect and ship full-stack products with{" "}
-            <span className="about-emphasis">React, Python, FastAPI &amp; Flask</span>, focusing on
+            <span className="about-emphasis">JavaScript, React, Python, FastAPI &amp; Flask</span>, focusing on
             clean systems, reliability, and practical AI automation.
           </li>
           <li>
@@ -429,7 +429,7 @@ function LandingPage() {
             .
           </li>
           <li>
-            Inquisitive by nature and committed till it's done — if we work together, expect
+            Inquisitive by nature and committed till it's done. If we work together, expect
             craftsmanship and ownership from discovery to launch.
           </li>
         </ul>
